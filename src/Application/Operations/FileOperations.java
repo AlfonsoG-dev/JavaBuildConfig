@@ -23,7 +23,6 @@ public class FileOperations {
             String configPath = "./config.txt";
             boolean isConfigPresent = fUtils.searchForFileInRoot(configPath);
             if(!isConfigPresent) {
-                // TODO: create the config with default values
                 System.out.println(String.format("[Error] archive '%s' doesn't exists", configPath));
                 return null;
             }
@@ -89,5 +88,19 @@ public class FileOperations {
             .parallelStream()
             .collect(Collectors.joining());
         return b;
+    }
+    public void createConfigFile(String author, String classPath, String libraries, String mainClass) {
+        try {
+            String sencentes = String.format(
+                    "Created-by: %s\nClass-Path: %s\nLibraries: %s\nMain-Class: %s",
+                    author,
+                    classPath,
+                    libraries,
+                    mainClass
+            );
+            fUtils.writeToFile(sencentes);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }

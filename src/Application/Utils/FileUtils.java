@@ -2,6 +2,7 @@ package Application.Utils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -137,16 +138,21 @@ public class FileUtils {
         }
         return build.toString();
     }
-    public void writeToFile(String filePath) {
+    public void writeToFile(String sentences) {
+        FileWriter fw = null;
         try {
-            /**
-             * TODO: implement writeToFile
-             * - this will be used to write or create the build file
-             * - by default FileWriter is used
-             */
-            throw new Exception("[Error] not implemented yet");
+            fw = new FileWriter(rootFilePath + "config.txt");
+            fw.write(sentences);
         } catch(Exception e) {
             e.printStackTrace();
+        } finally {
+            if(fw != null) {
+                try {
+                    fw.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
