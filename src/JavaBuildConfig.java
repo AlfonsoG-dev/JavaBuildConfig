@@ -1,8 +1,8 @@
-import Application.Operations.FileOperations;
+import Application.Operations.CommandOperations;
 class JavaBuildConfig {
     public static void main(String[] args) {
-        FileOperations op = new FileOperations("./");
-        String c = op.getProjectClassNames("./src/");
+        CommandOperations cp = new CommandOperations("./");
+        String c = cp.compile();
         System.out.println(c);
     }
 }

@@ -1,4 +1,5 @@
 Created-By: Alfonso-Gomajoa
-Class-Path: ./bin/
+Source-Path: .\src\
+Class-Path: .\bin\
 Libraries:
 Main-Class: JavaBuildConfig
