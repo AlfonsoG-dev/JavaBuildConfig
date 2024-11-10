@@ -27,7 +27,7 @@ public class FileOperations {
                 System.out.println(String.format("[Error] archive '%s' doesn't exists", configPath));
                 return null;
             }
-            String fileLines = fUtils.getFileLines(configPath);
+            String fileLines = fUtils.getCleanTextFromFile(configPath);
             if(fileLines == null) {
                 System.out.println(String.format("[Info] empty file '%s'", configPath));
                 return null;
@@ -40,9 +40,7 @@ public class FileOperations {
                 if(sentences.length > 1) {
                     values = sentences[1].trim();
                 }
-                if(!keys.equals("null")) {
-                    projectConfig.put(keys, values);
-                }
+                projectConfig.put(keys, values);
             }
         } catch(Exception e) {
             e.printStackTrace();
