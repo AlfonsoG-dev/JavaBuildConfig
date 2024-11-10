@@ -7,16 +7,13 @@ class JavaBuildConfig {
                 case "--compile":
                     System.out.println("[cmd] " + cp.compile());
                     break;
-                case "--h":
-                    messages();
-                    break;
-                case "--help":
-                    messages();
-                    break;
-                default:
-                    System.out.println("[Info] use --h or help to show help");
-                    break;
             }
+        }
+        if(args.length == 0) {
+            System.out.println("[Info] use --h or --help to show command options");
+        }
+        if(args.length > 0 && (args[0].equals("--h") ||args[0].equals("--help"))) {
+            messages();
         }
     }
     private static void messages() {
