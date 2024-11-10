@@ -1,8 +1,6 @@
 package Application.Utils;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -11,7 +9,6 @@ import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileUtils {
     private String rootFilePath;
@@ -30,9 +27,16 @@ public class FileUtils {
         }
         return count;
     }
+    /**
+     * normalize  given path
+     */
     public String getCleanPath(String filePath) {
         return new File(filePath).toPath().normalize().toString();
     }
+
+    /**
+     * return the list of files from the given path
+     */
     public List<File> getFilesFromPath(String filePath) {
         List<File> names = new ArrayList<>();
         try {
@@ -52,20 +56,9 @@ public class FileUtils {
         return names;
     }
 
-    public List<File> getFilesFromDirectory(DirectoryStream<Path> files) {
-        List<File> names = new ArrayList<>();
-        for(Path p: files) {
-            File f = p.toFile();
-            if(f.isFile()) {
-                names.add(f);
-            } else if (f.isDirectory()){
-                names.addAll(
-                        getFilesFromPath(f.getPath())
-                );
-            }
-        }
-        return names;
-    }
+    /**
+     * return the list of files of the given directory
+     */
     public List<File> getDirectoryFiles(DirectoryStream<Path> misFiles) {
         List<File> names = new ArrayList<>();
         for(Path p: misFiles) {
@@ -87,6 +80,9 @@ public class FileUtils {
         return names;
     }
 
+    /**
+     * return a list of directory names of the given directory
+     */
     public List<String> getDirectoriesNames(String path) {
         List<String> names = new ArrayList<>();
         try {
@@ -110,47 +106,5 @@ public class FileUtils {
             err.printStackTrace();
         }
         return names;
-    }
-
-    /**
-     * TODO: receive a params
-     * - as the source of the .java files
-     * - as the target of the .class files
-     **/
-    public String getProjectClassNames() {
-        String b = "";
-        List<String> names = new ArrayList<>();
-        try {
-            File srcFile = new File(rootFilePath + File.separator + "src");
-            if(srcFile.listFiles() != null) {
-                for(File f: srcFile.listFiles()) {
-                    if(f.isFile() && f.getName().contains(".java")) {
-                        names.add(".");
-                        names.add(File.separator);
-                        names.add("src");
-                        names.add(File.separator);
-                        names.add("*.java ");
-                        break;
-                    }
-                }
-                getDirectoriesNames("src")
-                    .parallelStream()
-                    .filter(e -> !e.isEmpty())
-                    .forEach(e -> {
-                        int countFiles = countFilesInDirectory(new File(e));
-                        if(countFiles > 0) {
-                            names.add(e + "*.java ");
-                        }
-                    });
-            } else {
-                System.out.println("[ INFO ]: " + rootFilePath + "\\src\\ folder not found");
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        b += names
-            .parallelStream()
-            .collect(Collectors.joining());
-        return b;
     }
 }
