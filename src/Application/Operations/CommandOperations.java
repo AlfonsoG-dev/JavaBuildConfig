@@ -9,7 +9,7 @@ public class CommandOperations {
     private FileOperations fOperations;
     private HashMap<String, String> configValues;
     public CommandOperations(String rootPath) {
-        cUtils = new CommandUtils();
+        cUtils = new CommandUtils(rootPath);
         fOperations = new FileOperations(rootPath);
         configValues = fOperations.getConfigValues();
     }

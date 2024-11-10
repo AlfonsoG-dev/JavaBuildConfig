@@ -19,5 +19,6 @@ class JavaBuildConfig {
     }
     private static void messages() {
         System.out.println("[Info] use --compile to compile the project");
+        System.out.println("[Info] use --run to execute the project");
     }
 }
