@@ -126,6 +126,24 @@ public class FileOperations {
             .collect(Collectors.joining());
         return b;
     }
+    public String getMainClass() {
+        String b = null;
+        try {
+            File f = new File(new File(rootFilePath).getCanonicalPath());
+            List<File> m = fUtils.getDirectoryFiles(Files.newDirectoryStream(f.toPath()))
+                .parallelStream()
+                .filter(e -> e.isFile() && e.getName().contains(".java"))
+                .toList();
+            for(File lf: m) {
+                if(lf.getName().equals(f.getName() + ".java")) {
+                    b = f.getName();
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
     public void createConfigFile(String author, String classPath, String libraries, String mainClass) {
         try {
             String sencentes = String.format(
