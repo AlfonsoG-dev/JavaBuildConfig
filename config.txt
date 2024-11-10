@@ -1,0 +1,5 @@
+
+Created-By: Alfonso-Gomajoa
+Class-Path: ./bin/
+Libraries:
+Main-Class: JavaBuildConfig
