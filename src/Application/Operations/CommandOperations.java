@@ -7,13 +7,14 @@ import java.util.HashMap;
 public class CommandOperations {
     private CommandUtils cUtils;
     private FileOperations fOperations;
+    private HashMap<String, String> configValues;
     public CommandOperations(String rootPath) {
         cUtils = new CommandUtils();
         fOperations = new FileOperations(rootPath);
+        configValues = fOperations.getConfigValues();
     }
 
     public String compile() {
-        HashMap<String, String> configValues = fOperations.getConfigValues();
         String sourceFiles = fOperations.getProjectClassNames(configValues.get("Source-Path"));
         String c = cUtils.getCompileCommand(
                 sourceFiles,
@@ -21,5 +22,13 @@ public class CommandOperations {
                 configValues.get("Libraries")
         );
         return c;
+    }
+    public String run() {
+        String r = cUtils.getRunCommand(
+                configValues.get("Class-Path"),
+                configValues.get("Libraries"),
+                configValues.get("Main-Class")
+        );
+        return r;
     }
 }

@@ -9,4 +9,7 @@ public class CommandUtils {
         b += " " + javaFiles;
         return b;
     }
+    public String getRunCommand(String classFiles, String libFiles, String mainClass) {
+        return "java -cp '" + classFiles + ";" + libFiles + "' '" + mainClass + "'";
+    }
 }
