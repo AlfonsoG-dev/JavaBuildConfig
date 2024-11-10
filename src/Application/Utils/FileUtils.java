@@ -137,4 +137,16 @@ public class FileUtils {
         }
         return build.toString();
     }
+    public void writeToFile(String filePath) {
+        try {
+            /**
+             * TODO: implement writeToFile
+             * - this will be used to write or create the build file
+             * - by default FileWriter is used
+             */
+            throw new Exception("[Error] not implemented yet");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
