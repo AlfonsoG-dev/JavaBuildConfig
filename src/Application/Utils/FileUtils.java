@@ -10,6 +10,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileUtils {
@@ -36,26 +37,20 @@ public class FileUtils {
         return new File(filePath).toPath().normalize().toString();
     }
 
-    /**
-     * return the list of files from the given path
-     */
-    public List<File> getFilesFromPath(String filePath) {
-        List<File> names = new ArrayList<>();
+    public boolean searchForFileInRoot(String filePath) {
+        boolean exists = false;
+        // root
+        File r = null;
         try {
-            File miFile = new File(filePath);
-            if(miFile.exists() && miFile.isFile()) {
-                names.add(miFile);
-            } else if(miFile.listFiles() != null) {
-                names.addAll(
-                        getDirectoryFiles(
-                            Files.newDirectoryStream(miFile.toPath())
-                        )
-                );
+            r = new File(rootFilePath);
+            List<File> files = Arrays.asList(r.listFiles());
+            if(files.contains(new File(filePath))) {
+                exists = true;
             }
-        } catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
-        return names;
+        return exists;
     }
 
     /**
