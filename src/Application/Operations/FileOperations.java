@@ -3,7 +3,7 @@ package Application.Operations;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +17,8 @@ public class FileOperations {
         this.rootFilePath = rootFilePath;
         fUtils = new FileUtils(rootFilePath);
     }
-    public List<String> getConfigValues() {
-        List<String> config = null;
+    public HashMap<String, String> getConfigValues() {
+        HashMap <String, String> projectConfig = new HashMap<>();
         try {
             String configPath = "./config.txt";
             boolean isConfigPresent = fUtils.searchForFileInRoot(configPath);
@@ -32,11 +32,22 @@ public class FileOperations {
                 System.out.println(String.format("[Info] empty file '%s'", configPath));
                 return null;
             }
-            config = Arrays.asList(fileLines.split("\n"));
+            String[] configSentences = fileLines.split("\n");
+            for(int i=0; i<configSentences.length; ++i) {
+                String[] sentences = configSentences[i].split(":");
+                String keys = sentences[0].trim();
+                String values = "";
+                if(sentences.length > 1) {
+                    values = sentences[1].trim();
+                }
+                if(!keys.equals("null")) {
+                    projectConfig.put(keys, values);
+                }
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return config;
+        return projectConfig;
     }
 
     /**
