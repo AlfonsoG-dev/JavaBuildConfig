@@ -33,4 +33,13 @@ public class CommandUtils {
         }
         return c;
     }
+    public String getCreateJarCommand(String classFiles, String libFiles, String mainClass) {
+        String c = "";
+        /**
+         * TODO: implement getCreateJarCommand
+         * - Logic
+         * - add manifesto validation
+         */
+        return c;
+    }
 }
