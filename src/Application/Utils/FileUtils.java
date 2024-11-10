@@ -123,7 +123,7 @@ public class FileUtils {
             }
             br = new BufferedReader(new FileReader(f));
             while(br.ready()) {
-                b += br.readLine();
+                b += br.readLine() + "\n";
             }
         } catch(Exception e) {
             e.printStackTrace();
