@@ -9,7 +9,7 @@ git clone https://github.com/AlfonsoG-dev/javaBuild2.0
 ```
 2. Create the configuration file
 ```shell
-Created-By: Author name
+Created-By: Author-Name
 Class-Path: ./bin/
 Libraries: ./lib/dependency/myJar.jar;./lib/dependency2/myJar2.jar
 Main-Class: App

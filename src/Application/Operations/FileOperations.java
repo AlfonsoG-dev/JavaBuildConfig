@@ -3,6 +3,7 @@ package Application.Operations;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,27 @@ public class FileOperations {
     public FileOperations(String rootFilePath) {
         this.rootFilePath = rootFilePath;
         fUtils = new FileUtils(rootFilePath);
+    }
+    public List<String> getConfigValues() {
+        List<String> config = null;
+        try {
+            String configPath = "./config.txt";
+            boolean isConfigPresent = fUtils.searchForFileInRoot(configPath);
+            if(!isConfigPresent) {
+                // TODO: create the config with default values
+                System.out.println(String.format("[Error] archive '%s' doesn't exists", configPath));
+                return null;
+            }
+            String fileLines = fUtils.getFileLines(configPath);
+            if(fileLines == null) {
+                System.out.println(String.format("[Info] empty file '%s'", configPath));
+                return null;
+            }
+            config = Arrays.asList(fileLines.split("\n"));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return config;
     }
 
     /**
