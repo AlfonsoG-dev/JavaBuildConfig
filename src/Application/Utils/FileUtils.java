@@ -1,6 +1,8 @@
 package Application.Utils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -106,5 +108,39 @@ public class FileUtils {
             err.printStackTrace();
         }
         return names;
+    }
+
+    public String getFileLines(String file) {
+        String b = "";
+        BufferedReader br = null;
+        File f = null;
+        try {
+            f = new File(file);
+            if(f.isDirectory()) {
+                System.err.println("[Error] only files here");
+                return null;
+            }
+            if(!f.exists()) {
+                System.err.println(
+                        String.format("[Error] archive '%s' doesn't exists", file)
+                );
+                return null;
+            }
+            br = new BufferedReader(new FileReader(f));
+            while(br.ready()) {
+                b += br.readLine();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(br != null) {
+                try {
+                    br.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return b;
     }
 }
