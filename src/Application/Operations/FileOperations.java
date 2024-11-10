@@ -69,7 +69,7 @@ public class FileOperations {
                     }
                 }
                 fUtils.getDirectoriesNames(source)
-                    .parallelStream()
+                    .stream()
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
                         int countFiles = fUtils.countFilesInDirectory(new File(e));
@@ -86,7 +86,7 @@ public class FileOperations {
             e.printStackTrace();
         }
         b += names
-            .parallelStream()
+            .stream()
             .collect(Collectors.joining());
         return b;
     }
@@ -120,6 +120,10 @@ public class FileOperations {
         } catch(Exception e) {
             e.printStackTrace();
         }
+        b+=libFiles
+            .stream()
+            .map(e -> e + ";")
+            .collect(Collectors.joining());
         return b;
     }
     public void createConfigFile(String author, String classPath, String libraries, String mainClass) {
