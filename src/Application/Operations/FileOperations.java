@@ -1,7 +1,8 @@
 package Application.Operations;
 
 import java.io.File;
-
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +56,7 @@ public class FileOperations {
         List<String> names = new ArrayList<>();
         source = fUtils.getCleanPath(source);
         try {
-            File srcFile = new File(rootFilePath + File.separator + source);
+            File srcFile = new File(rootFilePath + source);
             if(srcFile.listFiles() != null) {
                 for(File f: srcFile.listFiles()) {
                     if(f.isFile() && f.getName().contains(".java")) {
@@ -87,6 +88,38 @@ public class FileOperations {
         b += names
             .parallelStream()
             .collect(Collectors.joining());
+        return b;
+    }
+    public String getProjectLibFiles() { 
+        String b = "";
+        List<String> libFiles = new ArrayList<>();
+        File sf = null;
+        try {
+            sf = new File(rootFilePath + "lib");
+            if(sf.listFiles() != null) {
+                Files.newDirectoryStream(sf.toPath())
+                    .forEach(p -> {
+                        File lf = p.toFile();
+                        if(lf.isFile() && lf.getName().contains(".jar")) {
+                            libFiles.add(lf.getPath());
+                        } else if(lf.isDirectory()) {
+                            try {
+                                Files.newDirectoryStream(lf.toPath())
+                                    .forEach(ap -> {
+                                        File alf = ap.toFile();
+                                        if(alf.isFile() && alf.getName().contains(".jar")) {
+                                            libFiles.add(lf.getPath());
+                                        }
+                                    });
+                            } catch(IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         return b;
     }
     public void createConfigFile(String author, String classPath, String libraries, String mainClass) {

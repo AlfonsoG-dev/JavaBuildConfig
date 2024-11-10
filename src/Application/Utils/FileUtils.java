@@ -62,7 +62,7 @@ public class FileUtils {
         for(Path p: misFiles) {
             File f = p.toFile();
             try {
-                if(f.exists() && f.isFile()) {
+                if(f.isFile()) {
                     names.add(f);
                 } else if(f.isDirectory()) {
                     names.addAll(
