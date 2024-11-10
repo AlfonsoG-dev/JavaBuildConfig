@@ -54,6 +54,7 @@ public class FileOperations {
     public String getProjectClassNames(String source) {
         String b = "";
         List<String> names = new ArrayList<>();
+        source = fUtils.getCleanPath(source);
         try {
             File srcFile = new File(rootFilePath + File.separator + source);
             if(srcFile.listFiles() != null) {
