@@ -1,11 +1,8 @@
-import java.io.File;
-import java.io.IOException;
-
-import Application.Utils.FileUtils;
+import Application.Operations.FileOperations;
 class JavaBuildConfig {
-    public static void main(String[] args) throws IOException {
-        FileUtils fu = new FileUtils(String.format(".%s", File.separator));
-        String c = fu.getProjectClassNames();
+    public static void main(String[] args) {
+        FileOperations op = new FileOperations("./");
+        String c = op.getProjectClassNames("src");
         System.out.println(c);
     }
 }
