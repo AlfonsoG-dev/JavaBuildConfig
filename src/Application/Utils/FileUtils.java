@@ -106,7 +106,7 @@ public class FileUtils {
     }
 
     public String getFileLines(String file) {
-        String b = "";
+        String b = null;
         BufferedReader br = null;
         File f = null;
         try {
