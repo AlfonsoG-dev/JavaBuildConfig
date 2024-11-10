@@ -104,38 +104,37 @@ public class FileUtils {
         }
         return names;
     }
-
-    public String getFileLines(String file) {
-        String b = null;
-        BufferedReader br = null;
-        File f = null;
+    public String getCleanTextFromFile(String filePath) {
+        StringBuffer build = new StringBuffer();
+        FileReader miReader = null;
+        BufferedReader miBufferReader = null;
         try {
-            f = new File(file);
-            if(f.isDirectory()) {
-                System.err.println("[Error] only files here");
-                return null;
+            miReader = new FileReader(filePath);
+            miBufferReader = new BufferedReader(miReader);
+            while(miBufferReader.ready()) {
+                build.append(miBufferReader.readLine());
+                build.append("\n");
             }
-            if(!f.exists()) {
-                System.err.println(
-                        String.format("[Error] archive '%s' doesn't exists", file)
-                );
-                return null;
-            }
-            br = new BufferedReader(new FileReader(f));
-            while(br.ready()) {
-                b += br.readLine() + "\n";
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e);
         } finally {
-            if(br != null) {
+            if(miReader != null) {
                 try {
-                    br.close();
+                    miReader.close();
                 } catch(Exception e) {
-                    e.printStackTrace();
+                    System.err.println(e);
+                }
+            }
+            if(miBufferReader != null) {
+                try {
+                    miBufferReader.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                } finally {
+                    miBufferReader = null;
                 }
             }
         }
-        return b;
+        return build.toString();
     }
 }
