@@ -13,6 +13,11 @@ class JavaBuildConfig {
                 case "--jar":
                     System.out.println("[cmd] " + cp.createJar());
                     break;
+                case "--build":
+                    System.out.println("[cmd] " + cp.compile());
+                    System.out.println("[cmd] " + cp.createJar());
+                    System.out.println("[cmd] build complete");
+                    break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
                     break;

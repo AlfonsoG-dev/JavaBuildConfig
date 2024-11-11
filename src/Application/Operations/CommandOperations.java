@@ -36,7 +36,6 @@ public class CommandOperations {
                 configValues.get("Class-Path"),
                 configValues.get("Libraries"),
                 configValues.get("Main-Class")
-
         );
         return cj;
     }
