@@ -144,11 +144,13 @@ public class FileOperations {
         }
         return b;
     }
-    public void createConfigFile(String author, String classPath, String libraries, String mainClass) {
+    public void createConfigFile(String author, String sourcePath,String classPath, String libraries,
+            String mainClass) {
         try {
             String sencentes = String.format(
                     "Created-by: %s\nClass-Path: %s\nLibraries: %s\nMain-Class: %s",
                     author,
+                    sourcePath,
                     classPath,
                     libraries,
                     mainClass
