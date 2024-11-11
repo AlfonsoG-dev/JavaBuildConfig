@@ -15,8 +15,8 @@ public class CommandUtils {
         b += " " + javaFiles;
         return b;
     }
-    private String classRunCommand(String classFiles, String libFiles, String mainClass) {
-        return "java -cp '" + classFiles + ";" + libFiles + "' '" + mainClass + "'";
+    private String classRunCommand(String classPath, String libFiles, String mainClass) {
+        return "java -cp '" + classPath + ";" + libFiles + "' '" + mainClass + "'";
     }
     public String getRunCommand(String classFiles, String libFiles, String mainClass) {
         String c = "";
@@ -33,13 +33,11 @@ public class CommandUtils {
         }
         return c;
     }
-    public String getCreateJarCommand(String classFiles, String libFiles, String mainClass) {
-        String c = "";
-        /**
-         * TODO: implement getCreateJarCommand
-         * - Logic
-         * - add manifesto validation
-         */
+    public String getCreateJarCommand(String classPath, String libFiles, String mainClass) {
+        String c = "jar -cfm " + mainClass + ".jar" + " Manifesto.txt -C " + classPath + " .";
+        if(libFiles != "") {
+            c += " -C " + libFiles + " .";
+        }
         return c;
     }
 }

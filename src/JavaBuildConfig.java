@@ -10,9 +10,14 @@ class JavaBuildConfig {
                 case "--run":
                     System.out.println("[cmd] " + cp.run());
                     break;
+                case "--jar":
+                    System.out.println("[cmd] " + cp.createJar());
+                    break;
+                default:
+                    System.out.println("\n[Info] use --h or --help to show command options");
+                    break;
             }
         }
-        System.out.println("\n[Info] use --h or --help to show command options");
         if(args.length > 0 && (args[0].equals("--h") ||args[0].equals("--help"))) {
             messages();
         }
@@ -20,5 +25,6 @@ class JavaBuildConfig {
     private static void messages() {
         System.out.println("[Info] use --compile to compile the project");
         System.out.println("[Info] use --run to execute the project");
+        System.out.println("[Info] use --jar to create the project jar compress file");
     }
 }

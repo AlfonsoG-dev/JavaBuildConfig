@@ -31,4 +31,13 @@ public class CommandOperations {
         );
         return r;
     }
+    public String createJar() {
+        String cj = cUtils.getCreateJarCommand(
+                configValues.get("Class-Path"),
+                configValues.get("Libraries"),
+                configValues.get("Main-Class")
+
+        );
+        return cj;
+    }
 }
