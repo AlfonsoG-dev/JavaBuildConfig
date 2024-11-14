@@ -1,8 +1,8 @@
 package Application.Operations;
 
-import Application.Utils.CommandUtils;
-
 import java.util.HashMap;
+
+import Application.Utils.CommandUtils;
 
 public class CommandOperations {
     private CommandUtils cUtils;
