@@ -1,21 +1,23 @@
 import Application.Operations.CommandOperations;
+import Application.Execution;
 class JavaBuildConfig {
     public static void main(String[] args) {
         CommandOperations cp = new CommandOperations("./");
+        Execution ex = new Execution("./");
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
-                    System.out.println("[cmd] " + cp.compile());
+                    ex.executeCommand(cp.compile());
                     break;
                 case "--run":
-                    System.out.println("[cmd] " + cp.run());
+                    ex.executeCommand(cp.run());
                     break;
                 case "--jar":
-                    System.out.println("[cmd] " + cp.createJar());
+                    ex.executeCommand(cp.createJar());
                     break;
                 case "--build":
-                    System.out.println("[cmd] " + cp.compile());
-                    System.out.println("[cmd] " + cp.createJar());
+                    ex.executeCommand(cp.compile());
+                    ex.executeCommand(cp.createJar());
                     System.out.println("[cmd] build complete");
                     break;
                 default:
