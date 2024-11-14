@@ -15,16 +15,14 @@ public class CommandUtils {
         b += " " + javaFiles;
         return b;
     }
-    private String classRunCommand(String classPath, String libFiles, String mainClass) {
-        return "java -cp '" + classPath + ";" + libFiles + "' '" + mainClass + "'";
-    }
     public String getRunCommand(String classFiles, String libFiles, String mainClass) {
+        // TODO: add args that can include cli options to the run command
         String c = "";
         File f = null;
         try {
             f = new File(rootPath + mainClass + ".jar");
             if(!f.exists()) {
-                c = classRunCommand(classFiles, libFiles, mainClass);
+                c = "java -cp '" + classFiles + ";" + libFiles + "' '" + mainClass + "'";
             } else {
                 c = "java -jar " + mainClass + ".jar ";
             }
