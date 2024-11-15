@@ -155,8 +155,34 @@ public class FileOperations {
                     libraries,
                     mainClass
             );
-            fUtils.writeToFile(sencentes);
+            fUtils.writeToFile("config.txt", sencentes);
         } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void createBuildScript(String classPath, String sourcePath, String libFiles, String mainClass) {
+        try {
+            // TODO: for now only for windows
+            String
+                classes = "$classes=\"" + this.getProjectClassNames(sourcePath) + "\"\n",
+                libs = "$libs=\"" + libFiles + "\"\n",
+                compile = "$compile=\"javac -d " + classPath,
+                run = "$run=\"java -cp '" + classPath + ";",
+                invoke = "$invoke=$compile + \" && \" + $run\n",
+                b = "Invoke-Expression $invoke";
+            if(libFiles != "") {
+                compile += " -cp '$libs' $classes\"\n";
+                run += "$libs' '" + mainClass + "'\"\n";
+            } else {
+                compile += " $classes\"\n";
+                run += "' '" + mainClass + "'\"\n";
+            }
+            fUtils.writeToFile(
+                    "build.ps1",
+                    classes.concat(libs).concat(compile).concat(run).concat(invoke).concat(b)
+            );
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
     }

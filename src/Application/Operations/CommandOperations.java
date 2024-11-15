@@ -39,4 +39,12 @@ public class CommandOperations {
         );
         return cj;
     }
+    public void createBuildScript() {
+        fOperations.createBuildScript(
+                configValues.get("Class-Path"),
+                configValues.get("Source-Path"),
+                configValues.get("Libraries"),
+                configValues.get("Main-Class")
+        );
+    }
 }

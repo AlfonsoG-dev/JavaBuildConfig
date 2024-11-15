@@ -20,6 +20,10 @@ class JavaBuildConfig {
                     ex.executeCommand(cp.createJar());
                     System.out.println("[cmd] build complete");
                     break;
+                case "-cb":
+                    System.out.println("[Info] creating build script in root");
+                    cp.createBuildScript();
+                    break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
                     break;
