@@ -138,16 +138,16 @@ public class FileUtils {
         }
         return build.toString();
     }
-    public void writeToFile(String sentences) {
+    public void writeToFile(String file, String sentences) {
         FileWriter fw = null;
         File f = null;
         try {
-            f = new File(rootFilePath + "config.txt");
+            f = new File(rootFilePath + file);
             if(f.exists()) {
                 System.out.println("[Error] config already exists");
             } else {
                 System.out.println("[Info] config doesn't exists and it will be created");
-                fw = new FileWriter(rootFilePath + "config.txt");
+                fw = new FileWriter(rootFilePath + file);
                 fw.write(sentences);
             }
         } catch(Exception e) {
