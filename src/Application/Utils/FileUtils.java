@@ -144,9 +144,11 @@ public class FileUtils {
         try {
             f = new File(rootFilePath + file);
             if(f.exists()) {
-                System.out.println("[Error] config already exists");
+                System.out.println(String.format("[Error] file '%s' already exists", file));
             } else {
-                System.out.println("[Info] config doesn't exists and it will be created");
+                System.out.println(
+                        String.format("[Info] file '%s' doesn't exists and it will be created", file)
+                );
                 fw = new FileWriter(rootFilePath + file);
                 fw.write(sentences);
             }

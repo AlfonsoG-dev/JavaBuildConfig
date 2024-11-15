@@ -24,6 +24,9 @@ class JavaBuildConfig {
                     System.out.println("[Info] creating build script in root");
                     cp.createBuildScript();
                     break;
+                case "-cc":
+                    System.out.println("[Info] not implemented yet");
+                    break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
                     break;
@@ -37,5 +40,8 @@ class JavaBuildConfig {
         System.out.println("[Info] use --compile to compile the project");
         System.out.println("[Info] use --run to execute the project");
         System.out.println("[Info] use --jar to create the project jar compress file");
+        System.out.println("[Info] use -cb to create the build script");
+        System.out.println("[Info] use -cc to create the config file");
+        System.out.println("\t \bNot implemented yet");
     }
 }
