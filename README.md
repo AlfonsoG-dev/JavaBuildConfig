@@ -4,11 +4,11 @@
 
 # Installation
 1. Clone the repository
-```shell
+```cmd
 git clone https://github.com/AlfonsoG-dev/JavaBuildConfig
 ```
 2. Create the configuration file
-```shell
+```txt
 Created-By: Author-Name
 Source-Path: ./src/
 Class-Path: ./bin/
@@ -17,7 +17,7 @@ Main-Class: App
 ```
 3. Execute the build script
 >- for now only works on windows
-```shell
+```cmd
 pwsh build.ps1
 ```
 
