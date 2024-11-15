@@ -5,7 +5,7 @@
 # Installation
 1. Clone the repository
 ```shell
-git clone https://github.com/AlfonsoG-dev/javaBuild2.0
+git clone https://github.com/AlfonsoG-dev/JavaBuildConfig
 ```
 2. Create the configuration file
 ```shell
@@ -14,6 +14,11 @@ Source-Path: ./src/
 Class-Path: ./bin/
 Libraries: ./lib/dependency/myJar.jar;./lib/dependency2/myJar2.jar
 Main-Class: App
+```
+3. Execute the build script
+>- for now only works on windows
+```shell
+pwsh build.ps1
 ```
 
 # Disclaimer
