@@ -58,4 +58,11 @@ public class CommandOperations {
         };
         fOperations.createProjectStructure(files);
     }
+    public void createManifesto(boolean includeLibs) {
+        fOperations.createManifesto(
+                configValues.get("Created-By"),
+                configValues.get("Main-Class"),
+                includeLibs
+        );
+    }
 }

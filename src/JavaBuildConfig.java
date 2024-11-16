@@ -30,6 +30,10 @@ class JavaBuildConfig {
                     System.out.println("[Info] creating project structure...");
                     cp.createProjectStructure();
                     break;
+                case "-cm":
+                    System.out.println("[Info] creating manifesto...");
+                    cp.createManifesto(true);
+                    break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
                     break;
