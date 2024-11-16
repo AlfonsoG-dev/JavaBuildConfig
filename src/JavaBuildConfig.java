@@ -11,8 +11,13 @@ class JavaBuildConfig {
                     ex.executeCommand(cp.compile());
                     break;
                 case "--run":
+                    System.out.println(args.length);
                     System.out.println("[Info] running...");
-                    ex.executeCommand(cp.run());
+                    if((i+1) < args.length) {
+                        ex.executeCommand(cp.run(args[i+1]));
+                    } else {
+                        ex.executeCommand(cp.run(""));
+                    }
                     break;
                 case "--jar":
                     ex.executeCommand(cp.createJar());

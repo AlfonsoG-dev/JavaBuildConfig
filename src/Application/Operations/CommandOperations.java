@@ -25,10 +25,11 @@ public class CommandOperations {
         );
         return c;
     }
-    public String run() {
+    public String run(String runClassPath) {
         String r = cUtils.getRunCommand(
                 configValues.get("Class-Path"),
                 configValues.get("Libraries"),
+                runClassPath,
                 configValues.get("Main-Class")
         );
         return r;
