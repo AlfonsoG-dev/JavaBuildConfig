@@ -49,5 +49,6 @@ class JavaBuildConfig {
         System.out.println("[Info] use --jar to create the project jar compress file");
         System.out.println("[Info] use -cb to create the build script");
         System.out.println("[Info] use -cs to create the project structure");
+        System.out.println("[Info] use -cm to create the Manifesto file");
     }
 }
