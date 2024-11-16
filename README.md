@@ -18,7 +18,7 @@ Libraries: ./lib/dependency/myJar.jar;./lib/dependency2/myJar2.jar
 Main-Class: App
 ```
 3. Execute the build script
->- for now only works on windows
+>- For now only works on windows
 ```cmd
 pwsh build.ps1
 ```
@@ -26,30 +26,32 @@ pwsh build.ps1
 # Instructions
 > Using the CLI commands you can:
 
-1. compile
+1. Compile
 ```shell
 javabuild --compile
 ```
-2. run
+2. Run
 ```shell
 javabuild --run
 ```
-> for now only executes the main class for future versions it have access to execution of another commands
-3. create **JAR** file
+> For now only executes the main class
+> For future versions it have access to another commands
+3. Create **JAR** file
 ```shell
 javabuild --jar
 ```
-4. build project
+> Which creates the project **JAR** file
+4. Build project
 ```shell
 javabuild --build
 ```
-> Which executes **compile** & create **JAR** commands
-5. create build script
+> Which executes **compile** the project & creates the **JAR** file.
+5. Create build script
 ```shell
 javabuild -cb
 ```
-> for now only powershell **ps1** script are allow.
-6. create the project folder structure
+> For now only powershell **ps1** scripts are allowed.
+6. Create the project folder structure
 ```shell
 javabuild -cs
 ```
@@ -63,7 +65,6 @@ javabuild -cs
 javabuild -cm
 ```
 > The configuration file must be created before.
-
 7. Help
 ```shell
 javabuild --h
