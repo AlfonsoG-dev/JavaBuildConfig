@@ -2,8 +2,11 @@ package Application.Operations;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.nio.file.Files;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -167,6 +170,28 @@ public class FileOperations {
             );
         }
         catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createProjectStructure(String[] projectDirectories) {
+        File lf = new File(rootFilePath);
+        try {
+            if(lf.listFiles() != null) {
+                System.out.println("[Error] the root must be empty");
+            } else {
+                Arrays.asList(projectDirectories)
+                    .parallelStream()
+                    .map(e -> new File(e))
+                    .forEach(f -> {
+                        if(f.mkdir()) {
+                            System.out.println(
+                                    String.format("[Info] Created '%s'", f.getPath())
+                            );
+                        }
+                    });
+            }
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }

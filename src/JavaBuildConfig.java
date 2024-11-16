@@ -7,9 +7,11 @@ class JavaBuildConfig {
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
+                    System.out.println("[Info] compiling...");
                     ex.executeCommand(cp.compile());
                     break;
                 case "--run":
+                    System.out.println("[Info] running...");
                     ex.executeCommand(cp.run());
                     break;
                 case "--jar":
@@ -18,11 +20,15 @@ class JavaBuildConfig {
                 case "--build":
                     ex.executeCommand(cp.compile());
                     ex.executeCommand(cp.createJar());
-                    System.out.println("[cmd] build complete");
+                    System.out.println("[cmd] building...");
                     break;
                 case "-cb":
-                    System.out.println("[Info] creating build script in root");
+                    System.out.println("[Info] creating build script in root...");
                     cp.createBuildScript();
+                    break;
+                case "-cs":
+                    System.out.println("[Info] creating project structure...");
+                    cp.createProjectStructure();
                     break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
@@ -38,6 +44,6 @@ class JavaBuildConfig {
         System.out.println("[Info] use --run to execute the project");
         System.out.println("[Info] use --jar to create the project jar compress file");
         System.out.println("[Info] use -cb to create the build script");
-        System.out.println("\t \bNot implemented yet");
+        System.out.println("[Info] use -cs to create the project structure");
     }
 }

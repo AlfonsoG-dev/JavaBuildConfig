@@ -1,5 +1,7 @@
 package Application.Operations;
 
+import java.io.File;
+
 import java.util.HashMap;
 
 import Application.Utils.CommandUtils;
@@ -46,5 +48,14 @@ public class CommandOperations {
                 configValues.get("Libraries"),
                 configValues.get("Main-Class")
         );
+    }
+    public void createProjectStructure() {
+        String[] files = {
+            "." + File.separator + "bin" + File.separator,
+            "." + File.separator + "docs" + File.separator,
+            "." + File.separator + "lib" + File.separator,
+            "." + File.separator + "src" + File.separator,
+        };
+        fOperations.createProjectStructure(files);
     }
 }
