@@ -2,6 +2,9 @@
 - Another java build tool for simple projects.
 - In this occasion i want to use a configuration file.
 
+# References
+- [java tools and commands](https://docs.oracle.com/javase/10/tools/tools-and-command-reference.htm)
+
 ----
 
 # Installation
@@ -71,6 +74,10 @@ javabuild --h
 or 
 javabuild --help
 ```
+
+# TODO
+- [ ] add more options to the compile: 1) -XLint:all, 2) -g, 3) -Werror, 4) --target java-version(17)
+
 ---
 
 # Disclaimer
