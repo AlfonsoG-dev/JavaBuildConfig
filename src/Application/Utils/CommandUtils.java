@@ -7,8 +7,8 @@ public class CommandUtils {
     public CommandUtils(String rootPath) {
         this.rootPath = rootPath;
     }
-    public String getCompileCommand(String javaFiles, String classFiles, String libFiles) {
-        String b = "javac -d " + classFiles;
+    public String getCompileCommand(String flags, String javaFiles, String classFiles, String libFiles) {
+        String b = "javac " + flags + " -d " + classFiles;
         if(libFiles != "") {
             b += " -cp '" + libFiles + "'";
         }
