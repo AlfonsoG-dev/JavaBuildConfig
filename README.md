@@ -76,7 +76,7 @@ javabuild --help
 ```
 
 # TODO
-- [ ] add more options to the compile: 1) -XLint:all, 2) -g, 3) -Werror, 4) --target java-version(17)
+- [x] add more options to the compile: 1) -Xlint:all, 2) -g, 3) -Werror, 4) --target java-version(17)
 
 ---
 
