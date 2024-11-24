@@ -7,10 +7,12 @@ import java.util.HashMap;
 import Application.Utils.CommandUtils;
 
 public class CommandOperations {
+    private String rootPath;
     private CommandUtils cUtils;
     private FileOperations fOperations;
     private HashMap<String, String> configValues;
     public CommandOperations(String rootPath) {
+        this.rootPath = rootPath;
         cUtils = new CommandUtils(rootPath);
         fOperations = new FileOperations(rootPath);
         configValues = fOperations.getConfigValues();
@@ -19,6 +21,7 @@ public class CommandOperations {
     public String compile() {
         String sourceFiles = fOperations.getProjectClassNames(configValues.get("Source-Path"));
         String c = cUtils.getCompileCommand(
+                configValues.get("Compile-Flags"),
                 sourceFiles,
                 configValues.get("Class-Path"),
                 configValues.get("Libraries")
@@ -65,5 +68,17 @@ public class CommandOperations {
                 configValues.get("Main-Class"),
                 includeLibs
         );
+    }
+    public void createConfigFile() {
+        String m = fOperations.getMainClass();
+        if(m == null) {
+            try {
+                File f = new File(rootPath);
+                m = new File(f.getCanonicalPath()).getName();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        fOperations.createConfigFile("", "./src/", "/bin/", m);
     }
 }

@@ -37,7 +37,8 @@ public class FileOperations {
             }
             String[] configSentences = fileLines.split("\n");
             for(int i=0; i<configSentences.length; ++i) {
-                String[] sentences = configSentences[i].split(":");
+                // INFO: only get the first split when the sentences have :
+                String[] sentences = configSentences[i].split(":", 2);
                 String keys = sentences[0].trim();
                 String values = "";
                 if(sentences.length > 1) {
@@ -170,6 +171,23 @@ public class FileOperations {
             );
         }
         catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void createConfigFile(String author, String sourcePath, String classPath, String mainClass) {
+        try {
+            String
+                libFiles = this.getProjectLibFiles(),
+                b = "";
+
+            b = "Created-By: " + author + "\n" +
+                "Source-Path: " + sourcePath + "\n" +
+                "Class-Path: " + classPath + "\n" +
+                "Libraries: " + libFiles + "\n" +
+                "Main-Class: " + mainClass + "\n" +
+                "Compile-Flags: ";
+            fUtils.writeToFile("config.txt", b);
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
