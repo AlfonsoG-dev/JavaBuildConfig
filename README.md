@@ -37,8 +37,10 @@ javabuild --compile
 ```shell
 javabuild --run
 ```
-> For now only executes the main class
-> For future versions it have access to another commands
+> It can execute other **.java** files
+```shell
+javabuild --run ./src/Testing/Test.java
+```
 3. Create **JAR** file
 ```shell
 javabuild --jar
