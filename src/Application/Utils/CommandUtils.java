@@ -35,7 +35,17 @@ public class CommandUtils {
     public String getCreateJarCommand(String classPath, String libFiles, String mainClass) {
         String c = "jar -cfm " + mainClass + ".jar" + " Manifesto.txt -C " + classPath + " .";
         if(libFiles != "") {
-            c += " -C " + libFiles + " .";
+            System.out.println("[Error] Adding jar dependency not implemented");
+            System.out.println("\t[Info] Lib jar dependency will be ignored");
+            /**
+             * TODO: implement adding lib jar dependency.
+             * 1. extract or include the jar files of the dependency in the project jar build.
+             * 2. make a temp file for that.
+             * 3. sometimes the user may don't want to include the dependency so don't add it.
+             * 4. add some flags to that process in the configuration file like:
+             *    Jar-Flags: --i // to include the jar dependency.
+             *    Jar-Flags: --n // to not include the dependency.
+             */
         }
         return c;
     }
