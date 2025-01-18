@@ -16,13 +16,14 @@ public class CommandUtils {
         return b;
     }
     public String getRunCommand(String classFiles, String libFiles, String mainClass, String runClassPath, String flag) {
-        // TODO: add args that can include cli options to the run command
         String c = "";
         File f = null;
         try {
             if(runClassPath.isEmpty()) {
                 System.out.println("[Error] invalid classPath, now using config values");
                 c += "java -cp '" + classFiles + ";" + libFiles + "' '" + mainClass + "' " + flag;
+            } else if(runClassPath.startsWith("--")) {
+                c += "java -cp '" + classFiles + ";" + libFiles + "' " + mainClass + " " + runClassPath;
             } else {
                 c += "java -cp '" + classFiles + ";" + libFiles + "' " + runClassPath + " " + flag;
             }
