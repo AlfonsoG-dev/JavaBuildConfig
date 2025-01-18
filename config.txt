@@ -3,4 +3,4 @@ Source-Path: .\src\
 Class-Path: .\bin\
 Libraries: 
 Main-Class: JavaBuildConfig
-Compile-Flags: -Werror -Xlint:all
+Compile-Flags: -Werror -Xlint:all --release 17
