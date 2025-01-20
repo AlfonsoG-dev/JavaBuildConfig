@@ -1,11 +1,8 @@
 package Application.Utils;
 
-import java.io.File;
 
 public class CommandUtils {
-    private String rootPath;
-    public CommandUtils(String rootPath) {
-        this.rootPath = rootPath;
+    public CommandUtils() {
     }
     public String getCompileCommand(String flags, String javaFiles, String classFiles, String libFiles) {
         String b = "javac " + flags + " -d " + classFiles;
@@ -17,7 +14,6 @@ public class CommandUtils {
     }
     public String getRunCommand(String classFiles, String libFiles, String mainClass, String runClassPath, String flag) {
         String c = "";
-        File f = null;
         try {
             if(runClassPath.isEmpty()) {
                 System.out.println("[Error] invalid classPath, now using config values");
