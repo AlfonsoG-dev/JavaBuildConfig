@@ -67,6 +67,7 @@ public class CommandOperations {
         fOperations.createManifesto(
                 configValues.get("Created-By"),
                 configValues.get("Main-Class"),
+                configValues.get("Libraries")
                 includeLibs
         );
     }

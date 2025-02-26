@@ -20,6 +20,8 @@ Class-Path: ./bin/
 Libraries: ./lib/dependency/myJar.jar;./lib/dependency2/myJar2.jar
 Main-Class: App
 ```
+>- Remember that the *Libraries* should be sepparated by **;**
+
 3. Execute the build script
 >- For now only works on windows
 ```cmd

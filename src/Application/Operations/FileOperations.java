@@ -191,9 +191,8 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
-    public void createManifesto(String author, String mainClass, boolean includeLibs) {
+    public void createManifesto(String author, String mainClass, String libFiles, boolean includeLibs) {
         try {
-            String libFiles = this.getProjectLibFiles();
             String sentence = "Manifest-Version: 1.0\nCreated-By: " + author + "\nMain-Class: " + mainClass + "\n";
             if(includeLibs && !libFiles.equals("")) {
                 sentence += "Class-Path: " + libFiles;
