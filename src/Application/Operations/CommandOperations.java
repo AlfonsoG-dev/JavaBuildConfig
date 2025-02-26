@@ -13,7 +13,7 @@ public class CommandOperations {
     private HashMap<String, String> configValues;
     public CommandOperations(String rootPath) {
         this.rootPath = rootPath;
-        cUtils = new CommandUtils(rootPath);
+        cUtils = new CommandUtils();
         fOperations = new FileOperations(rootPath);
         configValues = fOperations.getConfigValues();
     }
