@@ -67,13 +67,12 @@ public class CommandOperations {
         fOperations.createManifesto(
                 configValues.get("Created-By"),
                 configValues.get("Main-Class"),
-                configValues.get("Libraries")
+                configValues.get("Libraries"),
                 includeLibs
         );
     }
     public void createConfigFile() {
         String m = fOperations.getMainClass();
-        File f = new File(rootPath + File.separator + "config.txt");
         if(m == null) {
             try {
                 File f = new File(rootPath);
@@ -82,16 +81,6 @@ public class CommandOperations {
                 e.printStackTrace();
             }
         }
-        if(!f.exists()) {
-            fOperations.createConfigFile("", "./src/", "/bin/", m, "-Werror -Xlint:all");
-        } else {
-            fOperations.createConfigFile(
-                    configValues.get("Created-By"),
-                    configValues.get("Source-Path"),
-                    configValues.get("Class-Path"),
-                    configValues.get("Main-Class"),
-                    configValues.get("Compile-Flags")
-            );
-        }
+        fOperations.createConfigFile("", "./src/", "/bin/", m, "-Werror -Xlint:all");
     }
 }
