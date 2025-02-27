@@ -38,6 +38,10 @@ class JavaBuildConfig {
                     System.out.println("[Info] creating manifesto...");
                     cp.createManifesto(true);
                     break;
+                case "-cc":
+                    System.out.println("[Info] creating configuration file...");
+                    cp.createConfigFile();
+                    break;
                 default:
                     System.out.println("\n[Info] use --h or --help to show command options");
                     break;

@@ -174,7 +174,8 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
-    public void createConfigFile(String author, String sourcePath, String classPath, String mainClass) {
+    public void createConfigFile(String author, String sourcePath, String classPath, String mainClass,
+            String compileFlags) {
         try {
             String
                 libFiles = this.getProjectLibFiles(),
@@ -185,7 +186,7 @@ public class FileOperations {
                 "Class-Path: " + classPath + "\n" +
                 "Libraries: " + libFiles + "\n" +
                 "Main-Class: " + mainClass + "\n" +
-                "Compile-Flags: ";
+                "Compile-Flags: " + compileFlags;
             fUtils.writeToFile("config.txt", b);
         } catch(Exception e) {
             e.printStackTrace();
