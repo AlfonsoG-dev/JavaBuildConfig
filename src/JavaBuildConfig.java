@@ -21,6 +21,7 @@ class JavaBuildConfig {
                     ex.executeCommand(cp.createJar());
                     break;
                 case "--build":
+                    cp.createManifesto(true);
                     ex.executeCommand(cp.compile());
                     ex.executeCommand(cp.createJar());
                     System.out.println("[cmd] building...");
