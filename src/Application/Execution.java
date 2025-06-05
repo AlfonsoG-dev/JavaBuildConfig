@@ -21,7 +21,7 @@ public class Execution {
                 if(line == null) {
                     break;
                 }
-                System.out.println("[Info] " + line);
+                System.out.println(line);
             }
         } catch(Exception e) {
             e.printStackTrace();

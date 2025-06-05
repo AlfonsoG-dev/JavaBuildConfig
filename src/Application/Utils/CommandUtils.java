@@ -13,15 +13,15 @@ public class CommandUtils {
         return b;
     }
     public String getRunCommand(String classFiles, String libFiles, String mainClass, String runClassPath, String flag) {
-        String c = "";
+        String c = "java -cp '" + classFiles + ";" + libFiles + "'";
         try {
             if(runClassPath.isEmpty()) {
                 System.out.println("[Error] invalid classPath, now using config values");
-                c += "java -cp '" + classFiles + ";" + libFiles + "' '" + mainClass + "' " + flag;
+                c += " '" + mainClass + "' " + flag;
             } else if(runClassPath.startsWith("--")) {
-                c += "java -cp '" + classFiles + ";" + libFiles + "' " + mainClass + " " + runClassPath;
+                c += " " + mainClass + " " + runClassPath;
             } else {
-                c += "java -cp '" + classFiles + ";" + libFiles + "' " + runClassPath + " " + flag;
+                c += " " + runClassPath + " " + flag;
             }
         } catch(Exception e) {
             e.printStackTrace();
