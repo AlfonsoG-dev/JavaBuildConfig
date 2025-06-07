@@ -11,26 +11,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import Application.Utils.FileUtils;
+import Application.Utils.FileMethods;
 
 public class FileOperations {
 
     private String rootFilePath;
-    private FileUtils fUtils;
+    private FileMethods fMethods;
     public FileOperations(String rootFilePath) {
         this.rootFilePath = rootFilePath;
-        fUtils = new FileUtils(rootFilePath);
+        fMethods = new FileMethods(rootFilePath);
     }
     public HashMap<String, String> getConfigValues() {
         HashMap <String, String> projectConfig = new HashMap<>();
         try {
             String configPath = "./config.txt";
-            boolean isConfigPresent = fUtils.searchForFileInRoot(configPath);
+            boolean isConfigPresent = fMethods.searchForFileInRoot(configPath);
             if(!isConfigPresent) {
                 System.out.println(String.format("[Error] archive '%s' doesn't exists", configPath));
                 return null;
             }
-            String fileLines = fUtils.getCleanTextFromFile(configPath);
+            String fileLines = fMethods.getCleanTextFromFile(configPath);
             if(fileLines == null) {
                 System.out.println(String.format("[Info] empty file '%s'", configPath));
                 return null;
@@ -58,7 +58,7 @@ public class FileOperations {
     public String getProjectClassNames(String source) {
         String b = "";
         List<String> names = new ArrayList<>();
-        source = fUtils.getCleanPath(source);
+        source = fMethods.getCleanPath(source);
         try {
             File srcFile = new File(rootFilePath + source);
             if(srcFile.listFiles() != null) {
@@ -72,11 +72,11 @@ public class FileOperations {
                         break;
                     }
                 }
-                fUtils.getDirectoriesNames(source)
+                fMethods.getDirectoriesNames(source)
                     .stream()
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        int countFiles = fUtils.countFilesInDirectory(new File(e));
+                        int countFiles = fMethods.countFilesInDirectory(new File(e));
                         if(countFiles > 0) {
                             names.add(e + "*.java ");
                         }
@@ -99,7 +99,7 @@ public class FileOperations {
         List<String> libFiles = new ArrayList<>();
         File sf = null;
         try {
-            sf = new File(rootFilePath + "lib");
+            sf = new File(fMethods.resolvePath(rootFilePath, "lib"));
             if(sf.listFiles() != null) {
                 Files.newDirectoryStream(sf.toPath())
                     .forEach(p -> {
@@ -134,7 +134,7 @@ public class FileOperations {
         String b = null;
         try {
             File f = new File(new File(rootFilePath).getCanonicalPath());
-            List<File> m = fUtils.getDirectoryFiles(Files.newDirectoryStream(f.toPath()))
+            List<File> m = fMethods.getDirectoryFiles(Files.newDirectoryStream(f.toPath()))
                 .parallelStream()
                 .filter(e -> e.isFile() && e.getName().contains(".java"))
                 .toList();
@@ -165,7 +165,7 @@ public class FileOperations {
                 compile += " $classes\"\n";
                 run += "' '" + mainClass + "'\"\n";
             }
-            fUtils.writeToFile(
+            fMethods.writeToFile(
                     "build.ps1",
                     classes.concat(libs).concat(compile).concat(run).concat(invoke).concat(b)
             );
@@ -187,7 +187,7 @@ public class FileOperations {
                 "Libraries: " + libFiles + "\n" +
                 "Main-Class: " + mainClass + "\n" +
                 "Compile-Flags: " + compileFlags;
-            fUtils.writeToFile("config.txt", b);
+            fMethods.writeToFile("config.txt", b);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -198,7 +198,7 @@ public class FileOperations {
             if(includeLibs && !libFiles.equals("")) {
                 sentence += "Class-Path: " + libFiles;
             }
-            fUtils.writeToFile("Manifesto.txt", sentence);
+            fMethods.writeToFile("Manifesto.txt", sentence);
         } catch(Exception e) {
             e.printStackTrace();
         }

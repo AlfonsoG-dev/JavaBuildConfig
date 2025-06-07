@@ -2,6 +2,7 @@ package Application.Utils;
 
 
 public class CommandUtils {
+
     public CommandUtils() {
     }
     public String getCompileCommand(String flags, String javaFiles, String classFiles, String libFiles) {

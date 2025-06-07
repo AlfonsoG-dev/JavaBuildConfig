@@ -12,9 +12,7 @@ public class Execution {
     }
 
     private void CMDOutput(InputStream miCmdStream) {
-        BufferedReader miReader = null;
-        try {
-            miReader = new BufferedReader(new InputStreamReader(miCmdStream));
+        try (BufferedReader miReader = new BufferedReader(new InputStreamReader(miCmdStream))) {
             String line = "";
             while(true) {
                 line = miReader.readLine();
@@ -25,22 +23,11 @@ public class Execution {
             }
         } catch(Exception e) {
             e.printStackTrace();
-        } finally {
-            if(miReader != null) {
-                try {
-                    miReader.close();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                miReader = null;
-            }
         }
     }
 
     private void CMDOutputError(InputStream miCmdStream) {
-        BufferedReader miReader = null;
-        try {
-            miReader = new BufferedReader(new InputStreamReader(miCmdStream));
+        try (BufferedReader miReader = new BufferedReader(new InputStreamReader(miCmdStream))) {
             String line = "";
             while(true) {
                 line = miReader.readLine();
@@ -51,15 +38,6 @@ public class Execution {
             }
         } catch(Exception e) {
             e.printStackTrace();
-        } finally {
-            if(miReader != null) {
-                try {
-                    miReader.close();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                miReader = null;
-            }
         }
     }
 

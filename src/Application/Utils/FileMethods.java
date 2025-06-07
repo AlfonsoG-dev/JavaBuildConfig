@@ -7,17 +7,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.nio.file.Files;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
+import java.nio.file.DirectoryStream;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
-public class FileUtils {
+public class FileMethods {
+
     private String rootFilePath;
-    public FileUtils(String rootFilePath) {
+
+    public FileMethods(String rootFilePath) {
         this.rootFilePath = rootFilePath;
+    }
+
+    public File resolvePath(String parent, String children) {
+        return new File(parent).toPath().resolve(children).toFile();
     }
 
     public int countFilesInDirectory(File myDirectory) {
@@ -139,29 +145,10 @@ public class FileUtils {
         return build.toString();
     }
     public void writeToFile(String file, String sentences) {
-        FileWriter fw = null;
-        File f = null;
-        try {
-            f = new File(rootFilePath + file);
-            if(f.exists()) {
-                System.out.println(String.format("[Error] file '%s' already exists", file));
-            } else {
-                System.out.println(
-                        String.format("[Info] file '%s' doesn't exists and it will be created", file)
-                );
-                fw = new FileWriter(rootFilePath + file);
-                fw.write(sentences);
-            }
+        try (FileWriter w = new FileWriter(resolvePath(rootFilePath, file))) {
+            w.write(sentences);
         } catch(Exception e) {
             e.printStackTrace();
-        } finally {
-            if(fw != null) {
-                try {
-                    fw.close();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
