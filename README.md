@@ -2,7 +2,11 @@
 - Another java build tool for simple projects.
 - In this occasion i want to use a configuration file.
 
-# References
+# This repository is archive because the main goal was to try out a way to use a configuration file for the build process of a java project.
+
+# Visit [Java build](https://github.com/AlfonsoG-dev/javaBuild) to see the new version.
+
+## References
 - [java tools and commands](https://docs.oracle.com/javase/10/tools/tools-and-command-reference.htm)
 
 ----
