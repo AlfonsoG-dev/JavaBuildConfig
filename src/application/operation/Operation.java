@@ -38,6 +38,12 @@ public class Operation {
         ex.executeCommand(command);
     }
     public void createBuildScript(String fileURL) {
+        String osName = System.getProperty("os.name").toLowerCase()
+        if(osName.contains("windows")) {
+            fileURL = fileURL + ".ps1";
+        } else if(osName.contains("linux")) {
+            fileURL = fileURL + ".sh";
+        }
         String lines = scriptBuilder.getScript(targetURL, includeLib);
         fileOperation.createFile(fileURL, lines);
     }
