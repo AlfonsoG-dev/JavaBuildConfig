@@ -16,6 +16,29 @@ pwsh build.ps1
 java -jar App.jar
 ``` 
 
+# Usage
+In this build tool you have the following commands:
+1. Compile command:
+- Use `--compile` to compile the project.
+```sh
+java -jar javaBuild.jar --compile
+```
+> You can use 3 sub-commands:
+>- `--s sourcePath` to change the source path.
+>- `--t classPath` to change the target path.
+>- `--i` to include or not the lib files.
+
+2. Run Command
+- Use `--run` to execute the project.
+```sh
+java -jar javaBuild.jar --run
+```
+> You can use 4 sub-commands:
+>- `src\app.java` to change the main class to execute.
+>- `--s` to change the source path.
+>- `--t` to change the target path.
+>- `--i` to include or not the lib files.
+
 ---
 
 # Disclaimer
