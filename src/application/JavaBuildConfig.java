@@ -9,7 +9,7 @@ class JavaBuildConfig {
         FileOperation op = new FileOperation(rootURL);
         op.populateList(rootURL);
         RunModel cm = new RunModel(rootURL, op);
-        String command = cm.getCommand("bin", "", false);
+        String command = cm.getCommand("src\\test\\TestLauncher.java", "bin", "", false);
         System.out.println(command);
     }
 }
