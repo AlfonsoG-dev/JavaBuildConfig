@@ -2,6 +2,7 @@ package application.utils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +25,15 @@ public record TextUtils() {
             e.printStackTrace();
         }
         return lines;
+    }
+    public static void writeLines(String fileURL, String lines) {
+        try(FileWriter w = new FileWriter(new File(fileURL))) {
+            if(!lines.isEmpty()) {
+                w.write(lines);
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void CommandOutputError(InputStream miCmdStream) {
         try (BufferedReader miReader = new BufferedReader(new InputStreamReader(miCmdStream))) {

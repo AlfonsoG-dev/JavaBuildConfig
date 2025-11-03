@@ -28,6 +28,17 @@ public class FileUtils {
             list.addAll(Files.walk(Paths.get(pathURL), FileVisitOption.FOLLOW_LINKS).toList());
         }
     }
+    public boolean createDirectory(String pathURL) {
+        File f = new File(pathURL);
+        if(f.exists()) return true;
+        if(f.toPath().getNameCount() > 2) {
+            return f.mkdirs();
+        }
+        return f.mkdir();
+    }
+    public void createFile(String fileURL, String lines) {
+        TextUtils.writeLines(fileURL, lines);
+    }
     public int countFiles(Path directory) {
         int n = 0;
         File f = directory.toFile();
