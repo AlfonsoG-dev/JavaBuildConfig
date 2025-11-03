@@ -10,20 +10,24 @@ public class FileOperation {
     private String root;
     private FileUtils fu;
     private ExecutorUtils ex;
+    private List<Path> listFiles;
     public FileOperation(String root) {
         this.root = root;
         fu = new FileUtils(root);
         ex = new ExecutorUtils();
     }
-    public List<Path> sourceFiles(String sourceURL) {
-        List<Path> files = ex.getResult(fu.callableList(sourceURL, 0))
+    public void populateList(String sourceURL) {
+        listFiles = ex.getResult(fu.callableList(sourceURL, 0));
+    }
+    public List<Path> sourceFiles() {
+        List<Path> files = listFiles
             .stream()
             .filter(p -> p.toFile().isFile())
             .toList();
         return files;
     }
-    public List<Path> sourceDirs(String sourceURL) {
-        List<Path> dirs = ex.getResult(fu.callableList(sourceURL, 0))
+    public List<Path> sourceDirs() {
+        List<Path> dirs = listFiles
             .stream()
             .filter(p -> p.toFile().isDirectory())
             .toList();
