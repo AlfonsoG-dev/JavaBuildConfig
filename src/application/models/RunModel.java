@@ -26,6 +26,10 @@ public record RunModel(String root, FileOperation op) implements CommandModel {
             command.append(prepareLibFiles());
         }
         command.append("' ");
+        if(flags.isEmpty()) flags = "-Xmx1g ";
+
+        command.append(flags);
+
         if(mainClassName != "") command.append(mainClassName);
 
         return command.toString();
