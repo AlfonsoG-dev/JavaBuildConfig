@@ -28,6 +28,18 @@ public class FileUtils {
             list.addAll(Files.walk(Paths.get(pathURL), FileVisitOption.FOLLOW_LINKS).toList());
         }
     }
+    public int countFiles(Path directory) {
+        int n = 0;
+        File f = directory.toFile();
+        if(f.isDirectory() && f.listFiles() != null) {
+            for(File mf: f.listFiles()) {
+                if(mf.isFile()) {
+                    ++n;
+                }
+            }
+        }
+        return n;
+    }
     public List<Path> listPaths(String pathURL, int level) {
         List<Path> files = new ArrayList<>();
         try {
