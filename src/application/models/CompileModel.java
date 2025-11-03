@@ -16,18 +16,14 @@ public record CompileModel(String root, FileOperation op) {
         return Paths.get(root).resolve("lib").toString();
     }
 
-    private String prepareLibFiles() {
+    private StringBuilder prepareLibFiles() {
         StringBuilder libs = new StringBuilder();
         libs.append(op.libFiles(getLibURL())
             .stream()
             .map(Path::toString)
             .collect(Collectors.joining(";"))
         );
-        String clean = libs.toString();
-        if((clean.length()-1) < clean.length()) {
-            clean = clean.substring(0, clean.length()-1);
-        }
-        return clean;
+        return libs;
     }
     /**
      * join files path as src\directory\*.java
@@ -54,7 +50,7 @@ public record CompileModel(String root, FileOperation op) {
         }
         command.append(flags);
         command.append(" ");
-        if(includeLib) {
+        if(includeLib && !prepareLibFiles().isEmpty()) {
             command.append("-cp '");
             command.append(prepareLibFiles());
             command.append("' ");
