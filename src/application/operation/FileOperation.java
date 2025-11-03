@@ -21,6 +21,12 @@ public class FileOperation {
     public void populateList(String sourceURL) {
         listFiles = ex.getResult(fu.callableList(sourceURL, 0));
     }
+    public boolean createDirectories(String dirURL) {
+        return fu.createDirectory(dirURL);
+    }
+    public void createFile(String fileURL, String lines) {
+        fu.createFile(fileURL, lines);
+    }
     public List<Path> sourceFiles() {
         List<Path> files = listFiles
             .stream()
