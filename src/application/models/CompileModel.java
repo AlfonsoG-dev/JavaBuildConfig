@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public record CompileModel(String root, FileOperation op) implements CommandModel {
+    @Override
+    public String getRoot() {
+        return root;
+    }
 
     @Override
     public FileOperation getFileOperation() {

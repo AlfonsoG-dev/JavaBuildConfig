@@ -13,10 +13,11 @@ import java.nio.file.Paths;
 public interface CommandModel {
 
     public FileOperation getFileOperation();
+    public String getRoot();
     public String getCommand(String targetURL, String flags, boolean includeLib);
 
     public default String getLibURL() {
-        return Paths.get("lib").toString();
+        return Paths.get(getRoot()).resolve("lib").toString();
     }
 
     public default StringBuilder prepareLibFiles() {
