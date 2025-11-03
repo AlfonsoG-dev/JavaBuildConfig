@@ -16,9 +16,18 @@ public class FileOperation {
         ex = new ExecutorUtils();
     }
     public List<Path> sourceFiles(String sourceURL) {
-        return ex.getResult(fu.callableList(sourceURL, 0))
+        List<Path> files = ex.getResult(fu.callableList(sourceURL, 0))
             .stream()
             .filter(p -> p.toFile().isFile())
             .toList();
+        return files;
+    }
+    public List<Path> sourceDirs(String sourceURL) {
+        List<Path> dirs = ex.getResult(fu.callableList(sourceURL, 0))
+            .stream()
+            .filter(p -> p.toFile().isDirectory())
+            .toList();
+        return dirs;
+
     }
 }
