@@ -34,4 +34,10 @@ public class FileOperation {
         return dirs;
 
     }
+    public List<Path> libFiles(String sourceURL) {
+        return ex.getResult(fu.callableList(sourceURL, 2))
+            .stream()
+            .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
+            .toList();
+    }
 }
