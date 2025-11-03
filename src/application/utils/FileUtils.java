@@ -35,6 +35,12 @@ public class FileUtils {
         } catch(IOException e) {
             e.printStackTrace();
         }
+        if(files.size() > 0) {
+            files
+                .stream()
+                .filter(p -> p.toFile().isFile())
+                .toList();
+        }
         return files;
     }
     public Callable<List<Path>> callableList(String pathURL, int level) {
