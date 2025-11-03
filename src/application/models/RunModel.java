@@ -35,7 +35,6 @@ public record RunModel(String root, FileOperation op) implements CommandModel {
         return command.toString();
     }
     private String prepareClassName(String mainClass) {
-        System.out.println(root + File.separator);
         return mainClass.replace(root + File.separator, "").replace(File.separator, ".").replace(".java", "");
     }
     public String getCommand(String mainClass, String targetURL, String flags, boolean includeLib) {

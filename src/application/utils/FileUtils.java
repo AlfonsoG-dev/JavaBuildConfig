@@ -16,7 +16,7 @@ import java.nio.file.FileVisitOption;
 public class FileUtils {
     private String root;
     public FileUtils(String root) {
-        this.root = Optional.ofNullable(root).orElse("." + File.separator);
+        this.root = Optional.ofNullable(root).orElse("src");
     }
     public File getRoot() {
         return new File(root);
