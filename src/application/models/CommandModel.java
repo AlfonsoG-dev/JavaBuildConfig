@@ -2,7 +2,6 @@ package application.models;
 
 import application.operation.FileOperation;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import java.io.File;

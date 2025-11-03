@@ -1,7 +1,5 @@
 package application;
 
-import java.io.File;
-
 import application.operation.FileOperation;
 import application.models.RunModel;
 

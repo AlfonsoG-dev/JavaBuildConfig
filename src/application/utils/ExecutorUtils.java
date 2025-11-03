@@ -1,9 +1,7 @@
 package application.utils;
 
-import application.utils.TextUtils;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.Future.State;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;

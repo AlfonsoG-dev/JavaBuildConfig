@@ -2,14 +2,6 @@ package application.models;
 
 import application.operation.FileOperation;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import java.io.File;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public record CompileModel(String root, FileOperation op) implements CommandModel {
     @Override
     public String getRoot() {

@@ -32,7 +32,7 @@ public class FileOperation {
         String sourceRoot = root + File.separator;
         File f = new File(root);
         if(f.listFiles() != null) {
-            outter:for(Path p: sourceFiles()) {
+            for(Path p: sourceFiles()) {
                 File mf = p.toFile();
                 if(mf.isFile() && mf.getName() != "TestLauncher.java") {
                     String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
