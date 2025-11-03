@@ -5,6 +5,8 @@ import application.operation.FileOperation;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.io.File;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -32,28 +34,31 @@ public record CompileModel(String root, FileOperation op) {
      */
     private String prepareSrcFiles() {
         StringBuilder src = new StringBuilder();
-        src.append(op.sourceFiles()
+        src.append(op.sourceDirs()
                 .stream()
                 .map(Path::toString)
-                .collect(Collectors.joining("*.java "))
+                .collect(Collectors.joining(File.separator + "*.java "))
         );
-        String clean = src.toString();
-        if((clean.length()-1) < clean.length()) {
-            clean = clean.substring(0, clean.length()-1);
-        }
+        // with collectors joining the last line doesn't have the aggregation \*.java
+        String clean = src.toString() + File.separator + "*.java";
         return clean;
     }
 
-    private String getCommand(String targetURL, boolean includeLib) {
+    public String getCommand(String targetURL, String flags, boolean includeLib) {
         StringBuilder command = new StringBuilder("javac -d ");
         // default bin
         command.append(targetURL);
         command.append(" ");
+        if(flags.isEmpty()) {
+            flags = "-Werror";
+        }
+        command.append(flags);
+        command.append(" ");
         if(includeLib) {
             command.append("-cp '");
             command.append(prepareLibFiles());
+            command.append("' ");
         }
-        command.append("' ");
         command.append(prepareSrcFiles());
         return command.toString();
     }
