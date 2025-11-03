@@ -2,6 +2,10 @@ package application.operation;
 
 import application.utils.*;
 
+import java.nio.file.Path;
+
+import java.util.List;
+
 public class FileOperation {
     private String root;
     private FileUtils fu;
@@ -11,10 +15,10 @@ public class FileOperation {
         fu = new FileUtils(root);
         ex = new ExecutorUtils();
     }
-
-    public void printFiles(String pathURL) {
-        ex.getResult(fu.callableList(pathURL, 0))
+    public List<Path> sourceFiles(String sourceURL) {
+        return ex.getResult(fu.callableList(sourceURL, 0))
             .stream()
-            .forEach(System.out::println);
+            .filter(p -> p.toFile().isFile())
+            .toList();
     }
 }
