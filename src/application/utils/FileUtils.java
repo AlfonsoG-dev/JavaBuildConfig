@@ -28,18 +28,12 @@ public class FileUtils {
             list.addAll(Files.walk(Paths.get(pathURL), FileVisitOption.FOLLOW_LINKS).toList());
         }
     }
-    public List<Path> getFiles(String pathURL, int level) {
+    public List<Path> listPaths(String pathURL, int level) {
         List<Path> files = new ArrayList<>();
         try {
             populateList(files, pathURL, level);
         } catch(IOException e) {
             e.printStackTrace();
-        }
-        if(files.size() > 0) {
-            files
-                .stream()
-                .filter(p -> p.toFile().isFile())
-                .toList();
         }
         return files;
     }
@@ -47,7 +41,7 @@ public class FileUtils {
         return new Callable<List<Path>>() {
             @Override
             public List<Path> call() {
-                return getFiles(pathURL, level);
+                return listPaths(pathURL, level);
             }
         };
     }
