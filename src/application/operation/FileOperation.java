@@ -3,6 +3,7 @@ package application.operation;
 import application.utils.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.nio.file.Path;
 
@@ -51,6 +52,17 @@ public class FileOperation {
             }
         }
         return "";
+    }
+    public String getProjectName() {
+        String name = "";
+        try {
+            File r = new File("." + File.separator);
+            File local = new File(r.getCanonicalPath());
+            name = local.getName();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return name;
     }
     public List<Path> sourceDirs() {
         List<Path> dirs = listFiles
