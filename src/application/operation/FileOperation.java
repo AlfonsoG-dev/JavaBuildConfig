@@ -15,10 +15,11 @@ public class FileOperation {
     private List<Path> listFiles;
     public FileOperation(String root) {
         this.root = root;
-        fu = new FileUtils(root);
+        fu = new FileUtils(this.root);
         ex = new ExecutorUtils();
     }
     public void populateList(String sourceURL) {
+        System.out.println(sourceURL + "==");
         listFiles = ex.getResult(fu.callableList(sourceURL, 0));
     }
     public boolean createDirectories(String dirURL) {
