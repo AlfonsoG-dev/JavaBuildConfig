@@ -37,8 +37,13 @@ public class Operation {
         String command = compileModel.getCommand(targetURL, flags, includeLib);
         ex.executeCommand(command);
     }
-    public void executeRunCommand(String flags) {
-        String command = runModel.getCommand(targetURL, flags, includeLib);
+    public void executeRunCommand(String flags, String mainClass) {
+        String command = "";
+        if(mainClass == null) {
+            command = runModel.getCommand(targetURL, flags, includeLib);
+        } else {
+            command = runModel.getCommand(mainClass, targetURL, flags, includeLib);
+        }
         ex.executeCommand(command);
     }
     public void createBuildScript(String fileURL) {

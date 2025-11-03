@@ -19,7 +19,6 @@ public class FileOperation {
         ex = new ExecutorUtils();
     }
     public void populateList(String sourceURL) {
-        System.out.println(sourceURL + "==");
         listFiles = ex.getResult(fu.callableList(sourceURL, 0));
     }
     public boolean createDirectories(String dirURL) {
