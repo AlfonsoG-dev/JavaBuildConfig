@@ -27,4 +27,8 @@ public record ExecutorUtils() {
         }
         return value;
     }
+    public void executeCommand(String command) {
+        // TODO: add command execution using system tools like pwsh or cmd
+        TextUtils.message(command);
+    }
 }
