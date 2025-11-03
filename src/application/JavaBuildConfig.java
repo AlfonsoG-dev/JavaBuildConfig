@@ -7,6 +7,5 @@ class JavaBuildConfig {
         String rootURL = "src";
         Operation op = new Operation(rootURL);
         op.initializeENV("src\\application", "bin", false);
-        op.createBuildScript("app.ps1");
     }
 }
