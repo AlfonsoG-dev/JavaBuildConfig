@@ -30,6 +30,7 @@ public class FileOperation {
         List<Path> dirs = listFiles
             .stream()
             .filter(p -> p.toFile().isDirectory())
+            .filter(p -> fu.countFiles(p) > 0)
             .toList();
         return dirs;
 
