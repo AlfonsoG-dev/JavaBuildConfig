@@ -7,7 +7,10 @@ import java.io.BufferedReader;
 
 public record TextUtils() {
     public final static void message(String message) {
-        System.out.println(message);
+        System.out.println("[Info] " + message);
+    }
+    public final static void error(String error) {
+        System.err.println("[Error] " + error);
     }
     public static String getFileLines(String pathURL) {
         String lines = "";
