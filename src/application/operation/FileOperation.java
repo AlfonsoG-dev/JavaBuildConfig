@@ -2,6 +2,8 @@ package application.operation;
 
 import application.utils.*;
 
+import java.io.File;
+
 import java.nio.file.Path;
 
 import java.util.List;
@@ -25,6 +27,24 @@ public class FileOperation {
             .filter(p -> p.toFile().isFile())
             .toList();
         return files;
+    }
+    public String getMainClass() {
+        String sourceRoot = root + File.separator;
+        File f = new File(root);
+        if(f.listFiles() != null) {
+            outter:for(Path p: sourceFiles()) {
+                File mf = p.toFile();
+                if(mf.isFile() && mf.getName() != "TestLauncher.java") {
+                    String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
+                    for(String l: lines) {
+                        if(l.contains("public static void main")) {
+                            return mf.getPath().replace(sourceRoot, "").replace(".java", "").replace(File.separator, ".");
+                        }
+                    }
+                }
+            }
+        }
+        return "";
     }
     public List<Path> sourceDirs() {
         List<Path> dirs = listFiles
