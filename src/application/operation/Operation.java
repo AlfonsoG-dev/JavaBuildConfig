@@ -48,6 +48,7 @@ public class Operation {
     }
     public void createBuildScript(String fileURL) {
         String osName = System.getProperty("os.name").toLowerCase();
+        fileURL = Optional.ofNullable(fileURL).orElse("build");
         if(osName.contains("windows")) {
             fileURL = fileURL + ".ps1";
         } else if(osName.contains("linux")) {

@@ -51,5 +51,20 @@ public class FileBuilder {
                 .collect(Collectors.joining(";"))
             );
         }
+        fileOperation.createFile("Manifesto.txt", lines.toString());
+    }
+    public void createConfig() {
+        StringBuilder lines = new StringBuilder();
+        String[][] headers = {
+            {"Root-Path: ", "src"},
+            {"Source-Path: ", "src"},
+            {"Class-Path: ", "bin"},
+            {"Main-Class: ", fileOperation.getProjectName()},
+            {"Test-Path: ", "src" + File.separator + "test"},
+            {"Test-Class: ", "test.TestLauncher"},
+            {"Libraries: ", ""},
+            {"Compile-Flags: ", "-Werror -Xlint:all -Xdiags:verbose"}
+        };
+        fileOperation.createFile("config.txt", lines.toString());
     }
 }
