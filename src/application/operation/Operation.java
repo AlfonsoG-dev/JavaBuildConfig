@@ -48,10 +48,11 @@ public class Operation {
         }
         ex.executeCommand(command);
     }
-    public void executeJarCommand(String flags, String mainClass) {
+    public void executeJarCommand(String fileName, String flags, String mainClass) {
         mainClass = Optional.ofNullable(mainClass).orElse(fileOperation.getMainClass());
         flags = Optional.ofNullable(flags).orElse("v");
-        String command = jarBuilder.getCommand(targetURL, mainClass, flags, includeLib);
+        fileName = Optional.ofNullable(fileName).orElse("App");
+        String command = jarBuilder.getCommand(fileName, targetURL, mainClass, flags, includeLib);
         ex.executeCommand(command);
     }
     public void createBuildScript(String fileURL) {

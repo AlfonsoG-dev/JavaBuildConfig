@@ -25,6 +25,9 @@ public record ExecutorUtils() {
                 TextUtils.message("Waiting for results...");
             }
             value = result.get();
+            if(result.state() == Future.State.SUCCESS) {
+                TextUtils.message("Data is ready...");
+            }
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
