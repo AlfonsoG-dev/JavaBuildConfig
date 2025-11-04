@@ -5,11 +5,6 @@ import application.operation.FileOperation;
 
 public record CompileBuilder(String root, FileOperation op) implements CommandModel {
     @Override
-    public String getRoot() {
-        return root;
-    }
-
-    @Override
     public FileOperation getFileOperation() {
         return op;
     }

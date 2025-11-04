@@ -8,10 +8,6 @@ import java.io.File;
 public record RunBuilder(String root, FileOperation op) implements CommandModel {
 
     @Override
-    public String getRoot() {
-        return root;
-    }
-    @Override
     public FileOperation getFileOperation() {
         return op;
     }

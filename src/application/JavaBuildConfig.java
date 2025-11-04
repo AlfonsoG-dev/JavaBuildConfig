@@ -11,7 +11,8 @@ class JavaBuildConfig {
         String libs = getSubCommand("--i", args);
         String flags = getSubCommand("-f", args);
         if(args.length > 0) {
-            op.initializeENV(source, target, libs != null ? true:false);
+            op.loadConfig();
+            op.initializeENV(source, target, libs);
         }
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {

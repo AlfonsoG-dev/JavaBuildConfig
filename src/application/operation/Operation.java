@@ -5,6 +5,7 @@ import application.models.*;
 import application.builders.*;
 
 import java.util.Optional;
+import java.util.HashMap;
 
 public class Operation {
     private CompileBuilder compileBuilder;
@@ -18,6 +19,13 @@ public class Operation {
     private String sourceURl;
     private String targetURL;
     private boolean includeLib;
+    private HashMap<String, String> configData;
+
+    private String oRoot;
+    private String oSourceURl;
+    private String oTargetURL;
+    private String oMainClass;
+    private boolean oIncludeLib;
 
     public Operation(String root) {
         this.root = Optional.ofNullable(root).orElse("src");
@@ -28,31 +36,40 @@ public class Operation {
         jarBuilder = new JarBuilder(this.root, fileOperation);
         scriptBuilder = new ScriptBuilder(compileBuilder);
     }
-    public void initializeENV(String sourceURl, String targetURL, boolean includeLib) {
-        this.sourceURl = Optional.ofNullable(sourceURl).orElse("src");
-        this.targetURL = Optional.ofNullable(targetURL).orElse("bin");
-        this.includeLib = Optional.ofNullable(includeLib).orElse(false);
+    public void loadConfig() {
+        configData = fileOperation.getConfigValues();
+        oRoot = Optional.ofNullable(configData.get("Root-Path")).orElse("src");
+        oSourceURl = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
+        oTargetURL = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
+        oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
+        String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
+        oIncludeLib = dataLib.equals("include");
+    }
+    public void initializeENV(String sourceURl, String targetURL, String includeLib) {
+        this.sourceURl = Optional.ofNullable(sourceURl).orElse(oSourceURl);
+        this.targetURL = Optional.ofNullable(targetURL).orElse(oTargetURL);
+        String dataLib = Optional.ofNullable(includeLib).orElse("exclude");
+        this.includeLib = dataLib.equals("include");
         fileOperation.populateList(this.sourceURl);
     }
     public void executeCompileCommand(String compileFlags) {
         String flags = Optional.ofNullable(compileFlags).orElse("-Werror -Xlint:all -Xdiags:verbose");
-        String command = compileBuilder.getCommand(targetURL, flags, includeLib);
+        String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         ex.executeCommand(command);
     }
     public void executeRunCommand(String flags, String mainClass) {
         String command = "";
         if(mainClass == null) {
-            command = runBuilder.getCommand(targetURL, flags, includeLib);
+            command = runBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         } else {
-            command = runBuilder.getCommand(mainClass, targetURL, flags, includeLib);
+            command = runBuilder.getCommand(oMainClass, oTargetURL, flags, oIncludeLib);
         }
         ex.executeCommand(command);
     }
     public void executeJarCommand(String fileName, String flags, String mainClass) {
-        mainClass = Optional.ofNullable(mainClass).orElse(fileOperation.getMainClass());
         flags = Optional.ofNullable(flags).orElse("v");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
-        String command = jarBuilder.getCommand(fileName, targetURL, mainClass, flags, includeLib);
+        String command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
         ex.executeCommand(command);
     }
     public void createBuildScript(String fileURL) {
@@ -63,7 +80,7 @@ public class Operation {
         } else if(osName.contains("linux")) {
             fileURL = fileURL + ".sh";
         }
-        String lines = scriptBuilder.getScript(targetURL, includeLib);
+        String lines = scriptBuilder.getScript(oTargetURL, oIncludeLib);
         fileOperation.createFile(fileURL, lines);
     }
 }

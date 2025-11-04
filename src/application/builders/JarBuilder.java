@@ -10,10 +10,6 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     public FileOperation getFileOperation() {
         return fileOperation;
     }
-    @Override
-    public String getRoot() {
-        return root;
-    }
     private String appendJarType(StringBuilder lines, String mainClass) {
         String executable = "";
         if(fileOperation.haveManifesto()) {

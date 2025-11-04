@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import java.util.List;
+import java.util.HashMap;
 
 public class FileOperation {
     private String root;
@@ -66,8 +67,22 @@ public class FileOperation {
     }
     public boolean haveManifesto() {
         File f = new File("." + File.separator + "Manifesto.txt");
-        if(f.exists()) return true;
-        return false;
+        return f.exists();
+    }
+    public boolean haveConfig() {
+        File f = new File("." + File.separator + "config.txt");
+        return f.exists();
+    }
+    public HashMap<String, String> getConfigValues() {
+        HashMap<String, String> configs = new HashMap<>();
+        String[] lines = TextUtils.getFileLines("config.txt").split("\n");
+        for(String l: lines) {
+            String[] values = l.split(":", 2);
+            String k = values[0].trim();
+            String v = 1 < values.length ? values[1].trim():"";
+            configs.put(k, v);
+        }
+        return configs;
     }
     public List<Path> sourceDirs() {
         List<Path> dirs = listFiles
