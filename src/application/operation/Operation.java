@@ -25,6 +25,7 @@ public class Operation {
     private String oSourceURl;
     private String oTargetURL;
     private String oMainClass;
+    private String oCompileFlags;
     private boolean oIncludeLib;
 
     public Operation(String root) {
@@ -42,6 +43,7 @@ public class Operation {
         oSourceURl = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
         oTargetURL = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
+        oCompileFlags = Optional.ofNullable(configData.get("Compile-Flags")).orElse("-Xlint:all -Xdiags:verbose");
         String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
         oIncludeLib = dataLib.equals("include");
     }
@@ -53,7 +55,7 @@ public class Operation {
         fileOperation.populateList(this.sourceURl);
     }
     public void executeCompileCommand(String compileFlags) {
-        String flags = Optional.ofNullable(compileFlags).orElse("-Werror -Xlint:all -Xdiags:verbose");
+        String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
         String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         ex.executeCommand(command);
     }
