@@ -64,6 +64,11 @@ public class FileOperation {
         }
         return name;
     }
+    public boolean haveManifesto() {
+        File f = new File("." + File.separator + "Manifesto.txt");
+        if(f.exists()) return true;
+        return false;
+    }
     public List<Path> sourceDirs() {
         List<Path> dirs = listFiles
             .stream()
