@@ -53,17 +53,17 @@ public class FileBuilder {
         }
         fileOperation.createFile("Manifesto.txt", lines.toString());
     }
-    public void createConfig(String source, String target, String mainClass) {
+    public void createConfig(String source, String target, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder();
         String[][] headers = {
-            {"Root-Path: ", "src"},
-            {"Source-Path: ", "src"},
-            {"Class-Path: ", "bin"},
-            {"Main-Class: ", fileOperation.getProjectName()},
+            {"Root-Path: ", source.split("\\" + File.separator)[0].trim()},
+            {"Source-Path: ", source},
+            {"Class-Path: ", target},
+            {"Main-Class: ", mainClass},
             {"Test-Path: ", "src" + File.separator + "test"},
             {"Test-Class: ", "test.TestLauncher"},
-            {"Libraries: ", ""},
-            {"Compile-Flags: ", "-Werror -Xlint:all -Xdiags:verbose"}
+            {"Libraries: ", includeLib ? "include":"exclude"},
+            {"Compile-Flags: ", flags}
         };
         for(int i=0; i<headers.length; ++i) {
             for(int j=0; j<headers[i].length; ++j) {
