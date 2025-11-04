@@ -27,7 +27,9 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     }
     @Override
     public String getCommand(String targetURL, String flags, boolean includeLib) {
-        StringBuilder lines = new StringBuilder("jar -cf");
+        StringBuilder lines = new StringBuilder("jar -c");
+        if(!flags.isEmpty()) lines.append(flags);
+        lines.append("f");
         String mainClass = fileOperation.getMainClass();
         // jar format
         String format = jarType(lines, mainClass);
@@ -50,7 +52,9 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         return lines.toString();
     }
     public String getCommand(String targetURL, String mainClass, String flags, boolean includeLib) {
-        StringBuilder lines = new StringBuilder("jar -cf");
+        StringBuilder lines = new StringBuilder("jar -c");
+        if(!flags.isEmpty()) lines.append(flags)
+        lines.append("f");
         // jar format
         String format = jarType(lines, mainClass);
 
