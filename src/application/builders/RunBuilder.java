@@ -1,10 +1,11 @@
 package application.models;
 
+import application.models.CommandModel;
 import application.operation.FileOperation;
 
 import java.io.File;
 
-public record RunModel(String root, FileOperation op) implements CommandModel {
+public record RunBuilder(String root, FileOperation op) implements CommandModel {
 
     @Override
     public String getRoot() {

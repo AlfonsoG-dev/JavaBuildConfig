@@ -1,8 +1,9 @@
 package application.models;
 
+import application.models.CommandModel;
 import application.operation.FileOperation;
 
-public record CompileModel(String root, FileOperation op) implements CommandModel {
+public record CompileBuilder(String root, FileOperation op) implements CommandModel {
     @Override
     public String getRoot() {
         return root;

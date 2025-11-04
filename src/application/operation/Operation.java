@@ -7,8 +7,8 @@ import application.builders.*;
 import java.util.Optional;
 
 public class Operation {
-    private CompileModel compileModel;
-    private RunModel runModel;
+    private CompileBuilder compileBuilder;
+    private RunBuilder runBuilder;
     private FileOperation fileOperation;
     private ExecutorUtils ex;
     private ScriptBuilder scriptBuilder;
@@ -22,9 +22,9 @@ public class Operation {
         this.root = Optional.ofNullable(root).orElse("src");
         fileOperation = new FileOperation(this.root);
         ex = new ExecutorUtils();
-        compileModel = new CompileModel(this.root, fileOperation);
-        runModel = new RunModel(this.root, fileOperation);
-        scriptBuilder = new ScriptBuilder(compileModel);
+        compileBuilder = new CompileBuilder(this.root, fileOperation);
+        runBuilder = new RunBuilder(this.root, fileOperation);
+        scriptBuilder = new ScriptBuilder(compileBuilder);
     }
     public void initializeENV(String sourceURl, String targetURL, boolean includeLib) {
         this.sourceURl = Optional.ofNullable(sourceURl).orElse("src");
@@ -34,15 +34,15 @@ public class Operation {
     }
     public void executeCompileCommand(String compileFlags) {
         String flags = Optional.ofNullable(compileFlags).orElse("-Werror -Xlint:all -Xdiags:verbose");
-        String command = compileModel.getCommand(targetURL, flags, includeLib);
+        String command = compileBuilder.getCommand(targetURL, flags, includeLib);
         ex.executeCommand(command);
     }
     public void executeRunCommand(String flags, String mainClass) {
         String command = "";
         if(mainClass == null) {
-            command = runModel.getCommand(targetURL, flags, includeLib);
+            command = runBuilder.getCommand(targetURL, flags, includeLib);
         } else {
-            command = runModel.getCommand(mainClass, targetURL, flags, includeLib);
+            command = runBuilder.getCommand(mainClass, targetURL, flags, includeLib);
         }
         ex.executeCommand(command);
     }
