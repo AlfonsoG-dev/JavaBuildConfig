@@ -9,6 +9,7 @@ import java.util.Optional;
 public class Operation {
     private CompileBuilder compileBuilder;
     private RunBuilder runBuilder;
+    private JarBuilder jarBuilder;
     private FileOperation fileOperation;
     private ExecutorUtils ex;
     private ScriptBuilder scriptBuilder;
@@ -24,6 +25,7 @@ public class Operation {
         ex = new ExecutorUtils();
         compileBuilder = new CompileBuilder(this.root, fileOperation);
         runBuilder = new RunBuilder(this.root, fileOperation);
+        jarBuilder = new JarBuilder(this.root, fileOperation);
         scriptBuilder = new ScriptBuilder(compileBuilder);
     }
     public void initializeENV(String sourceURl, String targetURL, boolean includeLib) {
@@ -44,6 +46,12 @@ public class Operation {
         } else {
             command = runBuilder.getCommand(mainClass, targetURL, flags, includeLib);
         }
+        ex.executeCommand(command);
+    }
+    public void executeJarCommand(String flags, String mainClass) {
+        mainClass = Optional.ofNullable(mainClass).orElse(fileOperation.getMainClass());
+        flags = Optional.ofNullable(flags).orElse("v");
+        String command = jarBuilder.getCommand(targetURL, mainClass, flags, includeLib);
         ex.executeCommand(command);
     }
     public void createBuildScript(String fileURL) {

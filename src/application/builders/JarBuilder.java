@@ -53,7 +53,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     }
     public String getCommand(String targetURL, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder("jar -c");
-        if(!flags.isEmpty()) lines.append(flags)
+        if(!flags.isEmpty()) lines.append(flags);
         lines.append("f");
         // jar format
         String format = jarType(lines, mainClass);

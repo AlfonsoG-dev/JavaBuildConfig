@@ -9,6 +9,7 @@ class JavaBuildConfig {
         String source = getSubCommand("--s", args);
         String target = getSubCommand("--t", args);
         String libs = getSubCommand("--i", args);
+        String flags = getSubCommand("-f", args);
         op.initializeENV(source, target, libs != null ? true:false);
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
@@ -26,6 +27,13 @@ class JavaBuildConfig {
                         op.executeRunCommand("", "");
                     }
                     break;
+                case "--jar":
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.executeJarCommand(flags, args[i+1]);
+                    } else {
+                        op.executeJarCommand(flags, null);
+                    }
+                    break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile -Werror to compile the project using JVM flags");
@@ -36,6 +44,10 @@ class JavaBuildConfig {
                     System.out.println("use --run to execute the project");
                     System.out.println("\tuse --s to change the project source");
                     System.out.println("\tuse --t to change the project target");
+
+                    System.out.println("use --jar to create the jar file of the project");
+                    System.out.println("\t use --jar application.App to change the main class entry point");
+                    System.out.println("\t use --jar -f vn to insert flags to the JVM");
                     break;
             }
         }
