@@ -51,7 +51,7 @@ public class Operation {
     public void executeJarCommand(String fileName, String flags, String mainClass) {
         mainClass = Optional.ofNullable(mainClass).orElse(fileOperation.getMainClass());
         flags = Optional.ofNullable(flags).orElse("v");
-        fileName = Optional.ofNullable(fileName).orElse("App");
+        fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
         String command = jarBuilder.getCommand(fileName, targetURL, mainClass, flags, includeLib);
         ex.executeCommand(command);
     }

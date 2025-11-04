@@ -10,8 +10,10 @@ class JavaBuildConfig {
         String target = getSubCommand("--t", args);
         String libs = getSubCommand("--i", args);
         String flags = getSubCommand("-f", args);
-        for(int i=0; i<args.length; ++i) {
+        if(args.length > 0) {
             op.initializeENV(source, target, libs != null ? true:false);
+        }
+        for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
                     if((i+1) < args.length && args[i+1].contains("-")) {
