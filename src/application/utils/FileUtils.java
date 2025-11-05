@@ -72,7 +72,7 @@ public class FileUtils {
         sourcePath = sourcePath.normalize();
         List<Path> files = listPaths(sourcePath.toString(), 0);
         files
-            .stream()
+            .parallelStream()
             .filter(p -> p.toFile().isDirectory())
             .forEach(p -> {
                 Path destinationPath = Paths.get(destinationURI).resolve(p);
@@ -83,7 +83,7 @@ public class FileUtils {
                 }
             });
         files
-            .stream()
+            .parallelStream()
             .forEach(p -> {
                 copyFile(p, destinationURI);
             });
