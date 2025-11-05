@@ -37,6 +37,9 @@ class JavaBuildConfig {
                         op.executeJarCommand(null, flags, getSubCommand("-e", args));
                     }
                     break;
+                case "--add":
+                    if ((i+2) < args.length) op.copyToPath(args[i+1], args[i+2]);
+                    break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile -Werror to compile the project using JVM flags");

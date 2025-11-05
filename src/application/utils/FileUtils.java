@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.FileVisitOption;
+import java.nio.file.StandardCopyOption;
 
 public class FileUtils {
     private String root;
@@ -21,23 +22,45 @@ public class FileUtils {
     public File getRoot() {
         return new File(root);
     }
-    private void populateList(List<Path> list, String pathURL, int level) throws IOException {
+    private void populateList(List<Path> list, String pathURI, int level) throws IOException {
         if(level > 0) {
-            list.addAll(Files.walk(Paths.get(pathURL), level, FileVisitOption.FOLLOW_LINKS).toList());
+            list.addAll(Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS).toList());
         } else {
-            list.addAll(Files.walk(Paths.get(pathURL), FileVisitOption.FOLLOW_LINKS).toList());
+            list.addAll(Files.walk(Paths.get(pathURI), FileVisitOption.FOLLOW_LINKS).toList());
         }
     }
-    public boolean createDirectory(String pathURL) {
-        File f = new File(pathURL);
+    public boolean createDirectory(String pathURI) {
+        File f = new File(pathURI);
         if(f.exists()) return true;
         if(f.toPath().getNameCount() > 2) {
             return f.mkdirs();
         }
         return f.mkdir();
     }
-    public void createFile(String fileURL, String lines) {
-        TextUtils.writeLines(fileURL, lines);
+    public void createFile(String fileURI, String lines) {
+        TextUtils.writeLines(fileURI, lines);
+    }
+    /**
+     * copy a file to a destination directory
+     * @param sourceURI the file path
+     * @param destinationURI the directory destination path
+     * @return the destination with the copied file.
+     */
+    public String copy(String sourceURI, String destinationURI) {
+        try {
+            File sourceFile = new File(sourceURI);
+            if(sourceFile.isFile()) {
+                Path sourcePath = sourceFile.toPath().normalize();
+                Path newPath = Paths.get(destinationURI).resolve(sourcePath);
+                String o =  Files.copy(sourcePath, newPath, StandardCopyOption.COPY_ATTRIBUTES).toString().toString();
+                System.out.println("[Info] Copying " + sourceURI + " into " + destinationURI + " as " + o);
+                return o;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return "";
     }
     public int countFiles(Path directory) {
         int n = 0;
@@ -51,20 +74,20 @@ public class FileUtils {
         }
         return n;
     }
-    public List<Path> listPaths(String pathURL, int level) {
+    public List<Path> listPaths(String pathURI, int level) {
         List<Path> files = new ArrayList<>();
         try {
-            populateList(files, pathURL, level);
+            populateList(files, pathURI, level);
         } catch(IOException e) {
             e.printStackTrace();
         }
         return files;
     }
-    public Callable<List<Path>> callableList(String pathURL, int level) {
+    public Callable<List<Path>> callableList(String pathURI, int level) {
         return new Callable<List<Path>>() {
             @Override
             public List<Path> call() {
-                return listPaths(pathURL, level);
+                return listPaths(pathURI, level);
             }
         };
     }

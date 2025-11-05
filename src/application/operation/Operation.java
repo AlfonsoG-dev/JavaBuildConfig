@@ -77,4 +77,8 @@ public class Operation {
         String lines = scriptBuilder.getScript(oTargetURL, oIncludeLib);
         fileOperation.createFile(fileURL, lines);
     }
+    public void copyToPath(String sourceURI, String destinationURI) {
+        String s = fileOperation.copyToPath(sourceURI, destinationURI);
+        if(s.isEmpty()) System.err.println("[Warning] Couldn't Copy files");
+    }
 }

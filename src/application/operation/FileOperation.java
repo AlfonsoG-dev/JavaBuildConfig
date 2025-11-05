@@ -99,6 +99,7 @@ public class FileOperation {
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
     }
-    public void copyToPath(String originURI, String destinationURI) {
+    public String copyToPath(String sourceURI, String destinationURI) {
+        return fu.copy(sourceURI, destinationURI);
     }
 }
