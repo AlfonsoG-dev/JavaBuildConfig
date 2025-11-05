@@ -100,6 +100,12 @@ public class FileOperation {
             .toList();
     }
     public String copyToPath(String sourceURI, String destinationURI) {
-        return fu.copy(sourceURI, destinationURI);
+        File f = new File(sourceURI);
+        if(f.isDirectory()) {
+            fu.copyDirectory(f.toPath(), destinationURI);
+        } else {
+            fu.copyFile(f.toPath(), destinationURI);
+        }
+         return "";
     }
 }
