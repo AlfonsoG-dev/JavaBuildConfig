@@ -78,6 +78,7 @@ public class Operation {
         fileOperation.createFile(fileURL, lines);
     }
     public void copyToPath(String sourceURI, String destinationURI) {
+        destinationURI = Optional.ofNullable(destinationURI).orElse("extractionFiles");
         fileOperation.copyToPath(sourceURI, destinationURI);
     }
 }

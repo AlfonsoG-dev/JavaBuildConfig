@@ -39,6 +39,7 @@ class JavaBuildConfig {
                     break;
                 case "--add":
                     if ((i+2) < args.length) op.copyToPath(args[i+1], args[i+2]);
+                    if((i+1) < args.length) op.copyToPath(args[i+1], null); 
                     break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
