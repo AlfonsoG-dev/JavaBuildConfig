@@ -49,8 +49,10 @@ class JavaBuildConfig {
 
 
                     System.out.println("use --run to execute the project");
+                    System.out.println("use --run app.java to execute other main class");
                     System.out.println("\tuse --s to change the project source");
                     System.out.println("\tuse --t to change the project target");
+                    System.out.println("use --run command to execute other commands like --h");
 
                     System.out.println("use --jar to create the jar file of the project");
                     System.out.println("\t use --jar fileName to change the jar file name");
