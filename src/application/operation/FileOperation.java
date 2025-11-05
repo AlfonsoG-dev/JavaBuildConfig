@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.nio.file.Files;
 
 import java.util.List;
 import java.util.HashMap;
@@ -20,14 +21,14 @@ public class FileOperation {
         fu = new FileUtils(this.root);
         ex = new ExecutorUtils();
     }
-    public void populateList(String sourceURL) {
-        listFiles = ex.getResult(fu.callableList(sourceURL, 0));
+    public void populateList(String sourceURI) {
+        listFiles = ex.getResult(fu.callableList(sourceURI, 0));
     }
-    public boolean createDirectories(String dirURL) {
-        return fu.createDirectory(dirURL);
+    public boolean createDirectories(String dirURI) {
+        return fu.createDirectory(dirURI);
     }
-    public void createFile(String fileURL, String lines) {
-        fu.createFile(fileURL, lines);
+    public void createFile(String fileURI, String lines) {
+        fu.createFile(fileURI, lines);
     }
     public List<Path> sourceFiles() {
         List<Path> files = listFiles
@@ -93,10 +94,12 @@ public class FileOperation {
         return dirs;
 
     }
-    public List<Path> libFiles(String sourceURL) {
-        return ex.getResult(fu.callableList(sourceURL, 2))
+    public List<Path> libFiles(String sourceURI) {
+        return ex.getResult(fu.callableList(sourceURI, 2))
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
+    }
+    public void copyToPath(String originURI, String destinationURI) {
     }
 }
