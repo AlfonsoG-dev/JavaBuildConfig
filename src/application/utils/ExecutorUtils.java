@@ -2,9 +2,6 @@ package application.utils;
 
 import java.io.File;
 
-import java.lang.ProcessBuilder;
-import java.lang.Process;
-
 import java.util.concurrent.Future;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -12,7 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RejectedExecutionException;
 
-import java.lang.InterruptedException;
 
 public record ExecutorUtils() {
     private final static String LOCAL_PATH = "." + File.separator;
