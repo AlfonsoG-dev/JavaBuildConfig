@@ -12,7 +12,6 @@ class JavaBuildConfig {
         String flags = getSubCommand("-f", args);
         if(args.length > 0) {
             op.loadConfig();
-            // FIXME: doesn't work when changing source or target
             op.initializeENV(source, target, libs);
         }
         for(int i=0; i<args.length; ++i) {
@@ -27,6 +26,8 @@ class JavaBuildConfig {
                         if(!conditionA && !conditionB) {
                             op.executeRunCommand(flags, args[i+1]);
                         }
+                    } else {
+                        op.executeRunCommand(flags, null);
                     }
                     break;
                 case "--jar":
