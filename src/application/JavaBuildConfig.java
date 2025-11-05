@@ -24,10 +24,14 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--run":
-                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.executeRunCommand("", args[i+1]);
-                    } else {
-                        op.executeRunCommand("", "");
+                    if((i+1) < args.length) {
+                        boolean conditionA = args[i+1].contains("--");
+                        boolean conditionB = args[i+1].contains("-");
+                        if(!conditionA && !conditionB) {
+                            op.executeRunCommand("", args[i+1]);
+                        } else {
+                            op.executeRunCommand(args[i+1], null);
+                        }
                     }
                     break;
                 case "--jar":

@@ -64,7 +64,7 @@ public class Operation {
         if(mainClass == null) {
             command = runBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         } else {
-            command = runBuilder.getCommand(oMainClass, oTargetURL, flags, oIncludeLib);
+            command = runBuilder.getCommand(mainClass, oTargetURL, flags, oIncludeLib);
         }
         ex.executeCommand(command);
     }

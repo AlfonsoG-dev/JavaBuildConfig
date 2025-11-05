@@ -23,11 +23,10 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
             command.append(prepareLibFiles());
         }
         command.append("' ");
-        if(flags.isEmpty()) flags = "-Xmx1g";
 
-        command.append(flags);
-        command.append(" ");
         if(mainClassName != "") command.append(mainClassName);
+        command.append(" ");
+        command.append(flags);
 
         return command.toString();
     }
@@ -44,11 +43,10 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
             command.append(prepareLibFiles());
         }
         command.append("' ");
-        if(flags.isEmpty()) flags = "-Xmx1g";
-
-        command.append(flags);
-        command.append(" ");
         command.append(prepareClassName(mainClass));
+
+        command.append(" ");
+        command.append(flags);
 
         return command.toString();
     }
