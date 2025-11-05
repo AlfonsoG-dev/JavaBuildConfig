@@ -57,7 +57,7 @@ public class FileUtils {
                 Path newPath = Paths.get(destinationURI).resolve(sourcePath);
                 String o =  Files.copy(sourcePath, newPath, StandardCopyOption.REPLACE_EXISTING).toString().toString();
                 System.out.println(
-                        "[Info] Copying { " + TextUtils.Colors.YELLOW_UNDERLINED + sourcePath.toString() + TextUtils.Colors.ANSI_RESET + " } as => [ " + TextUtils.Colors.GREEN_UNDERLINED + o + TextUtils.Colors.ANSI_RESET + " ]"
+                        "\tCopy { " + TextUtils.Colors.YELLOW_UNDERLINED + sourcePath.toString() + TextUtils.Colors.ANSI_RESET + " } \n\t\tinto => [ " + TextUtils.Colors.GREEN_UNDERLINED + o + TextUtils.Colors.ANSI_RESET + " ]"
                 );
                 return o;
             }
@@ -67,7 +67,7 @@ public class FileUtils {
             return "";
         }
     }
-    public String copyDirectory(Path sourcePath, String destinationURI) {
+    public void copyDirectory(Path sourcePath, String destinationURI) {
         // sourcePath already check if its a directory
         sourcePath = sourcePath.normalize();
         List<Path> files = listPaths(sourcePath.toString(), 0);
@@ -87,7 +87,6 @@ public class FileUtils {
             .forEach(p -> {
                 copyFile(p, destinationURI);
             });
-        return "";
     }
     public int countFiles(Path directory) {
         int n = 0;

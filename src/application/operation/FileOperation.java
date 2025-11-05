@@ -99,13 +99,13 @@ public class FileOperation {
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
     }
-    public String copyToPath(String sourceURI, String destinationURI) {
+    public void copyToPath(String sourceURI, String destinationURI) {
         File f = new File(sourceURI);
+        System.out.println("[Info] Copying ...");
         if(f.isDirectory()) {
             fu.copyDirectory(f.toPath(), destinationURI);
         } else {
             fu.copyFile(f.toPath(), destinationURI);
         }
-         return "";
     }
 }
