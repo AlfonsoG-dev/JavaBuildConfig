@@ -12,25 +12,20 @@ class JavaBuildConfig {
         String flags = getSubCommand("-f", args);
         if(args.length > 0) {
             op.loadConfig();
+            // FIXME: doesn't work when changing source or target
             op.initializeENV(source, target, libs);
         }
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
-                    if((i+1) < args.length && args[i+1].contains("-")) {
-                        op.executeCompileCommand(args[i+1]);
-                    } else {
-                        op.executeCompileCommand(null);
-                    }
+                    op.executeCompileCommand(flags);
                     break;
                 case "--run":
                     if((i+1) < args.length) {
                         boolean conditionA = args[i+1].contains("--");
                         boolean conditionB = args[i+1].contains("-");
                         if(!conditionA && !conditionB) {
-                            op.executeRunCommand("", args[i+1]);
-                        } else {
-                            op.executeRunCommand(args[i+1], null);
+                            op.executeRunCommand(flags, args[i+1]);
                         }
                     }
                     break;
