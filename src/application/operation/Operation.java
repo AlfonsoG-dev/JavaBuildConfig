@@ -1,7 +1,6 @@
 package application.operation;
 
 import application.utils.ExecutorUtils;
-import application.models.*;
 import application.builders.*;
 
 import java.util.Optional;
@@ -17,11 +16,8 @@ public class Operation {
 
     private String root;
     private String sourceURl;
-    private String targetURL;
-    private boolean includeLib;
     private HashMap<String, String> configData;
 
-    private String oRoot;
     private String oSourceURl;
     private String oTargetURL;
     private String oMainClass;
@@ -39,7 +35,6 @@ public class Operation {
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
-        oRoot = Optional.ofNullable(configData.get("Root-Path")).orElse("src");
         oSourceURl = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
         oTargetURL = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
@@ -49,9 +44,6 @@ public class Operation {
     }
     public void initializeENV(String sourceURl, String targetURL, String includeLib) {
         this.sourceURl = Optional.ofNullable(sourceURl).orElse(oSourceURl);
-        this.targetURL = Optional.ofNullable(targetURL).orElse(oTargetURL);
-        String dataLib = Optional.ofNullable(includeLib).orElse("exclude");
-        this.includeLib = dataLib.equals("include");
         fileOperation.populateList(this.sourceURl);
     }
     public void executeCompileCommand(String compileFlags) {

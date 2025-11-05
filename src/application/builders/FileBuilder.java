@@ -9,11 +9,9 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 public class FileBuilder {
-    private String root;
     private FileOperation fileOperation;
 
-    public FileBuilder(String root, FileOperation fileOperation) {
-        this.root = root;
+    public FileBuilder(FileOperation fileOperation) {
         this.fileOperation = fileOperation;
     }
     public void createIgnore() {
