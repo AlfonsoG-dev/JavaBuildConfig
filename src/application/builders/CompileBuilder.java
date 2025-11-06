@@ -4,7 +4,8 @@ import application.models.CommandModel;
 import application.operation.FileOperation;
 
 import java.util.List;
-
+import java.util.Set;
+import java.io.File;
 import java.nio.file.Path;
 
 public record CompileBuilder(String root, FileOperation op) implements CommandModel {
@@ -54,10 +55,18 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         if(paths.size() == 0) {
             return null;
         }
+        Set<String> imports = null;
         for(Path p: paths) {
             command.append(p.toString());
+            // files that depend on this one
+            String packageName = p.toString().replace(root + File.separator, "").replace(".java", "").replace(File.separator, ".");
+            imports = op.getDependencies(packageName, p.getFileName().toString());
+            for(String n: imports) {
+                command.append(" ");
+                command.append(n);
+            }
+
         }
-        System.out.println("Hellow there");
         return command.toString();
     }
 }

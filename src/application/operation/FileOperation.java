@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import java.util.List;
+import java.util.Set;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class FileOperation {
     private String root;
@@ -97,6 +99,24 @@ public class FileOperation {
         File source = sourceFile.toFile();
         File classFile = new File(sourceFile.toString().replace(root + File.separator, "bin" + File.separator).replace(".java", ".class"));
         return !classFile.exists() || source.lastModified() > classFile.lastModified();
+    }
+    public Set<String> getDependencies(String packageName, String fileName) {
+        Set<String> imports = new HashSet<>();
+        List<Path> files = sourceFiles();
+        for(Path p: files) {
+            String[] lines = TextUtils.getFileLines(p.toString()).split("\n");
+            for(String l: lines) {
+                l = l.trim().replace(";", "");
+                String packDir = packageName.replace("." + fileName.replace(".java", ""), "");
+                if(l.startsWith("import") && l.contains(packageName)) {
+                    imports.add(p.toString());
+                } 
+                if(l.startsWith("import") && l.endsWith("*") && l.contains(packDir)) {
+                   imports.add(p.toString());
+                }
+            }
+        }
+        return imports;
     }
     public List<Path> libFiles(String sourceURI) {
         return ex.getResult(fu.callableList(sourceURI, 2))
