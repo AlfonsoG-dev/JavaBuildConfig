@@ -93,6 +93,11 @@ public class FileOperation {
         return dirs;
 
     }
+    public boolean diferDate(Path sourceFile) {
+        File source = sourceFile.toFile();
+        File classFile = new File(sourceFile.toString().replace(root + File.separator, "bin" + File.separator).replace(".java", ".class"));
+        return !classFile.exists() || source.lastModified() > classFile.lastModified();
+    }
     public List<Path> libFiles(String sourceURI) {
         return ex.getResult(fu.callableList(sourceURI, 2))
             .stream()

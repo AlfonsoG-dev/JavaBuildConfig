@@ -5,6 +5,7 @@ import application.builders.*;
 
 import java.util.Optional;
 import java.util.HashMap;
+import java.io.File;
 
 public class Operation {
     private CompileBuilder compileBuilder;
@@ -48,6 +49,17 @@ public class Operation {
     }
     public void executeCompileCommand(String compileFlags) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
+        File f = new File(oTargetURL);
+        String command = "";
+        if(f.exists()) {
+            command = compileBuilder.reCompileCommand(oTargetURL, flags,oIncludeLib);
+        } else {
+            command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
+        }
+        ex.executeCommand(command);
+    }
+    public void executeScratchCompile(String flags) {
+        flags = Optional.ofNullable(flags).orElse(oCompileFlags);
         String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         ex.executeCommand(command);
     }

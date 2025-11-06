@@ -19,6 +19,10 @@ class JavaBuildConfig {
                 case "--compile":
                     op.executeCompileCommand(flags);
                     break;
+                    case "--build":
+                    op.executeScratchCompile(flags);
+                    op.executeJarCommand(null, flags, getSubCommand("-e", args));
+                    break;
                 case "--run":
                     if((i+1) < args.length) {
                         boolean conditionA = args[i+1].contains("--");
