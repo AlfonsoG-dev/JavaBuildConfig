@@ -53,11 +53,12 @@ public class FileUtils {
     public String copyFile(Path sourcePath, String destinationURI) {
         try {
             if(sourcePath.toFile().isFile()) {
-                sourcePath = sourcePath.normalize();
-                Path newPath = Paths.get(destinationURI).resolve(sourcePath);
-                String o =  Files.copy(sourcePath, newPath, StandardCopyOption.REPLACE_EXISTING).toString().toString();
-                System.out.println(
-                        "\tCopy { " + TextUtils.Colors.YELLOW_UNDERLINED + sourcePath.toString() + TextUtils.Colors.ANSI_RESET + " } \n\t\tinto => [ " + TextUtils.Colors.GREEN_UNDERLINED + o + TextUtils.Colors.ANSI_RESET + " ]"
+                Path destination = Paths.get(destinationURI).resolve(sourcePath.getFileName());
+                String o = Files.copy(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING).toString();
+                System.out.printf(
+                    "\tCopy { %s%s%s } \n\t\tinto => [ %s%s%s ]%n",
+                    TextUtils.Colors.YELLOW_UNDERLINED, sourcePath, TextUtils.Colors.ANSI_RESET,
+                    TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET
                 );
                 return o;
             }
@@ -67,27 +68,34 @@ public class FileUtils {
             return "";
         }
     }
-    public void copyDirectory(Path sourcePath, String destinationURI) {
-        // sourcePath already check if its a directory
-        sourcePath = sourcePath.normalize();
-        List<Path> files = listPaths(sourcePath.toString(), 0);
-        files
-            .parallelStream()
-            .filter(p -> p.toFile().isDirectory())
-            .forEach(p -> {
-                Path destinationPath = Paths.get(destinationURI).resolve(p);
-                try {
-                    Files.createDirectories(destinationPath);
-                } catch(IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        files
-            .parallelStream()
-            .forEach(p -> {
-                copyFile(p, destinationURI);
-            });
+    public void copyDirectory(Path sourceDir, String destinationURI) {
+        try {
+            Path destinationRoot = Paths.get(destinationURI);
+            Files.walk(sourceDir)
+                .forEach(source -> {
+                    try {
+                        Path relative = sourceDir.relativize(source);
+                        Path destination = destinationRoot.resolve(relative);
+    
+                        if (Files.isDirectory(source)) {
+                            Files.createDirectories(destination);
+                        } else {
+                            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+                            System.out.printf(
+                                "\tCopy { %s%s%s } \n\t\tinto => [ %s%s%s ]%n",
+                                TextUtils.Colors.YELLOW_UNDERLINED, source, TextUtils.Colors.ANSI_RESET,
+                                TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET
+                            );
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     public int countFiles(Path directory) {
         int n = 0;
         File f = directory.toFile();
