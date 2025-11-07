@@ -13,6 +13,7 @@ public class Operation {
     private JarBuilder jarBuilder;
     private ScriptBuilder scriptBuilder;
     private LibBuilder libBuilder;
+    private FileBuilder fileBuilder;
     private FileOperation fileOperation;
     private ExecutorUtils ex;
 
@@ -35,6 +36,7 @@ public class Operation {
         jarBuilder = new JarBuilder(this.root, fileOperation);
         scriptBuilder = new ScriptBuilder(compileBuilder);
         libBuilder = new LibBuilder(this.root, fileOperation);
+        fileBuilder = new FileBuilder(fileOperation);
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
@@ -48,6 +50,16 @@ public class Operation {
     public void initializeENV(String sourceURl, String targetURL, String includeLib) {
         this.sourceURl = Optional.ofNullable(sourceURl).orElse(oSourceURl);
         fileOperation.populateList(this.sourceURl);
+        if(targetURL != null) {
+            this. oTargetURL = targetURL;
+        }
+        if(includeLib != null) {
+            this.oIncludeLib = includeLib.equals("include");
+        }
+    }
+    public void setConfig(String mainClass, String flags) {
+        mainClass = Optional.ofNullable(mainClass).orElse(oSourceURl);
+        fileBuilder.createConfig(oSourceURl, oTargetURL, oMainClass, oCompileFlags, false);
     }
     public void executeCompileCommand(String compileFlags) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);

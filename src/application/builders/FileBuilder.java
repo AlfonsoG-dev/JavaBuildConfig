@@ -58,7 +58,7 @@ public class FileBuilder {
             {"Source-Path: ", source},
             {"Class-Path: ", target},
             {"Main-Class: ", mainClass},
-            {"Test-Path: ", "src" + File.separator + "test"},
+            {"Test-Path: ", source.split("\\" + File.separator)[0].trim() + File.separator + "test"},
             {"Test-Class: ", "test.TestLauncher"},
             {"Libraries: ", includeLib ? "include":"exclude"},
             {"Compile-Flags: ", flags}
