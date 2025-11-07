@@ -5,4 +5,4 @@ Main-Class: application.JavaBuildConfig
 Test-Path: src\test
 Test-Class: test.TestLauncher
 Libraries: 
-Compile-Flags: -Xlint:all
+Compile-Flags: -Werror -Xlint:all -g

@@ -42,8 +42,14 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--add":
-                    if ((i+2) < args.length) op.copyToPath(args[i+1], args[i+2]);
-                    if((i+1) < args.length) op.copyToPath(args[i+1], null); 
+                    if ((i+2) < args.length) {
+                         op.copyToPath(args[i+1], args[i+2]);
+                    } else if((i+1) < args.length) {
+                        op.copyToPath(args[i+1], null); 
+                    }
+                    break;
+                    case "--extract":
+                    op.extractDependencies(target, flags);
                     break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
@@ -67,6 +73,8 @@ class JavaBuildConfig {
                     System.out.println("\t use --jar fileName to change the jar file name");
                     System.out.println("\t use -e application.App to change the main class entry point if manifesto isn't present");
                     System.out.println("\t use --jar -f vn to insert flags to the JVM");
+                    break;
+                default:
                     break;
             }
         }

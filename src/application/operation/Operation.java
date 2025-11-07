@@ -11,9 +11,10 @@ public class Operation {
     private CompileBuilder compileBuilder;
     private RunBuilder runBuilder;
     private JarBuilder jarBuilder;
+    private ScriptBuilder scriptBuilder;
+    private LibBuilder libBuilder;
     private FileOperation fileOperation;
     private ExecutorUtils ex;
-    private ScriptBuilder scriptBuilder;
 
     private String root;
     private String sourceURl;
@@ -33,6 +34,7 @@ public class Operation {
         runBuilder = new RunBuilder(this.root, fileOperation);
         jarBuilder = new JarBuilder(this.root, fileOperation);
         scriptBuilder = new ScriptBuilder(compileBuilder);
+        libBuilder = new LibBuilder(this.root, fileOperation);
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
@@ -78,6 +80,11 @@ public class Operation {
         String command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
         ex.executeCommand(command);
     }
+    public void extractDependencies(String targetURI, String flags) {
+        targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
+        flags = Optional.ofNullable(flags).orElse("v");
+        libBuilder.getCommand(targetURI, null, oIncludeLib);
+    }
     public void createBuildScript(String fileURL) {
         String osName = System.getProperty("os.name").toLowerCase();
         fileURL = Optional.ofNullable(fileURL).orElse("build");
@@ -90,7 +97,7 @@ public class Operation {
         fileOperation.createFile(fileURL, lines);
     }
     public void copyToPath(String sourceURI, String destinationURI) {
-        destinationURI = Optional.ofNullable(destinationURI).orElse("extractionFiles");
+        destinationURI = Optional.ofNullable(destinationURI).orElse("lib");
         fileOperation.copyToPath(sourceURI, destinationURI);
     }
 }
