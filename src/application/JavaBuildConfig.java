@@ -17,7 +17,12 @@ class JavaBuildConfig {
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
-                    op.executeCompileCommand(flags);
+                    if((i+1) < args.length) {
+                        op.executeCompileCommand(flags, args[i+1]);
+                    } else {
+                        op.executeCompileCommand(flags, null);
+                    }
+
                     break;
                 case "--build":
                     op.executeScratchCompile(flags);
@@ -53,7 +58,8 @@ class JavaBuildConfig {
                     break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
-                    System.out.println("use --compile -Werror to compile the project using JVM flags");
+                    System.out.println("use --compile classpath to compile the project and store the .class files in that place");
+                    System.out.println("use --compile -f -Werror to compile the project using JVM flags");
                     System.out.println("\tuse --s to change the project source");
                     System.out.println("\tuse --t to change the project target");
 

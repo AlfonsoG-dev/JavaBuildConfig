@@ -61,12 +61,13 @@ public class Operation {
         mainClass = Optional.ofNullable(mainClass).orElse(oSourceURl);
         fileBuilder.createConfig(oSourceURl, oTargetURL, oMainClass, oCompileFlags, false);
     }
-    public void executeCompileCommand(String compileFlags) {
+    public void executeCompileCommand(String compileFlags, String target) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
+        target = Optional.ofNullable(target).orElse(oTargetURL);
         File f = new File(oTargetURL);
         String command = "";
         if(f.exists()) {
-            command = compileBuilder.reCompileCommand(oTargetURL, flags,oIncludeLib);
+            command = compileBuilder.reCompileCommand(oTargetURL, target, flags,oIncludeLib);
         } else {
             command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         }
