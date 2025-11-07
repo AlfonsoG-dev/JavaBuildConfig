@@ -83,7 +83,8 @@ public class Operation {
     public void extractDependencies(String targetURI, String flags) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         flags = Optional.ofNullable(flags).orElse("v");
-        libBuilder.getCommand(targetURI, null, oIncludeLib);
+        String c = libBuilder.getCommand(targetURI, null, oIncludeLib);
+        System.out.println(c);
     }
     public void createBuildScript(String fileURL) {
         String osName = System.getProperty("os.name").toLowerCase();
