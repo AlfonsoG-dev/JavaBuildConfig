@@ -48,7 +48,7 @@ class JavaBuildConfig {
                         op.copyToPath(args[i+1], null); 
                     }
                     break;
-                    case "--extract":
+                case "--extract":
                     op.extractDependencies(target, flags);
                     break;
                 case "--h":
