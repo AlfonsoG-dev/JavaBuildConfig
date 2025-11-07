@@ -27,6 +27,7 @@ java -jar javaBuild.jar --compile
 >- `--s sourcePath` to change the source path.
 >- `--t classPath` to change the target path.
 >- `--i` to include or not the lib files.
+>- `-f` to insert flags to the compile process.
 
 2. Run Command
 - Use `--run` to execute the project.
@@ -38,6 +39,34 @@ java -jar javaBuild.jar --run
 >- `--s` to change the source path.
 >- `--t` to change the target path.
 >- `--i` to include or not the lib files.
+>- `-f` to insert flags to the run process.
+
+3. Create `jar` file
+- Use `--jar` to create the build `.jar` file of the application.
+```sh
+java -jar javaBuild.jar --jar
+```
+>- `fileName` to change the `.jar` file name.
+```sh
+java -jar javaBuild.jar --jar app
+```
+>> Now the `.jar` file will be name `app.jar`
+>- `--s` to change the source path.
+>- `--t` to change the target path.
+>- `-e` to change the entry point if manifesto isn't present.
+>- `-f` to insert flags to the run process.
+
+4. Build project
+- It compile and creates the `.jar` file of the project.
+> Just to save time you only enter this command insted of two.
+```sh
+java -jar javaBuild.jar --build
+```
+> It accepts the same command as compile but the `-f` only works for compile not for `--jar` command.
+```sh
+java -jar javaBuild.jar --build -f -g
+```
+> The previous command will add `-g` flag to the compile process enabling debug information.
 
 ---
 

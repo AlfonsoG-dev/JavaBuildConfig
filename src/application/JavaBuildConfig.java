@@ -19,10 +19,10 @@ class JavaBuildConfig {
                 case "--compile":
                     op.executeCompileCommand(flags);
                     break;
-                    case "--build":
+                case "--build":
                     op.executeScratchCompile(flags);
-                    op.executeJarCommand(null, flags, getSubCommand("-e", args));
-                    break;
+                    op.executeJarCommand(null, null, getSubCommand("-e", args));
+                break;
                 case "--run":
                     if((i+1) < args.length) {
                         boolean conditionA = args[i+1].contains("--");
@@ -51,6 +51,11 @@ class JavaBuildConfig {
                     System.out.println("\tuse --s to change the project source");
                     System.out.println("\tuse --t to change the project target");
 
+                    System.out.println("use --build to build the entire project");
+                    System.out.println("\tuse --s to change the project source");
+                    System.out.println("\tuse --t to change the project target");
+                    System.out.println("\t use -f to insert flags to the compile process like -f -g");
+                    System.out.println("\t use -e application.App to change the main class entry point if manifesto isn't present");
 
                     System.out.println("use --run to execute the project");
                     System.out.println("use --run app.java to execute other main class");
@@ -60,7 +65,7 @@ class JavaBuildConfig {
 
                     System.out.println("use --jar to create the jar file of the project");
                     System.out.println("\t use --jar fileName to change the jar file name");
-                    System.out.println("\t use --jar -e application.App to change the main class entry point");
+                    System.out.println("\t use -e application.App to change the main class entry point if manifesto isn't present");
                     System.out.println("\t use --jar -f vn to insert flags to the JVM");
                     break;
             }
