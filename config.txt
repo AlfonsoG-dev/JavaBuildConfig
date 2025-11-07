@@ -4,5 +4,5 @@ Class-Path: bin
 Main-Class: application.JavaBuildConfig
 Test-Path: src\test
 Test-Class: test.TestLauncher
-Libraries: 
+Libraries:
 Compile-Flags: -Werror -Xlint:all -g

@@ -27,8 +27,33 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
                     op.copyToPath(f.getPath(), targetPath.toString());
                 }
             }
+            File f = new File(targetURL);
+            if(f.listFiles() != null) {
+                for(File s: f.listFiles()) {
+                    command.append("cd ");
+                    command.append(s.getPath());
+                    command.append(" && ");
+                    if(s.listFiles() != null) {
+                        for(File d: s.listFiles()) {
+                            if(d.getName().contains(".jar")) {
+                                command.append("jar -x");
+                                command.append(flags);
+                                command.append("f ");
+                                command.append(d.getName());
+                                command.append(" && rm -r ");
+                                command.append(d.getName());
+                                command.append(" cd.. && ");
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return command.toString();
+        String clean = command.toString();
+        if((clean.length()-9) < clean.length()) {
+            clean = clean.substring(0, clean.length()-9);
+        }
+        return clean;
     }
     
 }
