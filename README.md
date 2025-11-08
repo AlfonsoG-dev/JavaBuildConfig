@@ -68,6 +68,20 @@ java -jar javaBuild.jar --build -f -g
 ```
 > The previous command will add `-g` flag to the compile process enabling debug information.
 
+5. Configuration
+- It created or modifies the configuration and manifesto file
+```sh
+java -jar javaBuild.jar --config
+```
+> You can change the source by giving `--s src`
+> You can change the target by givin `--t bin`
+> You can change the main class by givin its name
+>- you can change the author by giving after the main class the name
+```sh
+java -jar javaBuild.jar --config src.App Owner-Mine
+```
+> You can "include/exclude" lib dependencies by giving `--i include/exclude`
+
 ---
 
 # Disclaimer
