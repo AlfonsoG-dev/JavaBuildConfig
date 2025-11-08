@@ -56,6 +56,15 @@ class JavaBuildConfig {
                 case "--extract":
                     op.extractDependencies(target, flags);
                     break;
+                case "--config":
+                    if((i+2) < args.length) {
+                        op.setConfig(args[i+1], args[i+2]);
+                    } else if((i+1) < args.length) {
+                        op.setConfig(args[i+1], null);
+                    } else {
+                        op.setConfig(null, null);
+                    }
+                    break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile classpath to compile the project and store the .class files in that place");
@@ -79,6 +88,11 @@ class JavaBuildConfig {
                     System.out.println("\t use --jar fileName to change the jar file name");
                     System.out.println("\t use -e application.App to change the main class entry point if manifesto isn't present");
                     System.out.println("\t use --jar -f vn to insert flags to the JVM");
+
+                    System.out.println("\t use --config to create the project config");
+                    System.out.println("\t use --config app to change the main class for the config");
+                    System.out.println("\t use --config app name-person to change the main author for the manifesto");
+                    System.out.println("\t use --config --i include/exclude lib dependencies");
                     break;
                 default:
                     break;

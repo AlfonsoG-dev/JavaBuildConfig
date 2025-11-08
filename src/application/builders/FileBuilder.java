@@ -65,10 +65,9 @@ public class FileBuilder {
         };
         for(int i=0; i<headers.length; ++i) {
             for(int j=0; j<headers[i].length; ++j) {
-                lines.append(headers[i][0]);
                 lines.append(headers[i][j]);
-                lines.append("\n");
             }
+            lines.append("\n");
         }
         fileOperation.createFile("config.txt", lines.toString());
     }

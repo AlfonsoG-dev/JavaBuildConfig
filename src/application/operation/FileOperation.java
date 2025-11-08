@@ -75,6 +75,17 @@ public class FileOperation {
         File f = new File("." + File.separator + "config.txt");
         return f.exists();
     }
+    public String getAuthor() {
+        if(haveManifesto()) {
+            String[] lines = TextUtils.getFileLines("Manifesto.txt").split("\n");
+            for(String l: lines) {
+                if(l.contains("Created-By")) {
+                    return l.split(":", 2)[1].trim();
+                }
+            }
+        }
+        return null;
+    }
     public HashMap<String, String> getConfigValues() {
         HashMap<String, String> configs = new HashMap<>();
         String[] lines = TextUtils.getFileLines("config.txt").split("\n");

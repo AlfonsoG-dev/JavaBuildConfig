@@ -58,7 +58,7 @@ public record TextUtils() {
         return lines;
     }
     public static void writeLines(String fileURL, String lines) {
-        try(FileWriter w = new FileWriter(new File(fileURL))) {
+        try(FileWriter w = new FileWriter(fileURL, false)) {
             if(!lines.isEmpty()) {
                 w.write(lines);
             }

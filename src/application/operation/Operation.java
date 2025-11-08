@@ -24,6 +24,7 @@ public class Operation {
     private String oSourceURl;
     private String oTargetURL;
     private String oMainClass;
+    private String oAuthor;
     private String oCompileFlags;
     private boolean oIncludeLib;
 
@@ -43,6 +44,7 @@ public class Operation {
         oSourceURl = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
         oTargetURL = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
+        oAuthor = Optional.ofNullable(fileOperation.getAuthor()).orElse("System-Owner");
         oCompileFlags = Optional.ofNullable(configData.get("Compile-Flags")).orElse("-Xlint:all -Xdiags:verbose");
         String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
         oIncludeLib = dataLib.equals("include");
@@ -57,9 +59,11 @@ public class Operation {
             this.oIncludeLib = includeLib.equals("include");
         }
     }
-    public void setConfig(String mainClass, String flags) {
-        mainClass = Optional.ofNullable(mainClass).orElse(oSourceURl);
-        fileBuilder.createConfig(oSourceURl, oTargetURL, oMainClass, oCompileFlags, false);
+    public void setConfig(String mainClass, String author) {
+        mainClass = Optional.ofNullable(mainClass).orElse(oMainClass);
+        author = Optional.ofNullable(author).orElse(oAuthor);
+        fileBuilder.createConfig(oSourceURl, oTargetURL, mainClass, oCompileFlags, oIncludeLib);
+        fileBuilder.createManifesto(author, oIncludeLib);
     }
     public void executeCompileCommand(String compileFlags, String target) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
