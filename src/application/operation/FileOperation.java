@@ -22,6 +22,11 @@ public class FileOperation {
         fu = new FileUtils(this.root);
         ex = new ExecutorUtils();
     }
+    public FileOperation(String root, ExecutorUtils executorUtils) {
+        this.root = root;
+        fu = new FileUtils(this.root);
+        this.ex = executorUtils;
+    }
     public void populateList(String sourceURI) {
         listFiles = ex.getResult(fu.callableList(sourceURI, 0));
     }
