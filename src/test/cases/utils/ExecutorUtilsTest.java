@@ -3,7 +3,6 @@ package test.cases.utils;
 import application.utils.*;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import java.io.File;
 
