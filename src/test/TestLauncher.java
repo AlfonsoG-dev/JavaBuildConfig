@@ -5,6 +5,7 @@ import application.operation.FileOperation;
 
 import test.cases.utils.*;
 import test.cases.operation.*;
+import test.cases.builders.*;
 
 import java.io.File;
 
@@ -44,5 +45,11 @@ class TestLauncher {
         fopt.getMainClassTest();
         fopt.getProjectNameTest();
         fopt.sourceDirsTest();
+
+        // test CompileBuilder
+        System.out.println("\nTesting CompileBuilder\b");
+        CompileBuilderTest cbt = new CompileBuilderTest(root, fop);
+        cbt.getCommandTest();
+        cbt.reCompileCommandTest();
     }
 }
