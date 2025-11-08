@@ -17,11 +17,9 @@ public class FileUtilsTest {
 
     private List<Path> list;
     private FileUtils fileUtils;
-    private String root;
 
-    public FileUtilsTest() {
-        root = "src";
-        fileUtils = new FileUtils(root);
+    public FileUtilsTest(FileUtils fileUtils) {
+        this.fileUtils = fileUtils;
     }
 
     public void createDirectoryTest() {
