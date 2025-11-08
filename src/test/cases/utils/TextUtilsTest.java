@@ -19,9 +19,9 @@ public class TextUtilsTest {
                     throw new Exception("In Manifesto the variable can't containt empty values");
                 }
             }
-            System.out.println("[Info] No error's on getFileLinesTest execution");
+            System.out.println("\r\t[Info] No error's on getFileLinesTest execution");
         } catch (Exception e) {
-            System.err.println("[Error] " + e.getLocalizedMessage());
+            System.err.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
 }
