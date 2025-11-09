@@ -43,6 +43,10 @@ public class FileOperation {
             .toList();
         return files;
     }
+    /**
+     * search in the source path for the first class that has main attribute present. 
+     * @return the main class package.name, or empty string
+     */
     public String getMainClass() {
         String sourceRoot = root + File.separator;
         File f = new File(root);
@@ -61,6 +65,10 @@ public class FileOperation {
         }
         return "";
     }
+    /**
+     * Get the project name form directory canonical path.name
+     * @return the project name
+     */
     public String getProjectName() {
         String name = "";
         try {
@@ -72,14 +80,26 @@ public class FileOperation {
         }
         return name;
     }
+    /**
+     * verify if manifesto is present.
+     * @return true if present, false otherwise 
+     */
     public boolean haveManifesto() {
         File f = new File("." + File.separator + "Manifesto.txt");
         return f.exists();
     }
+    /**
+     * verify if configuration is present.
+     * @return true if present, false otherwise 
+     */
     public boolean haveConfig() {
         File f = new File("." + File.separator + "config.txt");
         return f.exists();
     }
+    /**
+     * Get the project author from manifesto.
+     * @return the author, null if not defined.
+     */
     public String getAuthor() {
         if(haveManifesto()) {
             String[] lines = TextUtils.getFileLines("Manifesto.txt").split("\n");
@@ -91,6 +111,10 @@ public class FileOperation {
         }
         return null;
     }
+    /**
+     * A table with configuration attributes for the build tool.
+     * @return A HasMap with the configuration attributes.
+     */
     public HashMap<String, String> getConfigValues() {
         HashMap<String, String> configs = new HashMap<>();
         String[] lines = TextUtils.getFileLines("config.txt").split("\n");
@@ -102,6 +126,10 @@ public class FileOperation {
         }
         return configs;
     }
+    /**
+     * A list of source directories.
+     * @return the source directories.
+     */
     public List<Path> sourceDirs() {
         List<Path> dirs = listFiles
             .stream()
@@ -111,11 +139,22 @@ public class FileOperation {
         return dirs;
 
     }
-    public boolean diferDate(Path sourceFile) {
+    /**
+     * Compare last modified date in milliseconds of source files with their counterapart in class path.
+     * @param sourceFile path to the .java files.
+     * @return true if there is a difference in dates with the source file and class file, false otherwise.
+     */
+    public boolean differDate(Path sourceFile) {
         File source = sourceFile.toFile();
         File classFile = new File(sourceFile.toString().replace(root + File.separator, "bin" + File.separator).replace(".java", ".class"));
         return !classFile.exists() || source.lastModified() > classFile.lastModified();
     }
+    /**
+     * Search for the files that depend on a particular file, using the package name with the file name.
+     * @param packageName the package of the files that others depend on.
+     * @param fileName the file that others depend on.
+     * @return the files that depend on the searched file.
+     */
     public Set<Path> getDependencies(String packageName, String fileName) {
         Set<Path> imports = new HashSet<>();
         List<Path> files = sourceFiles();
@@ -133,12 +172,22 @@ public class FileOperation {
         }
         return imports;
     }
+    /**
+     * List of jar dependencies.
+     * @param sourceURI where the .jar dependencies are
+     * @return a list with the jar path.
+     */
     public List<Path> libFiles(String sourceURI) {
         return ex.getResult(fu.callableList(sourceURI, 2))
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
     }
+    /**
+     * Copy files or directory to a destination path.
+     * @param sourceURI the source file or directory.
+     * @param destinationURI the destination path.
+     */
     public void copyToPath(String sourceURI, String destinationURI) {
         File f = new File(sourceURI);
         System.out.println("[Info] Copying ...");
