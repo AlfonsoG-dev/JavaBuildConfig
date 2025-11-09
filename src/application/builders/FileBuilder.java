@@ -22,7 +22,7 @@ public class FileBuilder {
             "**Manifesto.txt\n",
             "**Session.vim\n",
             "**.jar\n",
-            "**.exen"
+            "**.exe"
         };
         StringBuilder lines = new StringBuilder();
         for(String f: files) {

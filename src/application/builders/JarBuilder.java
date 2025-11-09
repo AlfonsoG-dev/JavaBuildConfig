@@ -13,12 +13,11 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     private String appendJarType(StringBuilder lines, String mainClass) {
         String executable = "";
         if(fileOperation.haveManifesto()) {
-            lines.append("m ");
             executable = "m ";
         } else if(!mainClass.isEmpty()) {
-            lines.append("e ");
             executable = "e ";
         }
+        lines.append(executable);
         return executable;
     }
     private void appendAssets(StringBuilder lines, String targetURL, boolean includeLib) {
@@ -27,10 +26,23 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(File.separator);
         lines.append(" .");
         if(includeLib) {
-            lines.append(" -C ");
-            lines.append("extractionFiles");
-            lines.append(File.separator);
-            lines.append(" .");
+            File m = new File("extractionFiles");
+            String[] libFiles = prepareLibFiles().toString().split(";");
+            // TODO: test append assets having lib dependencies.
+            for(String l: libFiles) {
+                lines.append(" -C ");
+                File f = new File(l);
+                lines.append( m.toPath().resolve(f.getName().replace(".jar", "")));
+                lines.append(File.separator);
+                lines.append(" .");
+            }
+
+        }
+    }
+    private void appendJarFormat(StringBuilder lines, String format, String mainClass) {
+        switch(format) {
+            case "m " -> lines.append("Manifesto.txt");
+            case "e " -> lines.append(mainClass);
         }
     }
     @Override
@@ -39,14 +51,14 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         if(!flags.isEmpty()) lines.append(flags);
         lines.append("f");
         String mainClass = fileOperation.getMainClass();
-        // jar format
+        // append jar format
         String format = appendJarType(lines, mainClass);
 
+        // append files
         lines.append(fileOperation.getProjectName() + ".jar ");
-        switch(format) {
-            case "m " -> lines.append("Manifesto.txt");
-            case "e " -> lines.append(mainClass);
-        }
+        appendJarFormat(lines, format, mainClass);
+
+        // append assets
         appendAssets(lines, targetURL, includeLib);
         return lines.toString();
     }
@@ -58,10 +70,8 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         String format = appendJarType(lines, mainClass);
 
         lines.append(fileOperation.getProjectName() + ".jar ");
-        switch(format) {
-            case "m " -> lines.append("Manifesto.txt");
-            case "e " -> lines.append(mainClass);
-        }
+        appendJarFormat(lines, format, mainClass);
+
         appendAssets(lines, targetURL, includeLib);
         return lines.toString();
     }
@@ -74,10 +84,8 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         String format = appendJarType(lines, mainClass);
 
         lines.append(fileName + ".jar ");
-        switch(format) {
-            case "m " -> lines.append("Manifesto.txt");
-            case "e " -> lines.append(mainClass);
-        }
+        appendJarFormat(lines, format, mainClass);
+
         appendAssets(lines, targetURL, includeLib);
         return lines.toString();
     }

@@ -14,6 +14,21 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     public FileOperation getFileOperation() {
         return op;
     }
+    private void appendExtractJarContent(StringBuilder command, File extract, String flags) {
+        if(extract.listFiles() != null) {
+            for(File d: extract.listFiles()) {
+                if(d.getName().contains(".jar")) {
+                    command.append("jar -x");
+                    command.append(flags);
+                    command.append("f ");
+                    command.append(d.getName());
+                    command.append(" && rm -r ");
+                    command.append(d.getName());
+                    command.append(" cd .. && ");
+                }
+            }
+        }
+    }
 
     @Override
     public String getCommand(String targetURL, String flags, boolean includeLib) {
@@ -33,25 +48,13 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
                     command.append("cd ");
                     command.append(s.getPath());
                     command.append(" && ");
-                    if(s.listFiles() != null) {
-                        for(File d: s.listFiles()) {
-                            if(d.getName().contains(".jar")) {
-                                command.append("jar -x");
-                                command.append(flags);
-                                command.append("f ");
-                                command.append(d.getName());
-                                command.append(" && rm -r ");
-                                command.append(d.getName());
-                                command.append(" cd.. && ");
-                            }
-                        }
-                    }
+                    appendExtractJarContent(command, f, flags);
                 }
             }
         }
         String clean = command.toString();
-        if((clean.length()-9) < clean.length()) {
-            clean = clean.substring(0, clean.length()-9);
+        if((clean.length()-10) < clean.length()) {
+            clean = clean.substring(0, clean.length()-10);
         }
         return clean;
     }

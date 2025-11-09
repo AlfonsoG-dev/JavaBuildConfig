@@ -6,7 +6,7 @@ public record ScriptBuilder(CommandModel cm) {
 
     private final static String OS_NAME = System.getProperty("os.name").toLowerCase();
 
-    public void appenSource(StringBuilder lines) {
+    public void appendSource(StringBuilder lines) {
         if(OS_NAME.contains("windows")) {
             lines.append("$Source=");
             lines.append("\"");
@@ -95,7 +95,7 @@ public record ScriptBuilder(CommandModel cm) {
 
     public String getScript(String targetURL, boolean includeLib) {
         StringBuilder lines = new StringBuilder();
-        appenSource(lines);
+        appendSource(lines);
         if(includeLib) appendLib(lines);
         appendCompileCommand(lines, targetURL, includeLib);
         appendRunCommand(lines, targetURL, includeLib);

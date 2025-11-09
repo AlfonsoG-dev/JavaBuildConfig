@@ -11,6 +11,12 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
     public FileOperation getFileOperation() {
         return op;
     }
+    /**
+     * Get run command.
+     * @param targetURL the path to the source of the .class files.
+     * @param flags additional command to execute alongside with the run commnad.
+     * @param includeLib true if you want to include the jar dependencies in the build process, false otherwise.
+     */
     @Override
     public String getCommand(String targetURL, String flags, boolean includeLib) {
         if(!new File(targetURL).exists()) return null;
@@ -30,9 +36,22 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
 
         return command.toString();
     }
+    /**
+     * Prepare the class name to the form `com.application.manual.App`
+     * @param mainClass the main class name with file prefix included
+     * @return the main class name formated to match package definition.
+     */
     private String prepareClassName(String mainClass) {
         return mainClass.replace(root + File.separator, "").replace(File.separator, ".").replace(".java", "");
     }
+    /**
+     * Get run command when the user provides the class name to execute
+     * @param mainClass class to execute
+     * @param targetURL the path to the source of .class files.
+     * @param flags the commands to execute alongside with run command.
+     * @param includeLib if you want to include jar dependencies in the build process
+     * @return the command.
+     */
     public String getCommand(String mainClass, String targetURL, String flags, boolean includeLib) {
         if(!new File(targetURL).exists()) return null;
         StringBuilder command = new StringBuilder("java -cp '");
