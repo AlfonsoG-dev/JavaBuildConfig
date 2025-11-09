@@ -79,7 +79,7 @@ public class Operation {
     }
     public void executeScratchCompile(String flags) {
         flags = Optional.ofNullable(flags).orElse(oCompileFlags);
-        String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
+        String command = "rm -r " + oTargetURL + " && " + compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         ex.executeCommand(command);
     }
     public void executeRunCommand(String flags, String mainClass) {

@@ -53,9 +53,8 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         List<Path> paths = op.sourceFiles().stream()
             .filter(p -> op.diferDate(p))
             .toList();
-        if(paths.size() == 0) {
-            return null;
-        }
+        if(paths.size() == 0) return null;
+
         Set<Path> files = new HashSet<>();
         files.addAll(paths);
         for(Path p: paths) {
