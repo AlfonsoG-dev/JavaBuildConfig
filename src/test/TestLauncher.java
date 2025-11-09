@@ -51,5 +51,10 @@ class TestLauncher {
         CompileBuilderTest cbt = new CompileBuilderTest(root, fop);
         cbt.getCommandTest();
         cbt.reCompileCommandTest();
+
+        // test runBuilder
+        System.out.println("\nTesting RunBuilder\b");
+        RunBuilderTest rbt = new RunBuilderTest(root, fop);
+        rbt.getCommandTest();
     }
 }
