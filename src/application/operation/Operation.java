@@ -94,7 +94,12 @@ public class Operation {
     public void executeJarCommand(String fileName, String flags, String mainClass) {
         flags = Optional.ofNullable(flags).orElse("v");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
-        String command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
+        String command = "";
+        if(!new File(fileName + ".jar").exists()) {
+            command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
+        } else {
+            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURL, flags);
+        }
         ex.executeCommand(command);
     }
     public void extractDependencies(String targetURI, String flags) {

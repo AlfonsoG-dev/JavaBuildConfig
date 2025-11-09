@@ -17,7 +17,7 @@ class JavaBuildConfig {
         for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
-                    if((i+1) < args.length) {
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
                         op.executeCompileCommand(flags, args[i+1]);
                     } else {
                         op.executeCompileCommand(flags, null);
