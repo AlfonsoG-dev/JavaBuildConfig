@@ -96,7 +96,11 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Count the files inside a directory.
+     * @param directory the directory to count its files.
+     * @return the number of files inside the given dierectory, if its empty 0.
+     */
     public int countFiles(Path directory) {
         int n = 0;
         File f = directory.toFile();
@@ -109,6 +113,12 @@ public class FileUtils {
         }
         return n;
     }
+    /**
+     * A list of paths on the given nested level, if level is 0 the content will be recursively appended to the list.
+     * @param pathURI the path to list its content.
+     * @param level the nested level to search for content.
+     * @return the list content inside the given path
+     */
     public List<Path> listPaths(String pathURI, int level) {
         List<Path> files = new ArrayList<>();
         try {
@@ -118,6 +128,12 @@ public class FileUtils {
         }
         return files;
     }
+    /**
+     * A callable list of paths on the given nested level, if level is 0 the content will be recursively appended to the list.
+     * @param pathURI the paths to list its content.
+     * @param level the nested level to search for content.
+     * @return a callable tasks to complete its future.
+     */
     public Callable<List<Path>> callableList(String pathURI, int level) {
         return new Callable<List<Path>>() {
             @Override

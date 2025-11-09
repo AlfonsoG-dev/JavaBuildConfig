@@ -13,6 +13,12 @@ import java.util.concurrent.RejectedExecutionException;
 public record ExecutorUtils() {
     private final static String LOCAL_PATH = "." + File.separator;
 
+    /**
+     * Executes callable tasks with new cached thread pools.
+     * @param <T> the type to return when future of callable is completed.
+     * @param task the callable tasks to complete.
+     * @return the generic type of the result of the future of callable completion.
+     */
     public<T> T getResult(Callable<T> task) {
         T value = null;
         try(ExecutorService ex = Executors.newCachedThreadPool()) {
@@ -29,6 +35,10 @@ public record ExecutorUtils() {
         }
         return value;
     }
+    /**
+     * Executes the given commands and show the success or error. 
+     * @param command the command to execute.
+     */
     public void executeCommand(String command) {
         Process p = null;
         try {
