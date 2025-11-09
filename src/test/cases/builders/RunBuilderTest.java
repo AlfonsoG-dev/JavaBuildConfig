@@ -4,10 +4,8 @@ import application.builders.RunBuilder;
 import application.operation.FileOperation;
 
 public class RunBuilderTest {
-    private FileOperation fileOperation;
     private RunBuilder runBuilder;
     public RunBuilderTest(String root, FileOperation fileOperation) {
-        this.fileOperation = fileOperation;
         runBuilder = new RunBuilder(root, fileOperation);
     }
 

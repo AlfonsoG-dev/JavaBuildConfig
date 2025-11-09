@@ -116,8 +116,8 @@ public class FileOperation {
         File classFile = new File(sourceFile.toString().replace(root + File.separator, "bin" + File.separator).replace(".java", ".class"));
         return !classFile.exists() || source.lastModified() > classFile.lastModified();
     }
-    public Set<String> getDependencies(String packageName, String fileName) {
-        Set<String> imports = new HashSet<>();
+    public Set<Path> getDependencies(String packageName, String fileName) {
+        Set<Path> imports = new HashSet<>();
         List<Path> files = sourceFiles();
         for(Path p: files) {
             String[] lines = TextUtils.getFileLines(p.toString()).split("\n");
@@ -125,10 +125,9 @@ public class FileOperation {
                 l = l.trim().replace(";", "");
                 String packDir = packageName.replace("." + fileName.replace(".java", ""), "");
                 if(l.startsWith("import") && l.contains(packageName)) {
-                    imports.add(p.toString());
-                } 
-                if(l.startsWith("import") && l.endsWith("*") && l.contains(packDir)) {
-                   imports.add(p.toString());
+                    imports.add(p);
+                } else if(l.startsWith("import") && l.endsWith("*") && l.contains(packDir)) {
+                   imports.add(p);
                 }
             }
         }
