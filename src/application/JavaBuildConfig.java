@@ -9,7 +9,7 @@ class JavaBuildConfig {
         String source = getSubCommand("--s", args);
         String target = getSubCommand("--t", args);
         String libs = getSubCommand("--i", args);
-        String flags = getSubCommand("-f", args);
+        String flags = getSubCommand("--f", args);
         if(args.length > 0) {
             op.loadConfig();
             op.initializeENV(source, target, libs);
