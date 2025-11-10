@@ -29,12 +29,8 @@ class JavaBuildConfig {
                     op.executeJarCommand(null, null, getSubCommand("-e", args));
                 break;
                 case "--run":
-                    if((i+1) < args.length) {
-                        boolean conditionA = args[i+1].contains("--");
-                        boolean conditionB = args[i+1].contains("-");
-                        if(!conditionA && !conditionB) {
-                            op.executeRunCommand(flags, args[i+1]);
-                        }
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.executeRunCommand(flags, args[i+1]);
                     } else {
                         op.executeRunCommand(flags, null);
                     }
@@ -47,9 +43,9 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--add":
-                    if ((i+2) < args.length) {
+                    if ((i+2) < args.length && !args[i+1].startsWith("-") && !args[i+2].startsWith("-")) {
                          op.copyToPath(args[i+1], args[i+2]);
-                    } else if((i+1) < args.length) {
+                    } else if((i+1) < args.length && !args[i+1].startsWith("-")) {
                         op.copyToPath(args[i+1], null); 
                     }
                     break;
@@ -57,9 +53,9 @@ class JavaBuildConfig {
                     op.extractDependencies(target, flags);
                     break;
                 case "--config":
-                    if((i+2) < args.length) {
+                    if((i+2) < args.length && !args[i+1].startsWith("-") && !args[i+2].startsWith("-")) {
                         op.setConfig(args[i+1], args[i+2]);
-                    } else if((i+1) < args.length) {
+                    } else if((i+1) < args.length && !args[i+1].startsWith("-")) {
                         op.setConfig(args[i+1], null);
                     } else {
                         op.setConfig(null, null);
