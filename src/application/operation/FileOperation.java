@@ -117,7 +117,21 @@ public class FileOperation {
      */
     public HashMap<String, String> getConfigValues() {
         HashMap<String, String> configs = new HashMap<>();
-        String[] lines = TextUtils.getFileLines("config.txt").split("\n");
+        String[] lines = null;
+        if(!new File("config.txt").exists()) {
+            lines = new String[] {
+                "Root-Path: src",
+                "Source-Path: src",
+                "Class-Path: bin",
+                "Main-Class: " + getMainClass() != null ? getMainClass(): "",
+                "Test-Path: src" + File.separator + "test",
+                "Test-Class: test.TestLauncher", 
+                "Libraries: exclude",
+                "Compile-Flags: -Werror"
+            };
+        } else {
+            lines = TextUtils.getFileLines("config.txt").split("\n");
+        }
         for(String l: lines) {
             String[] values = l.split(":", 2);
             String k = values[0].trim();
