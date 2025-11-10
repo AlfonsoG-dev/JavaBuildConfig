@@ -92,7 +92,7 @@ public class Operation {
         ex.executeCommand(command);
     }
     public void executeJarCommand(String fileName, String flags, String mainClass) {
-        flags = Optional.ofNullable(flags).orElse("v");
+        flags = Optional.ofNullable(flags).orElse("");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
         String command = "";
         if(!new File(fileName + ".jar").exists()) {
