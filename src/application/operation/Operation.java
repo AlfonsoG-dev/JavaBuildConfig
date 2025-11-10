@@ -26,6 +26,7 @@ public class Operation {
     private String oMainClass;
     private String oAuthor;
     private String oCompileFlags;
+    private String oTestClass;
     private boolean oIncludeLib;
 
     public Operation(String root) {
@@ -46,6 +47,7 @@ public class Operation {
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
         oAuthor = Optional.ofNullable(fileOperation.getAuthor()).orElse("System-Owner");
         oCompileFlags = Optional.ofNullable(configData.get("Compile-Flags")).orElse("-Xlint:all -Xdiags:verbose");
+        oTestClass = Optional.ofNullable(configData.get("Test-Class")).orElse("test.TestLauncher");
         String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
         oIncludeLib = dataLib.equals("include");
     }
@@ -84,10 +86,21 @@ public class Operation {
     }
     public void executeRunCommand(String flags, String mainClass) {
         String command = "";
+        flags = Optional.ofNullable(flags).orElse("");
         if(mainClass == null) {
             command = runBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         } else {
             command = runBuilder.getCommand(mainClass, oTargetURL, flags, oIncludeLib);
+        }
+        ex.executeCommand(command);
+    }
+    public void executeTest(String mainClass) {
+        mainClass = Optional.ofNullable(mainClass).orElse(oTestClass);
+        String command = "";
+        if(mainClass == null) {
+            command = runBuilder.getCommand(oTargetURL, "", oIncludeLib);
+        } else {
+            command = runBuilder.getCommand(mainClass, oTargetURL, "", oIncludeLib);
         }
         ex.executeCommand(command);
     }

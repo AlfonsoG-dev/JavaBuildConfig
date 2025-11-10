@@ -59,6 +59,13 @@ class JavaBuildConfig {
                         op.setConfig(null, getSubCommand("-a", args));
                     }
                     break;
+                case "--test":
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.executeTest(args[i+1]);
+                    } else {
+                        op.executeTest(null);
+                    }
+                    break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile classpath to compile the project and store the .class files in that place");
@@ -87,6 +94,9 @@ class JavaBuildConfig {
                     System.out.println("\t use --config app to change the main class for the config");
                     System.out.println("\t use --config app name-person to change the main author for the manifesto");
                     System.out.println("\t use --config --i include/exclude lib dependencies");
+
+                    System.out.println("use --test to run tests");
+                    System.out.println("\tuse --test app.name to run another main class of tests");
                     break;
                 default:
                     break;
