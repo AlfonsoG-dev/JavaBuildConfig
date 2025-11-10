@@ -53,12 +53,10 @@ class JavaBuildConfig {
                     op.extractDependencies(target, flags);
                     break;
                 case "--config":
-                    if((i+2) < args.length && !args[i+1].startsWith("-") && !args[i+2].startsWith("-")) {
-                        op.setConfig(args[i+1], args[i+2]);
-                    } else if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.setConfig(args[i+1], null);
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.setConfig(args[i+1], getSubCommand("-a", args));
                     } else {
-                        op.setConfig(null, null);
+                        op.setConfig(null, getSubCommand("-a", args));
                     }
                     break;
                 case "--h":
