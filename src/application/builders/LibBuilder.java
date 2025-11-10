@@ -15,17 +15,15 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
         return op;
     }
     private void appendExtractJarContent(StringBuilder command, File extract, String flags) {
-        if(extract.listFiles() != null) {
-            for(File d: extract.listFiles()) {
-                if(d.getName().contains(".jar")) {
-                    command.append("jar -x");
-                    command.append(flags);
-                    command.append("f ");
-                    command.append(d.getName());
-                    command.append(" && rm -r ");
-                    command.append(d.getName());
-                    command.append(" cd .. && ");
-                }
+        for(File d: extract.listFiles()) {
+            if(d.getName().contains(".jar")) {
+                command.append("jar -x");
+                command.append(flags);
+                command.append("f ");
+                command.append(d.getName());
+                command.append(" && rm -r ");
+                command.append(d.getName());
+                command.append(" cd .. && ");
             }
         }
     }
@@ -33,23 +31,25 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     @Override
     public String getCommand(String targetURL, String flags, boolean includeLib) {
         StringBuilder command = new StringBuilder();
-        if(includeLib) {
-            String[] libFiles = prepareLibFiles().toString().split(";");
-            for(String l: libFiles) {
-                File f = new File(l);
-                Path targetPath = Paths.get(targetURL).resolve(f.getName().replace(".jar", ""));
-                if(op.createDirectories(targetPath.toString())) {
-                    op.copyToPath(f.getPath(), targetPath.toString());
-                }
+        // don't include in build process
+        if(!includeLib) return null;
+
+        String[] libFiles = prepareLibFiles().toString().split(";");
+        for(String l: libFiles) {
+            File f = new File(l);
+            Path targetPath = Paths.get(targetURL).resolve(f.getName().replace(".jar", ""));
+            // create a directory with the same name as the jar file in extractionFiles 
+            if(op.createDirectories(targetPath.toString())) {
+                op.copyToPath(f.getPath(), targetPath.toString());
             }
-            File f = new File(targetURL);
-            if(f.listFiles() != null) {
-                for(File s: f.listFiles()) {
-                    command.append("cd ");
-                    command.append(s.getPath());
-                    command.append(" && ");
-                    appendExtractJarContent(command, f, flags);
-                }
+        }
+        File f = new File(targetURL);
+        if(f.listFiles() != null) {
+            for(File s: f.listFiles()) {
+                command.append("cd ");
+                command.append(s.getPath());
+                command.append(" && ");
+                appendExtractJarContent(command, f, flags);
             }
         }
         String clean = command.toString();
