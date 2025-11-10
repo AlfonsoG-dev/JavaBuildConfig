@@ -14,23 +14,6 @@ public class FileBuilder {
     public FileBuilder(FileOperation fileOperation) {
         this.fileOperation = fileOperation;
     }
-    public void createIgnore() {
-        String[] files = {
-            "**bin\n",
-            "**lib\n",
-            "**extractionFiles\n",
-            "**Manifesto.txt\n",
-            "**Session.vim\n",
-            "**.jar\n",
-            "**.exe"
-        };
-        StringBuilder lines = new StringBuilder();
-        for(String f: files) {
-            lines.append(f);
-        }
-        fileOperation.createFile(".gitignore", lines.toString());
-    }
-
     public void createManifesto(String author, boolean includeLib) {
         StringBuilder lines = new StringBuilder("Created-By: ");
         if(!author.isEmpty()) lines.append(author);
