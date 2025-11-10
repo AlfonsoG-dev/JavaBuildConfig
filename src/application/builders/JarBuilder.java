@@ -28,7 +28,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         if(includeLib) {
             File m = new File("extractionFiles");
             String[] libFiles = prepareLibFiles().toString().split(";");
-            // TODO: test append assets having lib dependencies.
+            //append assets having lib dependencies.
             for(String l: libFiles) {
                 lines.append(" -C ");
                 File f = new File(l);
