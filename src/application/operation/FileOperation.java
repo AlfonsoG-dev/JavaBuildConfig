@@ -120,13 +120,13 @@ public class FileOperation {
         String[] lines = null;
         if(!new File("config.txt").exists()) {
             lines = new String[] {
-                "Root-Path: src",
-                "Source-Path: src",
-                "Class-Path: bin",
-                "Main-Class: " + getMainClass() != null ? getMainClass(): "",
-                "Test-Path: src" + File.separator + "test",
-                "Test-Class: test.TestLauncher", 
-                "Libraries: exclude",
+                "Root-Path: src\n",
+                "Source-Path: src\n",
+                "Class-Path: bin\n",
+                "Main-Class: \n",
+                "Test-Path: src" + File.separator + "test\n",
+                "Test-Class: test.TestLauncher\n", 
+                "Libraries: exclude\n",
                 "Compile-Flags: -Werror"
             };
         } else {

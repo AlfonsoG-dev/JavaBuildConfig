@@ -92,7 +92,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     /**
      * When updating only add the .class files from bin
      */
-    public String getUpdateJarCommand(String fileName, String targetURI, String flags) {
+    public String getUpdateJarCommand(String fileName, String targetURI, String flags, boolean includeLib) {
         StringBuilder command = new StringBuilder("jar -u");
         if(targetURI.isBlank()) return null;
         if(!flags.isBlank()) command.append("v");
@@ -103,11 +103,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         command.append(".jar");
 
         // bin or class file source
-
-        command.append(" -C ");
-        command.append(targetURI);
-        command.append(File.separator);
-        command.append(" .");
+        appendAssets(command, targetURI, includeLib);
         return command.toString();
     }
 }

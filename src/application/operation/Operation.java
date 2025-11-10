@@ -98,7 +98,7 @@ public class Operation {
         if(!new File(fileName + ".jar").exists()) {
             command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
         } else {
-            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURL, flags);
+            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURL, flags, oIncludeLib);
         }
         ex.executeCommand(command);
     }
