@@ -24,7 +24,7 @@ public class FileBuilder {
             lines.append(mainClass);
             lines.append("\n");
         }
-        if(includeLib) {
+        if(!includeLib) {
             lines.append("Class-Path: ");
             lines.append(fileOperation.libFiles("." + File.separator + "lib")
                 .stream()
