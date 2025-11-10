@@ -97,7 +97,7 @@ public class FileUtils {
         }
     }
     /**
-     * Count the files inside a directory.
+     * Count the items that are type file inside a directory.
      * @param directory the directory to count its files.
      * @return the number of files inside the given dierectory, if its empty 0.
      */
