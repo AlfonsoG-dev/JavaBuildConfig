@@ -60,10 +60,14 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\n");
         }
     }
+    public void appendCreateJarCommand(StringBuilder lines, String targetURL, boolean includeLib) {
+        // TODO: add create jar command
+    }
     public void appendRunCommand(StringBuilder lines, String targetURL, boolean includeLib) {
         if(OS_NAME.contains("windows")) {
             lines.append("$Run=");
             lines.append("\"");
+            // TODO: verify how to execute the project wihtout jar file
             lines.append("java -cp '");
             lines.append(targetURL);
             if(includeLib) {

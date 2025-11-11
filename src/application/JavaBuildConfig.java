@@ -74,6 +74,13 @@ class JavaBuildConfig {
                     }
                     op.executeCommand();
                     break;
+                case "--script":
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.createBuildScript(args[i+1]);
+                    } else {
+                        op.createBuildScript(null);
+                    }
+                    break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile classpath to compile the project and store the .class files in that place");
