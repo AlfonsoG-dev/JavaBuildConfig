@@ -4,6 +4,9 @@ import application.utils.ExecutorUtils;
 import application.builders.*;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.io.File;
 
@@ -28,6 +31,7 @@ public class Operation {
     private String oCompileFlags;
     private String oTestClass;
     private boolean oIncludeLib;
+    private ExecutorService executor;
 
     public Operation(String root) {
         this.root = Optional.ofNullable(root).orElse("src");
@@ -39,6 +43,7 @@ public class Operation {
         scriptBuilder = new ScriptBuilder(compileBuilder);
         libBuilder = new LibBuilder(this.root, fileOperation);
         fileBuilder = new FileBuilder(fileOperation);
+        executor = Executors.newCachedThreadPool();
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
@@ -67,7 +72,7 @@ public class Operation {
         fileBuilder.createConfig(oSourceURl, oTargetURL, mainClass, oCompileFlags, oIncludeLib);
         fileBuilder.createManifesto(author, oIncludeLib);
     }
-    public void executeCompileCommand(String compileFlags, String target) {
+    public void appendCompileProcess(String compileFlags, String target) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
         target = Optional.ofNullable(target).orElse(oTargetURL);
         File f = new File(oTargetURL);
@@ -77,14 +82,16 @@ public class Operation {
         } else {
             command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
         }
-        ex.executeCommand(command);
+        // ex.executeCommand(command);
+        ex.appendCommandToCallableProcess(command);
     }
-    public void executeScratchCompile(String flags) {
+    public void appendScratchCompileProcess(String flags) {
         flags = Optional.ofNullable(flags).orElse(oCompileFlags);
-        String command = "rm -r " + oTargetURL + " && " + compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
-        ex.executeCommand(command);
+        String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
+        ex.appendCommandToCallableProcess("rm -r " + oTargetURL);
+        ex.appendCommandToCallableProcess(command);
     }
-    public void executeRunCommand(String flags, String mainClass) {
+    public void appendRunProcess(String flags, String mainClass) {
         String command = "";
         flags = Optional.ofNullable(flags).orElse("");
         if(mainClass == null) {
@@ -92,9 +99,9 @@ public class Operation {
         } else {
             command = runBuilder.getCommand(mainClass, oTargetURL, flags, oIncludeLib);
         }
-        ex.executeCommand(command);
+        ex.appendCommandToCallableProcess(command);
     }
-    public void executeTest(String mainClass) {
+    public void appendTestProcess(String mainClass) {
         mainClass = Optional.ofNullable(mainClass).orElse(oTestClass);
         String command = "";
         if(mainClass == null) {
@@ -102,9 +109,9 @@ public class Operation {
         } else {
             command = runBuilder.getCommand(mainClass, oTargetURL, "", oIncludeLib);
         }
-        ex.executeCommand(command);
+        ex.appendCommandToCallableProcess(command);
     }
-    public void executeJarCommand(String fileName, String flags, String mainClass) {
+    public void appendJarProcess(String fileName, String flags, String mainClass) {
         flags = Optional.ofNullable(flags).orElse("");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
         String command = "";
@@ -113,13 +120,15 @@ public class Operation {
         } else {
             command = jarBuilder.getUpdateJarCommand(fileName, oTargetURL, flags, oIncludeLib);
         }
-        ex.executeCommand(command);
+        // ex.executeCommand(command);
+        ex.appendCommandToCallableProcess(command);
     }
-    public void extractDependencies(String targetURI, String flags) {
+    public void appendExtractDependenciesProcess(String targetURI, String flags) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         flags = Optional.ofNullable(flags).orElse("v");
         String c = libBuilder.getCommand(targetURI, flags, oIncludeLib);
-        ex.executeCommand(c);
+        // TODO: verify if the process is capable of executing all the && piped processes
+        ex.appendCommandToCallableProcess(c);
     }
     public void createBuildScript(String fileURL) {
         String osName = System.getProperty("os.name").toLowerCase();
@@ -135,5 +144,20 @@ public class Operation {
     public void copyToPath(String sourceURI, String destinationURI) {
         destinationURI = Optional.ofNullable(destinationURI).orElse("lib");
         fileOperation.copyToPath(sourceURI, destinationURI);
+    }
+    public void executeCommand() {
+        ex.executeCallableProcess(executor);
+    }
+    public void terminateProgram() {
+        executor.shutdown();
+        try {
+            if(!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            ex.cleanPendingProcess();
+        }
     }
 }

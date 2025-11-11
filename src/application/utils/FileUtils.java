@@ -138,7 +138,13 @@ public class FileUtils {
         return new Callable<List<Path>>() {
             @Override
             public List<Path> call() {
-                return listPaths(pathURI, level);
+                List<Path> files = new ArrayList<>();
+                try {
+                    populateList(files, pathURI, level);
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+                return files;
             }
         };
     }

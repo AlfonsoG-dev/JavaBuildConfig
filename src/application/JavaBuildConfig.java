@@ -18,29 +18,32 @@ class JavaBuildConfig {
             switch(args[i]) {
                 case "--compile":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.executeCompileCommand(flags, args[i+1]);
+                        op.appendCompileProcess(flags, args[i+1]);
                     } else {
-                        op.executeCompileCommand(flags, null);
+                        op.appendCompileProcess(flags, null);
                     }
-
+                    op.executeCommand();
                     break;
                 case "--build":
-                    op.executeScratchCompile(flags);
-                    op.executeJarCommand(null, null, getSubCommand("-e", args));
-                break;
+                    op.appendScratchCompileProcess(flags);
+                    op.appendJarProcess(null, null, getSubCommand("-e", args));
+                    op.executeCommand();
+                    break;
                 case "--run":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.executeRunCommand(flags, args[i+1]);
+                        op.appendRunProcess(flags, args[i+1]);
                     } else {
-                        op.executeRunCommand(flags, null);
+                        op.appendRunProcess(flags, null);
                     }
+                    op.executeCommand();
                     break;
                 case "--jar":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.executeJarCommand(args[i+1], flags, getSubCommand("-e", args));
+                        op.appendJarProcess(args[i+1], flags, getSubCommand("-e", args));
                     } else {
-                        op.executeJarCommand(null, flags, getSubCommand("-e", args));
+                        op.appendJarProcess(null, flags, getSubCommand("-e", args));
                     }
+                    op.executeCommand();
                     break;
                 case "--add":
                     if ((i+2) < args.length && !args[i+1].startsWith("-") && !args[i+2].startsWith("-")) {
@@ -50,7 +53,8 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--extract":
-                    op.extractDependencies(target, flags);
+                    op.appendExtractDependenciesProcess(target, flags);
+                    op.executeCommand();
                     break;
                 case "--config":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
@@ -61,10 +65,13 @@ class JavaBuildConfig {
                     break;
                 case "--test":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.executeTest(args[i+1]);
+                        op.appendCompileProcess(flags, target);
+                        op.appendTestProcess(args[i+1]);
                     } else {
-                        op.executeTest(null);
+                        op.appendCompileProcess(flags, target);
+                        op.appendTestProcess(null);
                     }
+                    op.executeCommand();
                     break;
                 case "--h":
                     System.out.println("use --compile to compile the project");
@@ -99,6 +106,7 @@ class JavaBuildConfig {
                     System.out.println("\tuse --test app.name to run another main class of tests");
                     break;
                 default:
+                    op.terminateProgram();
                     break;
             }
         }

@@ -21,7 +21,8 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         return executable;
     }
     private void appendAssets(StringBuilder lines, String targetURL, boolean includeLib) {
-        lines.append(" -C ");
+        lines.append(" -C .");
+        lines.append(File.separator);
         lines.append(targetURL);
         lines.append(File.separator);
         lines.append(" .");
@@ -30,7 +31,8 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
             String[] libFiles = prepareLibFiles().toString().split(";");
             //append assets having lib dependencies.
             for(String l: libFiles) {
-                lines.append(" -C ");
+                lines.append(" -C .");
+                lines.append(File.separator);
                 File f = new File(l);
                 lines.append( m.toPath().resolve(f.getName().replace(".jar", "")));
                 lines.append(File.separator);
