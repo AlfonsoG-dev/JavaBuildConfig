@@ -92,15 +92,18 @@ public class ExecutorUtils {
                 if(!f.isDone()) {
                     System.out.println("[Info] Waiting for results...");
                 }
-                Process p = f.get().start();
-                if(p.getErrorStream() != null) {
-                    TextUtils.CommandOutputError(p.getErrorStream());
+                ProcessBuilder b = f.get();
+                if(f.isDone()) {
+                    Process p = b.start();
+                    if(p.getErrorStream() != null) {
+                        TextUtils.CommandOutputError(p.getErrorStream());
+                    }
+                    if(p.getInputStream() != null) {
+                        TextUtils.CommandOutput(p.getInputStream());
+                    }
+                    p.waitFor(5, TimeUnit.SECONDS);
+                    p.destroy();
                 }
-                if(p.getInputStream() != null) {
-                    TextUtils.CommandOutput(p.getInputStream());
-                }
-                p.waitFor(5, TimeUnit.SECONDS);
-                p.destroy();
             }
         } catch(Exception e) {
             e.printStackTrace();

@@ -14,18 +14,14 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     public FileOperation getFileOperation() {
         return op;
     }
-    private void appendExtractJarContent(StringBuilder command, File extract, String flags) {
-        for(File d: extract.listFiles()) {
-            if(d.getName().contains(".jar")) {
-                command.append("jar -x");
-                command.append(flags);
-                command.append("f ");
-                command.append(d.getName());
-                command.append(" && rm -r ");
-                command.append(d.getName());
-                command.append(" cd .. && ");
-            }
-        }
+    private void appendExtractJarContent(StringBuilder command, File extract) {
+        command.append("jar -x");
+        command.append("f ");
+        command.append(extract.getName());
+        command.append(".jar");
+        command.append(" && rm -r ");
+        command.append(extract.getName());
+        command.append(".jar");
     }
 
     @Override
@@ -49,14 +45,10 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
                 command.append("cd ");
                 command.append(s.getPath());
                 command.append(" && ");
-                appendExtractJarContent(command, f, flags);
+                appendExtractJarContent(command, s);
             }
         }
-        String clean = command.toString();
-        if((clean.length()-10) < clean.length()) {
-            clean = clean.substring(0, clean.length()-10);
-        }
-        return clean;
+        return command.toString();
     }
     
 }

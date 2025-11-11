@@ -25,6 +25,7 @@ class JavaBuildConfig {
                     op.executeCommand();
                     break;
                 case "--build":
+                    op.appendExtractDependenciesProcess(target, flags);
                     op.appendScratchCompileProcess(flags);
                     op.appendJarProcess(null, null, getSubCommand("-e", args));
                     op.executeCommand();
