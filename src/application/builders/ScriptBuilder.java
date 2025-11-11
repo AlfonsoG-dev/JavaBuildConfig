@@ -67,7 +67,6 @@ public record ScriptBuilder(CommandModel cm) {
         if(OS_NAME.contains("windows")) {
             lines.append("$Run=");
             lines.append("\"");
-            // TODO: verify how to execute the project wihtout jar file
             lines.append("java -cp '");
             lines.append(targetURL);
             if(includeLib) {
@@ -93,7 +92,7 @@ public record ScriptBuilder(CommandModel cm) {
     // only on windows
     public void appendExecuteCommands(StringBuilder lines) {
         if(OS_NAME.contains("windows")) {
-            lines.append("Invoke-Expression $Compile && $Run");
+            lines.append("Invoke-Expression ($Compile + \" && \" + $Run)");
         }
     }
 
