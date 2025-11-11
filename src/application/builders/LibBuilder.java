@@ -6,7 +6,6 @@ import application.operation.FileOperation;
 import java.io.File;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public record LibBuilder(String root, FileOperation op) implements CommandModel {
 
@@ -25,23 +24,24 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     }
 
     @Override
-    public String getCommand(String targetURL, String flags, boolean includeLib) {
-        StringBuilder command = new StringBuilder();
+    public String getCommand(String targetURI, String flags, boolean includeLib) {
         // don't include in build process
         if(!includeLib) return null;
+
+        StringBuilder command = new StringBuilder();
+        File targetFile = new File(targetURI);
 
         String[] libFiles = prepareLibFiles().toString().split(";");
         for(String l: libFiles) {
             File f = new File(l);
-            Path targetPath = Paths.get(targetURL).resolve(f.getName().replace(".jar", ""));
+            Path targetPath = targetFile.toPath().resolve(f.getName().replace(".jar", ""));
             // create a directory with the same name as the jar file in extractionFiles 
             if(op.createDirectories(targetPath.toString())) {
                 op.copyToPath(f.getPath(), targetPath.toString());
             }
         }
-        File f = new File(targetURL);
-        if(f.listFiles() != null) {
-            for(File s: f.listFiles()) {
+        if(targetFile.listFiles() != null) {
+            for(File s: targetFile.listFiles()) {
                 command.append("cd ");
                 command.append(s.getPath());
                 command.append(" && ");

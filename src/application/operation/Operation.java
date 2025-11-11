@@ -126,7 +126,6 @@ public class Operation {
     public void appendExtractDependenciesProcess(String targetURI, String flags) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         flags = Optional.ofNullable(flags).orElse("v");
-        // TODO: verify if its better to append each process individually or concatenate them with '&&'
         String c = libBuilder.getCommand(targetURI, flags, oIncludeLib);
         // the process is capable of executing all the concatenated processes with '&&'
         ex.appendCommandToCallableProcess(c);
