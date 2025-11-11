@@ -106,7 +106,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append(targetURL);
             if(includeLib) {
                 lines.append(";");
-                lines.append(cm.prepareLibFiles());
+                lines.append("$Libs");
             }
             lines.append("' ");
             lines.append(cm.getFileOperation().getMainClass());
@@ -116,7 +116,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append(targetURL);
             if(includeLib) {
                 lines.append(";");
-                lines.append(cm.prepareLibFiles());
+                lines.append("$libs");
             }
             lines.append("' ");
             lines.append(cm.getFileOperation().getMainClass());
