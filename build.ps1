@@ -1,5 +1,7 @@
-$Source="src\application\*.java src\application\builders\*.java src\application\models\*.java src\application\operation\*.java src\application\utils\*.java"
-$Compile="javac -d bin $Source"
-$Jar="jar -cfm JavaBuildConfig.jar Manifesto.txt -C bin\ . "
-$Run="java -cp 'bin' application.JavaBuildConfig"
-Invoke-Expression ($Compile + " && " + $Jar + " && " + $Run)
+$srcClases = "src\application\*.java src\application\builders\*.java src\application\models\*.java src\application\operation\*.java src\application\utils\*.java "
+$libFiles = ""
+$compile = "javac --release 23 -Xlint:all -Xdiags:verbose -d .\bin\ $srcClases"
+$createJar = "jar -cfm JavaBuildConfig.jar Manifesto.txt -C .\bin\ ."
+$javaCommand = "java -jar JavaBuildConfig.jar"
+$runCommand = "$compile" + " && " + "$createJar" + " && " +"$javaCommand"
+Invoke-Expression $runCommand 
