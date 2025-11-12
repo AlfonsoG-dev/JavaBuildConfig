@@ -99,8 +99,9 @@ public class ExecutorUtils {
                     if(p.getInputStream() != null) {
                         TextUtils.CommandOutput(p.getInputStream());
                     }
-                    p.waitFor(5, TimeUnit.SECONDS);
-                    p.destroy();
+                    if(!p.waitFor(5, TimeUnit.SECONDS)) {
+                        p.destroy();
+                    }
                 }
             }
         } catch(Exception e) {
