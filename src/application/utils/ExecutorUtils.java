@@ -89,11 +89,9 @@ public class ExecutorUtils {
         try {
             List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
             for(Future<ProcessBuilder> f: futureResults) {
-                if(!f.isDone()) {
-                    System.out.println("[Info] Waiting for results...");
-                }
+                System.out.println("[Info] Waiting for process to complete...");
                 ProcessBuilder b = f.get();
-                if(f.isDone()) {
+                if(b != null) {
                     Process p = b.start();
                     if(p.getErrorStream() != null) {
                         TextUtils.CommandOutputError(p.getErrorStream());
