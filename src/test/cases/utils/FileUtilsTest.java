@@ -53,7 +53,7 @@ public class FileUtilsTest {
             if(list.size() <= 0) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
-            System.out.println("\r\t[Info] No errors present on countFilesTest execution");
+            System.out.println("\r\t[Info] No errors present on listPathsTest execution");
         } catch (Exception e) {
             System.err.println("\t[Error] " + e.getLocalizedMessage());
         }
@@ -67,7 +67,7 @@ public class FileUtilsTest {
             if(list.size() <= 0) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
-            System.out.println("\r\t[Info] No errors present on countFilesTest execution");
+            System.out.println("\r\t[Info] No errors present on callableListTest execution");
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
             System.err.println("\t[Error] on execution of task");
         } catch (Exception e) {
