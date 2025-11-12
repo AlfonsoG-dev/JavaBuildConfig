@@ -103,9 +103,13 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         command.append("f ");
         command.append(fileName.replace(".jar", ""));
         command.append(".jar");
-
+        
+        /**
+         *  FIXME: for now when updating lib files it generates a corrupt jar file.
+         * a temporal fix is to disable the includeLib, making always false.
+        */
         // bin or class file source
-        appendAssets(command, targetURI, includeLib);
+        appendAssets(command, targetURI, false);
         return command.toString();
     }
 }
