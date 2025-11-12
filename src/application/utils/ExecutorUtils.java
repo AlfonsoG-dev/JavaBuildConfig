@@ -17,7 +17,6 @@ public class ExecutorUtils {
     private final static String OS_NAME = System.getProperty("os.name").toLowerCase();
     private List<Callable<ProcessBuilder>> pendingProcess = new ArrayList<>();
 
-
     /**
      * Executes callable tasks with new cached thread pools.
      * @param <T> the type to return when future of callable is completed.
@@ -25,19 +24,20 @@ public class ExecutorUtils {
      * @return the generic type of the result of the future of callable completion.
      */
     public<T> T getResult(Callable<T> task) {
-        T value = null;
         ExecutorService executor = Executors.newCachedThreadPool();
         try {
             Future<T> result = executor.submit(task);
             if(!result.isDone()) {
                 TextUtils.message("Waiting for results...");
             }
-            value = result.get();
+            T value = result.get();
             if(result.isDone()) {
                 TextUtils.message("Data is ready...");
             }
+            return value;
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            return null;
         } finally {
             if(executor != null) {
                 executor.shutdown();
@@ -50,7 +50,33 @@ public class ExecutorUtils {
                 }
             }
         }
-        return value;
+    }
+    public void executeCallableProcess(ExecutorService executor) {
+        if(pendingProcess.isEmpty()) {
+            System.out.println("[Info] All process has been finished");
+            return;
+        }
+        try {
+            List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
+            for(Future<ProcessBuilder> f: futureResults) {
+                System.out.println("[Info] Waiting for process to complete...");
+                ProcessBuilder b = f.get();
+                if(b != null) {
+                    Process p = b.start();
+                    if(p.getErrorStream() != null) {
+                        TextUtils.CommandOutputError(p.getErrorStream());
+                    }
+                    if(p.getInputStream() != null) {
+                        TextUtils.CommandOutput(p.getInputStream());
+                    }
+                    if(!p.waitFor(5, TimeUnit.SECONDS)) {
+                        p.destroy();
+                    }
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     public void appendCommandToCallableProcess(String command) {
         pendingProcess.add(new Callable<ProcessBuilder>() {
@@ -80,33 +106,6 @@ public class ExecutorUtils {
                     }
                 }
             });
-    }
-    public void executeCallableProcess(ExecutorService executor) {
-        if(pendingProcess.isEmpty()) {
-            System.out.println("[Info] All process has been finished");
-            return;
-        }
-        try {
-            List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
-            for(Future<ProcessBuilder> f: futureResults) {
-                System.out.println("[Info] Waiting for process to complete...");
-                ProcessBuilder b = f.get();
-                if(b != null) {
-                    Process p = b.start();
-                    if(p.getErrorStream() != null) {
-                        TextUtils.CommandOutputError(p.getErrorStream());
-                    }
-                    if(p.getInputStream() != null) {
-                        TextUtils.CommandOutput(p.getInputStream());
-                    }
-                    if(!p.waitFor(5, TimeUnit.SECONDS)) {
-                        p.destroy();
-                    }
-                }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
     }
     public void cleanPendingProcess() {
         pendingProcess = null;
