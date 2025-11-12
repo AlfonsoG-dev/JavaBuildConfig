@@ -35,8 +35,8 @@ public class Operation {
 
     public Operation(String root) {
         this.root = Optional.ofNullable(root).orElse("src");
-        fileOperation = new FileOperation(this.root);
         ex = new ExecutorUtils();
+        fileOperation = new FileOperation(this.root, ex);
         compileBuilder = new CompileBuilder(this.root, fileOperation);
         runBuilder = new RunBuilder(this.root, fileOperation);
         jarBuilder = new JarBuilder(this.root, fileOperation);
