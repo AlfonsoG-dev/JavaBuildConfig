@@ -2,6 +2,13 @@
 - A java build tool that uses a **configuration file** to build the project.
 > Its made for simple java project with minimal use of `.jar` dependencies.
 
+- Execute some tests.
+![expected output](./docs/expected_output1.png)
+
+- Compile some other source.
+![expected_recompile](./docs/expected_output2.png)
+
+
 ---
 
 # Installation
