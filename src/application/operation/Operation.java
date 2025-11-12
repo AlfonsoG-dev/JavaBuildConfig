@@ -143,7 +143,11 @@ public class Operation {
     }
     public void copyToPath(String sourceURI, String destinationURI) {
         destinationURI = Optional.ofNullable(destinationURI).orElse("lib");
-        fileOperation.copyToPath(sourceURI, destinationURI);
+        // get the source .jar file name
+        File sourceFile = new File(sourceURI);
+        File destinationFile = new File(destinationURI).toPath().resolve(sourceFile.getName().replace(".jar", "")).toFile();
+        if(!destinationFile.exists()) destinationFile.mkdir();
+        fileOperation.copyToPath(sourceURI, destinationFile.toString());
     }
     public void executeCommand() {
         ex.executeCallableProcess(executor);
