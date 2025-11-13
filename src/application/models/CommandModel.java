@@ -12,15 +12,15 @@ import java.nio.file.Paths;
 public interface CommandModel {
 
     public FileOperation getFileOperation();
-    public String getCommand(String targetURL, String flags, boolean includeLib);
+    public String getCommand(String targetURI, String flags, boolean includeLib);
 
-    public default String getLibURL() {
+    public default String getLibURI() {
         return Paths.get("." + File.separator).resolve("lib").toString();
     }
 
     public default StringBuilder prepareLibFiles() {
         StringBuilder libs = new StringBuilder();
-        libs.append(getFileOperation().libFiles(getLibURL())
+        libs.append(getFileOperation().libFiles(getLibURI())
             .stream()
             .map(Path::toString)
             .collect(Collectors.joining(";"))

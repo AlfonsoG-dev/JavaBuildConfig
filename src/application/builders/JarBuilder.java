@@ -20,10 +20,10 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(executable);
         return executable;
     }
-    private void appendAssets(StringBuilder lines, String targetURL, boolean includeLib) {
+    private void appendAssets(StringBuilder lines, String targetURI, boolean includeLib) {
         lines.append(" -C .");
         lines.append(File.separator);
-        lines.append(targetURL);
+        lines.append(targetURI);
         lines.append(File.separator);
         lines.append(" .");
         if(includeLib) {
@@ -48,7 +48,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         }
     }
     @Override
-    public String getCommand(String targetURL, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder("jar -c");
         if(!flags.isEmpty()) lines.append(flags);
         lines.append("f");
@@ -61,10 +61,10 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         appendJarFormat(lines, format, mainClass);
 
         // append assets
-        appendAssets(lines, targetURL, includeLib);
+        appendAssets(lines, targetURI, includeLib);
         return lines.toString();
     }
-    public String getCommand(String targetURL, String mainClass, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder("jar -c");
         if(!flags.isEmpty()) lines.append(flags);
         lines.append("f");
@@ -74,11 +74,11 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(fileOperation.getProjectName() + ".jar ");
         appendJarFormat(lines, format, mainClass);
 
-        appendAssets(lines, targetURL, includeLib);
+        appendAssets(lines, targetURI, includeLib);
         return lines.toString();
     }
 
-    public String getCommand(String fileName, String targetURL, String mainClass, String flags, boolean includeLib) {
+    public String getCommand(String fileName, String targetURI, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder("jar -c");
         if(!flags.isEmpty()) lines.append(flags);
         lines.append("f");
@@ -88,7 +88,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(fileName + ".jar ");
         appendJarFormat(lines, format, mainClass);
 
-        appendAssets(lines, targetURL, includeLib);
+        appendAssets(lines, targetURI, includeLib);
         return lines.toString();
     }
     /**

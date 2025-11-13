@@ -49,9 +49,9 @@ public record TextUtils() {
     public final static void error(String error) {
         System.err.println(Colors.RED_UNDERLINED + "[Error] " + Colors.ANSI_RESET + error);
     }
-    public static String getFileLines(String pathURL) {
+    public static String getFileLines(String pathURI) {
         String lines = "";
-        try(BufferedReader br = new BufferedReader(new FileReader(new File(pathURL)))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(new File(pathURI)))) {
             while(br.ready()) {
                 lines += br.readLine() + "\n";
             }
@@ -60,9 +60,9 @@ public record TextUtils() {
         }
         return lines;
     }
-    public static void writeLines(String fileURL, String lines) {
+    public static void writeLines(String fileURI, String lines) {
         System.out.println("Writing lines...");
-        try(FileWriter w = new FileWriter(fileURL, false)) {
+        try(FileWriter w = new FileWriter(fileURI, false)) {
             if(!lines.isEmpty()) {
                 w.write(lines);
             }

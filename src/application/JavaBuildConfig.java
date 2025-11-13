@@ -4,8 +4,8 @@ import application.operation.Operation;
 
 class JavaBuildConfig {
     public static void main(String[] args) {
-        String rootURL = "src";
-        Operation op = new Operation(rootURL);
+        String rootURI = "src";
+        Operation op = new Operation(rootURI);
         String source = getSubCommand("--s", args);
         String target = getSubCommand("--t", args);
         String libs = getSubCommand("--i", args);

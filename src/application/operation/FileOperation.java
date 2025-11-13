@@ -36,12 +36,40 @@ public class FileOperation {
     public void createFile(String fileURI, String lines) {
         fu.createFile(fileURI, lines);
     }
+    /**
+     * Source list of files.
+     * @return the list of only files.
+     */
     public List<Path> sourceFiles() {
         List<Path> files = listFiles
             .stream()
             .filter(p -> p.toFile().isFile())
             .toList();
         return files;
+    }
+    /**
+     * A list of source directories.
+     * @return a list with only directories.
+     */
+    public List<Path> sourceDirs() {
+        List<Path> dirs = listFiles
+            .stream()
+            .filter(p -> p.toFile().isDirectory())
+            .filter(p -> fu.countFiles(p) > 0)
+            .toList();
+        return dirs;
+
+    }
+    /**
+     * List of jar dependencies.
+     * @param sourceURI where the .jar dependencies are
+     * @return a list with the jar path.
+     */
+    public List<Path> libFiles(String sourceURI) {
+        return ex.getResult(fu.callableList(sourceURI, 2))
+            .stream()
+            .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
+            .toList();
     }
     /**
      * search in the source path for the first class that has main attribute present. 
@@ -141,19 +169,6 @@ public class FileOperation {
         return configs;
     }
     /**
-     * A list of source directories.
-     * @return the source directories.
-     */
-    public List<Path> sourceDirs() {
-        List<Path> dirs = listFiles
-            .stream()
-            .filter(p -> p.toFile().isDirectory())
-            .filter(p -> fu.countFiles(p) > 0)
-            .toList();
-        return dirs;
-
-    }
-    /**
      * Compare last modified date in milliseconds of source files with their counterapart in class path.
      * @param sourceFile path to the .java files.
      * @return true if there is a difference in dates with the source file and class file, false otherwise.
@@ -185,17 +200,6 @@ public class FileOperation {
             }
         }
         return imports;
-    }
-    /**
-     * List of jar dependencies.
-     * @param sourceURI where the .jar dependencies are
-     * @return a list with the jar path.
-     */
-    public List<Path> libFiles(String sourceURI) {
-        return ex.getResult(fu.callableList(sourceURI, 2))
-            .stream()
-            .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
-            .toList();
     }
     /**
      * Copy files or directory to a destination path.

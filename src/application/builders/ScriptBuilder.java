@@ -34,12 +34,12 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\"\n");
         }
     }
-    public void appendCompileCommand(StringBuilder lines, String targetURL, boolean includeLib) {
+    public void appendCompileCommand(StringBuilder lines, String targetURI, boolean includeLib) {
         if(OS_NAME.contains("windows")) {
             lines.append("$Compile=");
             lines.append("\"");
             lines.append("javac -d ");
-            lines.append(targetURL);
+            lines.append(targetURI);
             if(includeLib) {
                 lines.append(" -cp '");
                 lines.append("$Libs'");
@@ -48,7 +48,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\"\n");
         } else if(OS_NAME.contains("linux")) {
             lines.append("javac -d ");
-            lines.append(targetURL);
+            lines.append(targetURI);
             if(includeLib) {
                 lines.append(" -cp '");
                 lines.append("$libs'");
@@ -57,14 +57,14 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\n");
         }
     }
-    public void appendCreateJarCommand(StringBuilder lines, String targetURL, boolean includeLib) {
+    public void appendCreateJarCommand(StringBuilder lines, String targetURI, boolean includeLib) {
         // TODO: test this create jar command
         if(OS_NAME.contains("windows")) {
             lines.append("$Jar=\"jar -cfm ");
             lines.append(cm.getFileOperation().getProjectName());
             lines.append(".jar ");
             lines.append("Manifesto.txt -C ");
-            lines.append(targetURL);
+            lines.append(targetURI);
             lines.append(File.separator);
             lines.append(" .");
             if(includeLib) {
@@ -83,7 +83,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append(cm.getFileOperation().getProjectName());
             lines.append(".jar ");
             lines.append("Manifesto.txt -C ");
-            lines.append(targetURL);
+            lines.append(targetURI);
             lines.append(File.separator);
             lines.append(" .");
             if(includeLib) {
@@ -98,12 +98,12 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\n");
         }
     }
-    public void appendRunCommand(StringBuilder lines, String targetURL, boolean includeLib) {
+    public void appendRunCommand(StringBuilder lines, String targetURI, boolean includeLib) {
         if(OS_NAME.contains("windows")) {
             lines.append("$Run=");
             lines.append("\"");
             lines.append("java -cp '");
-            lines.append(targetURL);
+            lines.append(targetURI);
             if(includeLib) {
                 lines.append(";");
                 lines.append("$Libs");
@@ -113,7 +113,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\"\n");
         } else if(OS_NAME.contains("linux")) {
             lines.append("java -cp '");
-            lines.append(targetURL);
+            lines.append(targetURI);
             if(includeLib) {
                 lines.append(";");
                 lines.append("$libs");
@@ -130,13 +130,13 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
 
-    public String getScript(String targetURL, boolean includeLib) {
+    public String getScript(String targetURI, boolean includeLib) {
         StringBuilder lines = new StringBuilder();
         appendSource(lines);
         if(includeLib) appendLib(lines);
-        appendCompileCommand(lines, targetURL, includeLib);
-        appendCreateJarCommand(lines, targetURL, includeLib);
-        appendRunCommand(lines, targetURL, includeLib);
+        appendCompileCommand(lines, targetURI, includeLib);
+        appendCreateJarCommand(lines, targetURI, includeLib);
+        appendRunCommand(lines, targetURI, includeLib);
         appendExecuteCommands(lines);
         return lines.toString();
     }

@@ -21,11 +21,11 @@ public class Operation {
     private ExecutorUtils ex;
 
     private String root;
-    private String sourceURl;
+    private String sourceURI;
     private HashMap<String, String> configData;
 
-    private String oSourceURl;
-    private String oTargetURL;
+    private String oSourceURI;
+    private String oTargetURI;
     private String oMainClass;
     private String oAuthor;
     private String oCompileFlags;
@@ -47,8 +47,8 @@ public class Operation {
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
-        oSourceURl = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
-        oTargetURL = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
+        oSourceURI = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
+        oTargetURI = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
         oAuthor = Optional.ofNullable(fileOperation.getAuthor()).orElse("System-Owner");
         oCompileFlags = Optional.ofNullable(configData.get("Compile-Flags")).orElse("-Xlint:all -Xdiags:verbose");
@@ -56,48 +56,48 @@ public class Operation {
         String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
         oIncludeLib = dataLib.equals("include");
     }
-    public void initializeENV(String sourceURl, String targetURL, String includeLib) {
-        this.sourceURl = Optional.ofNullable(sourceURl).orElse(oSourceURl);
-        if(targetURL != null) {
-            this. oTargetURL = targetURL;
+    public void initializeENV(String sourceURI, String targetURI, String includeLib) {
+        this.sourceURI = Optional.ofNullable(sourceURI).orElse(oSourceURI);
+        if(targetURI != null) {
+            this. oTargetURI = targetURI;
         }
         if(includeLib != null) {
             this.oIncludeLib = includeLib.equals("include");
         }
-        fileOperation.populateList(this.sourceURl);
+        fileOperation.populateList(this.sourceURI);
     }
     public void setConfig(String mainClass, String author) {
         mainClass = Optional.ofNullable(mainClass).orElse(oMainClass);
         author = Optional.ofNullable(author).orElse(oAuthor);
-        fileBuilder.createConfig(oSourceURl, oTargetURL, mainClass, oCompileFlags, oIncludeLib);
+        fileBuilder.createConfig(oSourceURI, oTargetURI, mainClass, oCompileFlags, oIncludeLib);
         fileBuilder.createManifesto(author, oIncludeLib);
     }
     public void appendCompileProcess(String compileFlags, String target) {
         String flags = Optional.ofNullable(compileFlags).orElse(oCompileFlags);
-        target = Optional.ofNullable(target).orElse(oTargetURL);
-        File f = new File(oTargetURL);
+        target = Optional.ofNullable(target).orElse(oTargetURI);
+        File f = new File(oTargetURI);
         String command = "";
         if(f.exists()) {
-            command = compileBuilder.reCompileCommand(oTargetURL, target, flags,oIncludeLib);
+            command = compileBuilder.reCompileCommand(oTargetURI, target, flags,oIncludeLib);
         } else {
-            command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
+            command = compileBuilder.getCommand(oTargetURI, flags, oIncludeLib);
         }
         // ex.executeCommand(command);
         ex.appendCommandToCallableProcess(command);
     }
     public void appendScratchCompileProcess(String flags) {
         flags = Optional.ofNullable(flags).orElse(oCompileFlags);
-        String command = compileBuilder.getCommand(oTargetURL, flags, oIncludeLib);
-        ex.appendCommandToCallableProcess("rm -r " + oTargetURL);
+        String command = compileBuilder.getCommand(oTargetURI, flags, oIncludeLib);
+        ex.appendCommandToCallableProcess("rm -r " + oTargetURI);
         ex.appendCommandToCallableProcess(command);
     }
     public void appendRunProcess(String flags, String mainClass) {
         String command = "";
         flags = Optional.ofNullable(flags).orElse("");
         if(mainClass == null) {
-            command = runBuilder.getCommand(oTargetURL, flags, oIncludeLib);
+            command = runBuilder.getCommand(oTargetURI, flags, oIncludeLib);
         } else {
-            command = runBuilder.getCommand(mainClass, oTargetURL, flags, oIncludeLib);
+            command = runBuilder.getCommand(mainClass, oTargetURI, flags, oIncludeLib);
         }
         ex.appendCommandToCallableProcess(command);
     }
@@ -105,9 +105,9 @@ public class Operation {
         mainClass = Optional.ofNullable(mainClass).orElse(oTestClass);
         String command = "";
         if(mainClass == null) {
-            command = runBuilder.getCommand(oTargetURL, "", oIncludeLib);
+            command = runBuilder.getCommand(oTargetURI, "", oIncludeLib);
         } else {
-            command = runBuilder.getCommand(mainClass, oTargetURL, "", oIncludeLib);
+            command = runBuilder.getCommand(mainClass, oTargetURI, "", oIncludeLib);
         }
         ex.appendCommandToCallableProcess(command);
     }
@@ -116,9 +116,9 @@ public class Operation {
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
         String command = "";
         if(!new File(fileName + ".jar").exists()) {
-            command = jarBuilder.getCommand(fileName, oTargetURL, oMainClass, flags, oIncludeLib);
+            command = jarBuilder.getCommand(fileName, oTargetURI, oMainClass, flags, oIncludeLib);
         } else {
-            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURL, flags, oIncludeLib);
+            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, flags, oIncludeLib);
         }
         // ex.executeCommand(command);
         ex.appendCommandToCallableProcess(command);
@@ -130,16 +130,16 @@ public class Operation {
         // the process is capable of executing all the concatenated processes with '&&'
         ex.appendCommandToCallableProcess(c);
     }
-    public void createBuildScript(String fileURL) {
+    public void createBuildScript(String fileURI) {
         String osName = System.getProperty("os.name").toLowerCase();
-        fileURL = Optional.ofNullable(fileURL).orElse("build");
+        fileURI = Optional.ofNullable(fileURI).orElse("build");
         if(osName.contains("windows")) {
-            fileURL = fileURL + ".ps1";
+            fileURI = fileURI + ".ps1";
         } else if(osName.contains("linux")) {
-            fileURL = fileURL + ".sh";
+            fileURI = fileURI + ".sh";
         }
-        String lines = scriptBuilder.getScript(oTargetURL, oIncludeLib);
-        fileOperation.createFile(fileURL, lines);
+        String lines = scriptBuilder.getScript(oTargetURI, oIncludeLib);
+        fileOperation.createFile(fileURI, lines);
     }
     public void copyToPath(String sourceURI, String destinationURI) {
         destinationURI = Optional.ofNullable(destinationURI).orElse("lib");

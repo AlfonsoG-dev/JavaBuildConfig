@@ -13,17 +13,17 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
     }
     /**
      * Get run command.
-     * @param targetURL the path to the source of the .class files.
+     * @param targetURI the path to the source of the .class files.
      * @param flags additional command to execute alongside with the run commnad.
      * @param includeLib true if you want to include the jar dependencies in the build process, false otherwise.
      */
     @Override
-    public String getCommand(String targetURL, String flags, boolean includeLib) {
-        if(!new File(targetURL).exists()) return null;
+    public String getCommand(String targetURI, String flags, boolean includeLib) {
+        if(!new File(targetURI).exists()) return null;
         StringBuilder command = new StringBuilder("java -cp '");
         String mainClassName = op.getMainClass();
 
-        command.append(targetURL);
+        command.append(targetURI);
         if(includeLib && !prepareLibFiles().isEmpty()) {
             command.append(";");
             command.append(prepareLibFiles());
@@ -47,16 +47,16 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
     /**
      * Get run command when the user provides the class name to execute
      * @param mainClass class to execute
-     * @param targetURL the path to the source of .class files.
+     * @param targetURI the path to the source of .class files.
      * @param flags the commands to execute alongside with run command.
      * @param includeLib if you want to include jar dependencies in the build process
      * @return the command.
      */
-    public String getCommand(String mainClass, String targetURL, String flags, boolean includeLib) {
-        if(!new File(targetURL).exists()) return null;
+    public String getCommand(String mainClass, String targetURI, String flags, boolean includeLib) {
+        if(!new File(targetURI).exists()) return null;
         StringBuilder command = new StringBuilder("java -cp '");
 
-        command.append(targetURL);
+        command.append(targetURI);
         if(includeLib && !prepareLibFiles().isEmpty()) {
             command.append(";");
             command.append(prepareLibFiles());
