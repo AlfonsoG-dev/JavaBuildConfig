@@ -28,6 +28,11 @@ public class FileOperation {
         this.ex = executorUtils;
     }
     public void populateList(String sourceURI) {
+        /**
+         * FIXME: append the list to a pending list evaluation on executor.
+         * the ex.getResult does nothing concurrent or parallel, is just for implementation later on the pending list it will me more robust. 
+         * NOTE: for now use the getResult as to get the immediate result of the callable list task. 
+         */
         listFiles = ex.getResult(fu.callableList(sourceURI, 0));
     }
     public boolean createDirectories(String dirURI) {
@@ -66,6 +71,7 @@ public class FileOperation {
      * @return a list with the jar path.
      */
     public List<Path> libFiles(String sourceURI) {
+        // FIXME: append the list to a pending list evaluation on executor.
         return ex.getResult(fu.callableList(sourceURI, 2))
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
