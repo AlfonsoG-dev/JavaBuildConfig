@@ -88,9 +88,10 @@ public class FileOperation {
             for(Path p: sourceFiles()) {
                 File mf = p.toFile();
                 if(mf.isFile() && mf.getName() != "TestLauncher.java") {
+                    String breakerLine = "public static void main";
                     String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
                     for(String l: lines) {
-                        if(l.contains("public static void main")) {
+                        if(l.contains(breakerLine)) {
                             return mf.getPath().replace(sourceRoot, "").replace(".java", "").replace(File.separator, ".");
                         }
                     }
