@@ -94,7 +94,7 @@ public record TextUtils() {
                     break;
                 }
                 // show success message
-                message(line);
+                System.out.println(line);
             }
         } catch(Exception e) {
             e.printStackTrace();
