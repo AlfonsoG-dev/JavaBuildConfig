@@ -28,7 +28,7 @@ public class ExecutorUtils {
         try {
             Future<T> result = executor.submit(task);
             if(!result.isDone()) {
-                TextUtils.message("Waiting for results...");
+                System.out.println("Waiting for results...");
             }
             T value = result.get();
             if(result.isDone()) {
@@ -53,13 +53,13 @@ public class ExecutorUtils {
     }
     public void executeCallableProcess(ExecutorService executor) {
         if(pendingProcess.isEmpty()) {
-            System.out.println("[Info] All process has been finished");
+            TextUtils.message("[Info] All process has been finished");
             return;
         }
         try {
             List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
             for(Future<ProcessBuilder> f: futureResults) {
-                System.out.println("[Info] Waiting for process to complete...");
+                System.out.println("Waiting for process to complete...");
                 ProcessBuilder b = f.get();
                 if(b != null) {
                     Process p = b.start();
@@ -82,14 +82,14 @@ public class ExecutorUtils {
         pendingProcess.add(new Callable<ProcessBuilder>() {
                 @Override
                 public ProcessBuilder call() {
-                    System.out.println("[Info] Adding command to process...");
+                    System.out.println("Adding command to process...");
                     try {
                         ProcessBuilder builder = new ProcessBuilder();
                         String localFULL = new File(LOCAL_PATH).getCanonicalPath();
                         File local = new File(localFULL);
                         String lc = command;
                         if(lc == null || lc.isEmpty()) {
-                            System.out.println("[Warnning] Empty command");
+                            TextUtils.warning("Empty command");
                             lc = "echo Happy-Day";
                         } 
                         System.out.println("[Command] " + command);
@@ -121,7 +121,7 @@ public class ExecutorUtils {
             String localFULL = new File(LOCAL_PATH).getCanonicalPath();
             File local = new File(localFULL);
             if(command == null || command.isEmpty()) {
-                System.out.println("[Warnning] Empty command");
+                TextUtils.warning("[Warning] Empty command");
                 command = "echo Happy-Day";
             } 
             System.out.println("[Command] " + command);

@@ -33,10 +33,10 @@ public class FileUtils {
         File f = new File(pathURI);
         if(!f.exists()){
             if(f.toPath().getNameCount() > 2) {
-                System.out.println("[Info] Creating " + f.getPath());
+                TextUtils.message("Creating " + f.getPath());
                 return f.mkdirs();
             } else {
-                System.out.println("[Info] Creating " + f.getPath());
+                TextUtils.message("Creating " + f.getPath());
                 return f.mkdir();
             }
         }

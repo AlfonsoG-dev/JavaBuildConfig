@@ -58,13 +58,13 @@ public class Operation {
     }
     public void initializeENV(String sourceURl, String targetURL, String includeLib) {
         this.sourceURl = Optional.ofNullable(sourceURl).orElse(oSourceURl);
-        fileOperation.populateList(this.sourceURl);
         if(targetURL != null) {
             this. oTargetURL = targetURL;
         }
         if(includeLib != null) {
             this.oIncludeLib = includeLib.equals("include");
         }
+        fileOperation.populateList(this.sourceURl);
     }
     public void setConfig(String mainClass, String author) {
         mainClass = Optional.ofNullable(mainClass).orElse(oMainClass);

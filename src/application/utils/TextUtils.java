@@ -40,11 +40,14 @@ public record TextUtils() {
          */
         public static final String RED_UNDERLINED = "\033[4;31m";
     }
+    public final static void warning(String message) {
+        System.out.println(Colors.YELLOW_UNDERLINED + "[Warning] " + Colors.ANSI_RESET + message);
+    }
     public final static void message(String message) {
-        System.out.println("[Info] " + message);
+        System.out.println(Colors.GREEN_UNDERLINED + "[Info] " + Colors.ANSI_RESET + message);
     }
     public final static void error(String error) {
-        System.err.println("[Error] " + error);
+        System.err.println(Colors.RED_UNDERLINED + "[Error] " + Colors.ANSI_RESET + error);
     }
     public static String getFileLines(String pathURL) {
         String lines = "";
@@ -58,6 +61,7 @@ public record TextUtils() {
         return lines;
     }
     public static void writeLines(String fileURL, String lines) {
+        System.out.println("Writing lines...");
         try(FileWriter w = new FileWriter(fileURL, false)) {
             if(!lines.isEmpty()) {
                 w.write(lines);
@@ -74,7 +78,8 @@ public record TextUtils() {
                 if(line == null) {
                     break;
                 }
-                System.err.println(line);
+                // show error message
+                error(line);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -88,7 +93,8 @@ public record TextUtils() {
                 if(line == null) {
                     break;
                 }
-                System.out.println(line);
+                // show success message
+                message(line);
             }
         } catch(Exception e) {
             e.printStackTrace();

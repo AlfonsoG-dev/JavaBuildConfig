@@ -204,7 +204,7 @@ public class FileOperation {
      */
     public void copyToPath(String sourceURI, String destinationURI) {
         File f = new File(sourceURI);
-        System.out.println("[Info] Copying ...");
+        System.out.println("Copying ...");
         if(f.isDirectory()) {
             fu.copyDirectory(f.toPath(), destinationURI);
         } else {
