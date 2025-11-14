@@ -9,7 +9,13 @@ import test.cases.builders.*;
 
 import java.io.File;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+
 class TestLauncher {
+    private final static int THREAD_COUNT = 1; 
+    private final static ExecutorService EXECUTOR_THREAD = Executors.newFixedThreadPool(1);
     public static void main(String[] args) {
         // dependencies
         String root = "src";
@@ -20,12 +26,10 @@ class TestLauncher {
         // start env variables
         fop.appendSource("src" + File.separator + "application");
         fop.appendLists();
-        /** 
-         * FIXME: update the populate list to append the correct list sources.
-         * Currently we have to pass an executor thread to the populate list.
-         * modify the code to a certain degree that it not affect the overall structure.
-        */
+
         // fop.populateList(ex.getListsResult(null));
+        // Don't include lib files for now
+        fop.populateList(ex.getListsResult(EXECUTOR_THREAD), false);
 
         // test text utils
         System.out.println("\nTesting TextUtils\b");
@@ -63,5 +67,13 @@ class TestLauncher {
         System.out.println("\nTesting RunBuilder\b");
         RunBuilderTest rbt = new RunBuilderTest(root, fop);
         rbt.getCommandTest();
+        try {
+            EXECUTOR_THREAD.shutdown();
+            if(!EXECUTOR_THREAD.awaitTermination(5, TimeUnit.SECONDS)) {
+                EXECUTOR_THREAD.shutdownNow();
+            }
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
