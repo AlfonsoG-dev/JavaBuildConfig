@@ -3,10 +3,10 @@
 > Its made for simple java project with minimal use of `.jar` dependencies.
 
 - Build the entire project.
-![expected output](./docs/output1.png)
+![expected output](./docs/output_1.png)
 
 - Compile some other source.
-![expected_recompile](./docs/output2.png)
+![expected_recompile](./docs/output_2.png)
 
 ---
 
