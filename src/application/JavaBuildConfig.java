@@ -14,7 +14,7 @@ class JavaBuildConfig {
             op.loadConfig();
             op.initializeENV(source, target, libs);
         }
-        for(int i=0; i<args.length; ++i) {
+        outter:for(int i=0; i<args.length; ++i) {
             switch(args[i]) {
                 case "--compile":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
@@ -82,13 +82,13 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--h":
-                
                     System.out.println();
                     System.out.println("All the sub-commands bellow can be used by any command");
                     System.out.println("use --s to change the project source");
                     System.out.println("use --s to change the project source");
                     System.out.println("use --t to change the project target");
                     System.out.println("use -f to insert flags to the compile process like -f -g");
+                    System.out.println();
     
                     System.out.println("use --compile to compile the project");
                     System.out.println("use --compile classpath to compile the project and store the .class files in that place");
@@ -113,10 +113,13 @@ class JavaBuildConfig {
     
                     System.out.println("use --test to run tests");
                     System.out.println("\tuse --test app.name to run another main class of tests");
-                    break;
-                default:
+                    // terminate the program because default never reach
                     op.terminateProgram();
-                    break;
+                    break outter;
+                default:
+                    System.out.println("Use --h to see the commands");
+                    op.terminateProgram();
+                    break outter;
             }
         }
     }
