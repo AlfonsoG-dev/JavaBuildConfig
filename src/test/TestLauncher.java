@@ -18,7 +18,14 @@ class TestLauncher {
         FileOperation fop = new FileOperation(root, ex);
 
         // start env variables
-        fop.populateList("src" + File.separator + "application");
+        fop.appendSource("src" + File.separator + "application");
+        fop.appendLists();
+        /** 
+         * FIXME: update the populate list to append the correct list sources.
+         * Currently we have to pass an executor thread to the populate list.
+         * modify the code to a certain degree that it not affect the overall structure.
+        */
+        // fop.populateList(ex.getListsResult(null));
 
         // test text utils
         System.out.println("\nTesting TextUtils\b");

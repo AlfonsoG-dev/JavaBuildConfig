@@ -1,9 +1,12 @@
 package application.utils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.Future;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +19,7 @@ public class ExecutorUtils {
     private final static String LOCAL_PATH = "." + File.separator;
     private final static String OS_NAME = System.getProperty("os.name").toLowerCase();
     private List<Callable<ProcessBuilder>> pendingProcess = new ArrayList<>();
+    private List<HashMap<String, Callable<List<Path>>>> pendingLists = new ArrayList<>();
 
     /**
      * Executes callable tasks with new cached thread pools.
@@ -50,6 +54,29 @@ public class ExecutorUtils {
                 }
             }
         }
+    }
+    public HashMap<String, List<Path>> getListsResult(ExecutorService executor) {
+        HashMap<String, List<Path>> completeResult = new HashMap<>();
+        try {
+            if(pendingLists.isEmpty()) return null; 
+            for(HashMap<String, Callable<List<Path>>> pending: pendingLists) {
+                Set<String> keys = pending.keySet();
+                for(String k: keys) {
+                    Future<List<Path>> futureResult = executor.submit(pending.get(k));
+                    if(!futureResult.isDone()) {
+                        System.out.println("Waiting for list results...");
+                    }
+                    List<Path> value = futureResult.get();
+                    if(futureResult.isDone()) {
+                        TextUtils.message("Populated " + k + " list");
+                        completeResult.put(k, value);
+                    }
+                }
+            }
+        } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return completeResult;
     }
     /**
      * Execute pending process with appended commands.
@@ -110,6 +137,9 @@ public class ExecutorUtils {
                     }
                 }
             });
+    }
+    public void appendListToCallableProcess(HashMap<String, Callable<List<Path>>> lists) {
+        pendingLists.add(lists);
     }
     public void cleanPendingProcess() {
         pendingProcess = null;

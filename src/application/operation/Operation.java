@@ -18,7 +18,7 @@ public class Operation {
     private LibBuilder libBuilder;
     private FileBuilder fileBuilder;
     private FileOperation fileOperation;
-    private ExecutorUtils ex;
+    private ExecutorUtils executorUtils;
 
     private String root;
     private String sourceURI;
@@ -31,19 +31,19 @@ public class Operation {
     private String oCompileFlags;
     private String oTestClass;
     private boolean oIncludeLib;
-    private ExecutorService executor;
+    private ExecutorService executorThread;
 
     public Operation(String root) {
         this.root = Optional.ofNullable(root).orElse("src");
-        ex = new ExecutorUtils();
-        fileOperation = new FileOperation(this.root, ex);
+        executorUtils = new ExecutorUtils();
+        fileOperation = new FileOperation(this.root, executorUtils);
         compileBuilder = new CompileBuilder(this.root, fileOperation);
         runBuilder = new RunBuilder(this.root, fileOperation);
         jarBuilder = new JarBuilder(this.root, fileOperation);
         scriptBuilder = new ScriptBuilder(compileBuilder);
         libBuilder = new LibBuilder(this.root, fileOperation);
         fileBuilder = new FileBuilder(fileOperation);
-        executor = Executors.newCachedThreadPool();
+        executorThread = Executors.newCachedThreadPool();
     }
     public void loadConfig() {
         configData = fileOperation.getConfigValues();
@@ -64,7 +64,12 @@ public class Operation {
         if(includeLib != null) {
             this.oIncludeLib = includeLib.equals("include");
         }
-        fileOperation.populateList(this.sourceURI);
+        fileOperation.appendSource(this.sourceURI);
+        if(oIncludeLib) {
+            fileOperation.appendLib("lib");
+        }
+        fileOperation.appendLists();
+        fileOperation.populateList(executorUtils.getListsResult(executorThread), oIncludeLib);
     }
     public void setConfig(String mainClass, String author) {
         mainClass = Optional.ofNullable(mainClass).orElse(oMainClass);
@@ -83,13 +88,13 @@ public class Operation {
             command = compileBuilder.getCommand(oTargetURI, flags, oIncludeLib);
         }
         // ex.executeCommand(command);
-        ex.appendCommandToCallableProcess(command);
+        executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendScratchCompileProcess(String flags) {
         flags = Optional.ofNullable(flags).orElse(oCompileFlags);
         String command = compileBuilder.getCommand(oTargetURI, flags, oIncludeLib);
-        ex.appendCommandToCallableProcess("rm -r " + oTargetURI);
-        ex.appendCommandToCallableProcess(command);
+        executorUtils.appendCommandToCallableProcess("rm -r " + oTargetURI);
+        executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendRunProcess(String flags, String mainClass) {
         String command = "";
@@ -99,7 +104,7 @@ public class Operation {
         } else {
             command = runBuilder.getCommand(mainClass, oTargetURI, flags, oIncludeLib);
         }
-        ex.appendCommandToCallableProcess(command);
+        executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendTestProcess(String mainClass) {
         mainClass = Optional.ofNullable(mainClass).orElse(oTestClass);
@@ -109,7 +114,7 @@ public class Operation {
         } else {
             command = runBuilder.getCommand(mainClass, oTargetURI, "", oIncludeLib);
         }
-        ex.appendCommandToCallableProcess(command);
+        executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendJarProcess(String fileName, String flags, String mainClass) {
         flags = Optional.ofNullable(flags).orElse("");
@@ -121,13 +126,13 @@ public class Operation {
             command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, flags, oIncludeLib);
         }
         // ex.executeCommand(command);
-        ex.appendCommandToCallableProcess(command);
+        executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendExtractDependenciesProcess(String targetURI, String flags) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         // the process is capable of executing all the concatenated processes with '&&'
         // ex.appendCommandToCallableProcess(c);
-        libBuilder.appendCommandToProcess(ex, targetURI, oIncludeLib);
+        libBuilder.appendCommandToProcess(executorUtils, targetURI, oIncludeLib);
     }
     public void createBuildScript(String fileURI) {
         String osName = System.getProperty("os.name").toLowerCase();
@@ -149,18 +154,18 @@ public class Operation {
         fileOperation.copyToPath(sourceURI, destinationFile.toString());
     }
     public void executeCommand() {
-        ex.executeCallableProcess(executor);
+        executorUtils.executeCallableProcess(executorThread);
     }
     public void terminateProgram() {
-        executor.shutdown();
+        executorThread.shutdown();
         try {
-            if(!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
+            if(!executorThread.awaitTermination(5, TimeUnit.SECONDS)) {
+                executorThread.shutdownNow();
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
         } finally {
-            ex.cleanPendingProcess();
+            executorUtils.cleanPendingProcess();
         }
     }
 }

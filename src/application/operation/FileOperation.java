@@ -9,6 +9,7 @@ import java.nio.file.Path;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -17,6 +18,9 @@ public class FileOperation {
     private FileUtils fu;
     private ExecutorUtils ex;
     private List<Path> listFiles;
+    private List<Path> libFiles;
+    private HashMap<String, Callable<List<Path>>> content = new HashMap<>();
+    
     public FileOperation(String root) {
         this.root = root;
         fu = new FileUtils(this.root);
@@ -27,13 +31,21 @@ public class FileOperation {
         fu = new FileUtils(this.root);
         this.ex = executorUtils;
     }
-    public void populateList(String sourceURI) {
+    public void populateList(HashMap<String, List<Path>> computed, boolean includeLib) {
         /**
-         * FIXME: append the list to a pending list evaluation on executor.
-         * the ex.getResult does nothing concurrent or parallel, is just for implementation later on the pending list it will me more robust. 
-         * NOTE: for now use the getResult as to get the immediate result of the callable list task. 
+         * append the list to a pending list evaluation on an executor class.
          */
-        listFiles = ex.getResult(fu.callableList(sourceURI, 0));
+        listFiles = computed.get("source");
+        if(includeLib) libFiles = computed.get("lib");
+    }
+    public void appendSource(String sourceURI) {
+        content.put("source", fu.callableList(sourceURI, 0));
+    }
+    public void appendLib(String sourceLb) {
+        content.put("lib", fu.callableList(sourceLb, 2));
+    }
+    public void appendLists() {
+        ex.appendListToCallableProcess(content);
     }
     public boolean createDirectories(String dirURI) {
         return fu.createDirectory(dirURI);
@@ -57,13 +69,12 @@ public class FileOperation {
      * @return a list with only directories.
      */
     public List<Path> sourceDirs() {
-        List<Path> dirs = listFiles
+        List<Path> dirs =  listFiles
             .stream()
             .filter(p -> p.toFile().isDirectory())
             .filter(p -> fu.countFiles(p) > 0)
             .toList();
         return dirs;
-
     }
     /**
      * List of jar dependencies.
@@ -71,11 +82,11 @@ public class FileOperation {
      * @return a list with the jar path.
      */
     public List<Path> libFiles(String sourceURI) {
-        // FIXME: append the list to a pending list evaluation on executor.
-        return ex.getResult(fu.callableList(sourceURI, 2))
+        List<Path> libs =  libFiles
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
+        return libs;
     }
     /**
      * search in the source path for the first class that has main attribute present. 
