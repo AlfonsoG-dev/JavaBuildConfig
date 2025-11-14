@@ -2,6 +2,7 @@ package application.builders;
 
 import application.models.CommandModel;
 import application.operation.FileOperation;
+import application.utils.ExecutorUtils;
 
 import java.io.File;
 
@@ -49,6 +50,36 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
             }
         }
         return command.toString();
+    }
+    public void appendCommandToProcess(ExecutorUtils ex, String targetURI, boolean includeLib) {
+        if(!includeLib) return;
+        File targetFile = new File(targetURI);
+        String[] libFiles = prepareLibFiles().toString().split(";");
+        for(String l: libFiles) {
+            File f = new File(l);
+            Path targetPath = targetFile.toPath().resolve(f.getName().replace(".jar", ""));
+            // create a directory with the same name as the jar file in extractionFiles 
+            if(op.createDirectories(targetPath.toString())) {
+                op.copyToPath(f.getPath(), targetPath.toString());
+            }
+        }
+        if(targetFile.listFiles() != null) {
+            StringBuilder command = new StringBuilder();
+            // TODO: test if is able to append more than 1 lib dependency.
+            for(File s: targetFile.listFiles()) {
+                command.append("cd ");
+                command.append(s.getPath());
+                command.append(" && ");
+                command.append("jar -x");
+                command.append("f ");
+                command.append(s.getName());
+                command.append(".jar");
+                command.append(" && rm -r ");
+                command.append(s.getName());
+                command.append(".jar");
+            }
+            ex.appendCommandToCallableProcess(command.toString());
+        }
     }
     
 }

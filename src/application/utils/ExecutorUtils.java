@@ -51,6 +51,10 @@ public class ExecutorUtils {
             }
         }
     }
+    /**
+     * Execute pending process with appended commands.
+     * @param executor the type of executor.
+     */
     public void executeCallableProcess(ExecutorService executor) {
         if(pendingProcess.isEmpty()) {
             TextUtils.message("[Info] All process has been finished");

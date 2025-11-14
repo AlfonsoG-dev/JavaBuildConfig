@@ -125,10 +125,9 @@ public class Operation {
     }
     public void appendExtractDependenciesProcess(String targetURI, String flags) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
-        flags = Optional.ofNullable(flags).orElse("v");
-        String c = libBuilder.getCommand(targetURI, flags, oIncludeLib);
         // the process is capable of executing all the concatenated processes with '&&'
-        ex.appendCommandToCallableProcess(c);
+        // ex.appendCommandToCallableProcess(c);
+        libBuilder.appendCommandToProcess(ex, targetURI, oIncludeLib);
     }
     public void createBuildScript(String fileURI) {
         String osName = System.getProperty("os.name").toLowerCase();
