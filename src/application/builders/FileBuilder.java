@@ -5,7 +5,7 @@ import application.operation.FileOperation;
 import java.io.File;
 
 import java.nio.file.Path;
-
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileBuilder {
@@ -25,12 +25,15 @@ public class FileBuilder {
             lines.append("\n");
         }
         if(!includeLib) {
-            lines.append("Class-Path: ");
-            lines.append(fileOperation.libFiles("." + File.separator + "lib")
-                .stream()
-                .map(Path::toString)
-                .collect(Collectors.joining(";"))
-            );
+            List<Path> libs = fileOperation.libFiles("." + File.separator + "lib");
+            if(libs != null) {
+                lines.append("Class-Path: ");
+                lines.append(libs
+                    .stream()
+                    .map(Path::toString)
+                    .collect(Collectors.joining(";"))
+                );
+            }
         }
         fileOperation.createFile("Manifesto.txt", lines.toString());
     }
