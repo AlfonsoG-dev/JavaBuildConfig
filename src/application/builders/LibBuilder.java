@@ -67,13 +67,16 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
             StringBuilder command = new StringBuilder();
             // TODO: test if is able to append more than 1 lib dependency.
             for(File s: targetFile.listFiles()) {
+                // enter the directory
                 command.append("cd ");
                 command.append(s.getPath());
                 command.append(" && ");
+                // the .jar dependency has the same name as the parent folder.
                 command.append("jar -x");
                 command.append("f ");
                 command.append(s.getName());
                 command.append(".jar");
+                // remove the .jar file.
                 command.append(" && rm -r ");
                 command.append(s.getName());
                 command.append(".jar");
