@@ -82,6 +82,7 @@ public class FileOperation {
      * @return a list with the jar path.
      */
     public List<Path> libFiles(String sourceURI) {
+        if(libFiles == null) return null;
         List<Path> libs =  libFiles
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
@@ -187,13 +188,17 @@ public class FileOperation {
         return configs;
     }
     /**
-     * Compare last modified date in milliseconds of source files with their counterapart in class path.
+     * Compare last modified date in milliseconds of source files with their counterpart in class path.
      * @param sourceFile path to the .java files.
      * @return true if there is a difference in dates with the source file and class file, false otherwise.
      */
     public boolean differDate(Path sourceFile) {
         File source = sourceFile.toFile();
-        File classFile = new File(sourceFile.toString().replace(root + File.separator, "bin" + File.separator).replace(".java", ".class"));
+        File classFile = new File(
+                sourceFile.toString()
+                    .replace(root + File.separator, "bin" + File.separator)
+                    .replace(".java", ".class")
+        );
         return !classFile.exists() || source.lastModified() > classFile.lastModified();
     }
     /**
