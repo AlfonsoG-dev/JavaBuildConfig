@@ -91,6 +91,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         String format = appendJarType(lines, mainClass);
 
         lines.append(fileName);
+        lines.append(FILE_EXTENSION);
         appendJarFormat(lines, format, mainClass);
 
         appendAssets(lines, targetURI, includeLib);
@@ -105,11 +106,11 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         if(targetURI.isBlank()) return null;
         if(!flags.isBlank()) command.append("v");
         if(fileName.isBlank()) return null;
-        if(!fileName.contains(FILE_EXTENSION)) fileName = fileName + FILE_EXTENSION;
 
         // add jar file
         command.append("f ");
         command.append(fileName);
+        command.append(FILE_EXTENSION);
         /**
          * FIXME: for now when updating lib files it generates a corrupt jar file.
          * a temporal fix is to disable the includeLib, making always false.
