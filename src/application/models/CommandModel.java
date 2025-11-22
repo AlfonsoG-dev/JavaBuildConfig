@@ -38,7 +38,6 @@ public interface CommandModel {
                 .collect(Collectors.joining(File.separator + "*.java "))
         );
         // with collectors joining the last line doesn't have the aggregation \*.java
-        String clean = src.toString() + File.separator + "*.java";
-        return clean;
+        return src.toString() + File.separator + "*.java";
     }
 }

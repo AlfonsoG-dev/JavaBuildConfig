@@ -1,10 +1,13 @@
 package application.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+
 import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -16,10 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 
 public class ExecutorUtils {
-    private final static String LOCAL_PATH = "." + File.separator;
-    private final static String OS_NAME = System.getProperty("os.name").toLowerCase();
+    private static final String LOCAL_PATH = "." + File.separator;
+    private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
     private List<Callable<ProcessBuilder>> pendingProcess = new ArrayList<>();
-    private List<HashMap<String, Callable<List<Path>>>> pendingLists = new ArrayList<>();
+    private List<Map<String, Callable<List<Path>>>> pendingLists = new ArrayList<>();
 
     /**
      * Executes callable tasks with new cached thread pools.
@@ -28,11 +31,10 @@ public class ExecutorUtils {
      * @return the generic type of the result of the future of callable completion.
      */
     public<T> T getResult(Callable<T> task) {
-        ExecutorService executor = Executors.newCachedThreadPool();
-        try {
+        try(ExecutorService executor = Executors.newCachedThreadPool()) {
             Future<T> result = executor.submit(task);
             if(!result.isDone()) {
-                System.out.println("Waiting for results...");
+                TextUtils.showMessage("Waiting for results...");
             }
             T value = result.get();
             if(result.isDone()) {
@@ -41,30 +43,20 @@ public class ExecutorUtils {
             return value;
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return null;
-        } finally {
-            if(executor != null) {
-                executor.shutdown();
-                try {
-                    if(!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                        executor.shutdownNow();
-                    }
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            Thread.currentThread().interrupt();
         }
+        return null;
     }
-    public HashMap<String, List<Path>> getListsResult(ExecutorService executor) {
+    public Map<String, List<Path>> getListsResult(ExecutorService executor) {
         HashMap<String, List<Path>> completeResult = new HashMap<>();
         try {
-            if(pendingLists.isEmpty()) return null; 
-            for(HashMap<String, Callable<List<Path>>> pending: pendingLists) {
+            if(pendingLists.isEmpty()) return completeResult; 
+            for(Map<String, Callable<List<Path>>> pending: pendingLists) {
                 Set<String> keys = pending.keySet();
                 for(String k: keys) {
                     Future<List<Path>> futureResult = executor.submit(pending.get(k));
                     if(!futureResult.isDone()) {
-                        System.out.println("Waiting for list results...");
+                        TextUtils.showMessage("Waiting for list results...");
                     }
                     List<Path> value = futureResult.get();
                     if(futureResult.isDone()) {
@@ -75,6 +67,7 @@ public class ExecutorUtils {
             }
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         return completeResult;
     }
@@ -90,30 +83,29 @@ public class ExecutorUtils {
         try {
             List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
             for(Future<ProcessBuilder> f: futureResults) {
-                System.out.println("Waiting for process to complete...");
+                TextUtils.showMessage("Waiting for process to complete...");
                 ProcessBuilder b = f.get();
                 if(b != null) {
                     Process p = b.start();
                     if(p.getErrorStream() != null) {
-                        TextUtils.CommandOutputError(p.getErrorStream());
+                        TextUtils.commandOutputError(p.getErrorStream());
                     }
                     if(p.getInputStream() != null) {
-                        TextUtils.CommandOutput(p.getInputStream());
+                        TextUtils.commandOutput(p.getInputStream());
                     }
                     if(!p.waitFor(5, TimeUnit.SECONDS)) {
                         p.destroy();
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch(IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
     public void appendCommandToCallableProcess(String command) {
-        pendingProcess.add(new Callable<ProcessBuilder>() {
-                @Override
-                public ProcessBuilder call() {
-                    System.out.println("Adding command to process...");
+        pendingProcess.add(() -> {
+                    TextUtils.showMessage("Adding command to process...");
                     try {
                         ProcessBuilder builder = new ProcessBuilder();
                         String localFULL = new File(LOCAL_PATH).getCanonicalPath();
@@ -123,7 +115,7 @@ public class ExecutorUtils {
                             TextUtils.warning("Empty command");
                             lc = "echo Happy-Day";
                         } 
-                        System.out.println("[Command] " + command);
+                        TextUtils.showMessage("[Command] " + command);
                         if(OS_NAME.contains("windows")) {
                             builder.command("pwsh", "-NoProfile", "-Command", lc);
                         } else if(OS_NAME.contains("linux")) {
@@ -135,10 +127,9 @@ public class ExecutorUtils {
                         e.printStackTrace();
                         return null;
                     }
-                }
-            });
+                });
     }
-    public void appendListToCallableProcess(HashMap<String, Callable<List<Path>>> lists) {
+    public void appendListToCallableProcess(Map<String, Callable<List<Path>>> lists) {
         pendingLists.add(lists);
     }
     public void cleanPendingProcess() {
@@ -158,7 +149,7 @@ public class ExecutorUtils {
                 TextUtils.warning("[Warning] Empty command");
                 command = "echo Happy-Day";
             } 
-            System.out.println("[Command] " + command);
+            TextUtils.showMessage("[Command] " + command);
             if(OS_NAME.contains("windows")) {
                 builder.command("pwsh", "-NoProfile", "-Command", command);
             } else if(OS_NAME.contains("linux")) {
@@ -167,10 +158,10 @@ public class ExecutorUtils {
             builder.directory(local);
             p = builder.start();
             if(p.getErrorStream() != null) {
-                TextUtils.CommandOutputError(p.getErrorStream());
+                TextUtils.commandOutputError(p.getErrorStream());
             }
             if(p.getInputStream() != null) {
-                TextUtils.CommandOutput(p.getInputStream());
+                TextUtils.commandOutput(p.getInputStream());
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -179,8 +170,9 @@ public class ExecutorUtils {
                 try {
                     p.waitFor();
                     p.destroy();
-                } catch(Exception e) {
+                } catch(InterruptedException e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
                 p = null;
             }

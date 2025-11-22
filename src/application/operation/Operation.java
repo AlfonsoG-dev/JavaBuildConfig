@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 
 public class Operation {
@@ -21,8 +21,6 @@ public class Operation {
     private ExecutorUtils executorUtils;
 
     private String root;
-    private String sourceURI;
-    private HashMap<String, String> configData;
 
     private String oSourceURI;
     private String oTargetURI;
@@ -46,7 +44,7 @@ public class Operation {
         executorThread = Executors.newCachedThreadPool();
     }
     public void loadConfig() {
-        configData = fileOperation.getConfigValues();
+        Map<String, String> configData = fileOperation.getConfigValues();
         oSourceURI = Optional.ofNullable(configData.get("Source-Path")).orElse("src");
         oTargetURI = Optional.ofNullable(configData.get("Class-Path")).orElse("bin");
         oMainClass = Optional.ofNullable(configData.get("Main-Class")).orElse(fileOperation.getProjectName());
@@ -57,14 +55,13 @@ public class Operation {
         oIncludeLib = dataLib.equals("include");
     }
     public void initializeENV(String sourceURI, String targetURI, String includeLib) {
-        this.sourceURI = Optional.ofNullable(sourceURI).orElse(oSourceURI);
         if(targetURI != null) {
             this. oTargetURI = targetURI;
         }
         if(includeLib != null) {
             this.oIncludeLib = includeLib.equals("include");
         }
-        fileOperation.appendSource(this.sourceURI);
+        fileOperation.appendSource(Optional.ofNullable(sourceURI).orElse(oSourceURI));
         if(oIncludeLib) {
             fileOperation.appendLib("lib");
         }
@@ -87,7 +84,6 @@ public class Operation {
         } else {
             command = compileBuilder.getCommand(oTargetURI, flags, oIncludeLib);
         }
-        // ex.executeCommand(command);
         executorUtils.appendCommandToCallableProcess(command);
     }
     public void appendScratchCompileProcess(String flags) {
@@ -116,22 +112,20 @@ public class Operation {
         }
         executorUtils.appendCommandToCallableProcess(command);
     }
-    public void appendJarProcess(String fileName, String flags, String mainClass) {
+    public void appendJarProcess(String fileName, String flags) {
         flags = Optional.ofNullable(flags).orElse("");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
         String command = "";
         if(!new File(fileName + ".jar").exists()) {
             command = jarBuilder.getCommand(fileName, oTargetURI, oMainClass, flags, oIncludeLib);
         } else {
-            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, flags, oIncludeLib);
+            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, flags);
         }
-        // ex.executeCommand(command);
         executorUtils.appendCommandToCallableProcess(command);
     }
-    public void appendExtractDependenciesProcess(String targetURI, String flags) {
+    public void appendExtractDependenciesProcess(String targetURI) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         // the process is capable of executing all the concatenated processes with '&&'
-        // ex.appendCommandToCallableProcess(c);
         libBuilder.appendCommandToProcess(executorUtils, targetURI, oIncludeLib);
     }
     public void createBuildScript(String fileURI) {
@@ -164,6 +158,7 @@ public class Operation {
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         } finally {
             executorUtils.cleanPendingProcess();
         }

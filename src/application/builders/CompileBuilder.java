@@ -51,9 +51,9 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
 
         // change path to directory.App
         List<Path> paths = op.sourceFiles().stream()
-            .filter(p -> op.differDate(p))
+            .filter(op::differDate)
             .toList();
-        if(paths.size() == 0) return null;
+        if(paths.isEmpty()) return null;
 
         Set<Path> files = new HashSet<>();
         files.addAll(paths);

@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.HashSet;
 
 public class FileOperation {
+    private static final String FILE_EXTENSION = ".java";
+    private static final String CONFIG_PAH = "config.txt";
     private String root;
     private FileUtils fu;
     private ExecutorUtils ex;
@@ -31,7 +34,7 @@ public class FileOperation {
         fu = new FileUtils(this.root);
         this.ex = executorUtils;
     }
-    public void populateList(HashMap<String, List<Path>> computed, boolean includeLib) {
+    public void populateList(Map<String, List<Path>> computed, boolean includeLib) {
         /**
          * append the list to a pending list evaluation on an executor class.
          */
@@ -58,23 +61,21 @@ public class FileOperation {
      * @return the list of only files.
      */
     public List<Path> sourceFiles() {
-        List<Path> files = listFiles
+        return listFiles
             .stream()
             .filter(p -> p.toFile().isFile())
             .toList();
-        return files;
     }
     /**
      * A list of source directories.
      * @return a list with only directories.
      */
     public List<Path> sourceDirs() {
-        List<Path> dirs =  listFiles
+        return listFiles
             .stream()
             .filter(p -> p.toFile().isDirectory())
             .filter(p -> fu.countFiles(p) > 0)
             .toList();
-        return dirs;
     }
     /**
      * List of jar dependencies.
@@ -82,12 +83,11 @@ public class FileOperation {
      * @return a list with the jar path.
      */
     public List<Path> libFiles(String sourceURI) {
-        if(libFiles == null) return null;
-        List<Path> libs =  libFiles
+        if(libFiles == null) return libFiles;
+        return libFiles
             .stream()
             .filter(p -> p.toFile().isFile() && p.toFile().getName().contains(".jar"))
             .toList();
-        return libs;
     }
     /**
      * search in the source path for the first class that has main attribute present. 
@@ -95,17 +95,18 @@ public class FileOperation {
      */
     public String getMainClass() {
         String sourceRoot = root + File.separator;
-        File f = new File(root);
-        if(f.listFiles() != null) {
-            for(Path p: sourceFiles()) {
-                File mf = p.toFile();
-                if(mf.isFile() && mf.getName() != "TestLauncher.java") {
-                    String breakerLine = "public static void main";
-                    String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
-                    for(String l: lines) {
-                        if(l.contains(breakerLine)) {
-                            return mf.getPath().replace(sourceRoot, "").replace(".java", "").replace(File.separator, ".");
-                        }
+        List<Path> files = fu.listPaths(sourceRoot, 3);
+        for(Path p: files) {
+            File mf = p.toFile();
+            if(mf.isFile() && !mf.getName().equals("TestLauncher.java")) {
+                String breakerLine = "public static void main";
+                String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
+                for(String l: lines) {
+                    if(l.contains(breakerLine)) {
+                        return mf.getPath()
+                            .replace(sourceRoot, "")
+                            .replace(FILE_EXTENSION, "")
+                            .replace(File.separator, ".");
                     }
                 }
             }
@@ -140,7 +141,7 @@ public class FileOperation {
      * @return true if present, false otherwise 
      */
     public boolean haveConfig() {
-        File f = new File("." + File.separator + "config.txt");
+        File f = new File("." + File.separator + CONFIG_PAH);
         return f.exists();
     }
     /**
@@ -162,10 +163,10 @@ public class FileOperation {
      * A table with configuration attributes for the build tool.
      * @return A HasMap with the configuration attributes.
      */
-    public HashMap<String, String> getConfigValues() {
+    public Map<String, String> getConfigValues() {
         HashMap<String, String> configs = new HashMap<>();
         String[] lines = null;
-        if(!new File("config.txt").exists()) {
+        if(!new File(CONFIG_PAH).exists()) {
             lines = new String[] {
                 "Root-Path: src\n",
                 "Source-Path: src\n",
@@ -177,7 +178,7 @@ public class FileOperation {
                 "Compile-Flags: -Werror"
             };
         } else {
-            lines = TextUtils.getFileLines("config.txt").split("\n");
+            lines = TextUtils.getFileLines(CONFIG_PAH).split("\n");
         }
         for(String l: lines) {
             String[] values = l.split(":", 2);
@@ -197,7 +198,7 @@ public class FileOperation {
         File classFile = new File(
                 sourceFile.toString()
                     .replace(root + File.separator, "bin" + File.separator)
-                    .replace(".java", ".class")
+                    .replace(FILE_EXTENSION, ".class")
         );
         return !classFile.exists() || source.lastModified() > classFile.lastModified();
     }
@@ -214,11 +215,9 @@ public class FileOperation {
             String[] lines = TextUtils.getFileLines(p.toString()).split("\n");
             for(String l: lines) {
                 l = l.trim().replace(";", "");
-                String packDir = packageName.replace("." + fileName.replace(".java", ""), "");
-                if(l.startsWith("import") && l.contains(packageName)) {
+                String packDir = packageName.replace("." + fileName.replace(FILE_EXTENSION, ""), "");
+                if(l.startsWith("import") && l.contains(packageName) || (l.endsWith("*") && l.contains(packDir))) {
                     imports.add(p);
-                } else if(l.startsWith("import") && l.endsWith("*") && l.contains(packDir)) {
-                   imports.add(p);
                 }
             }
         }
@@ -231,7 +230,7 @@ public class FileOperation {
      */
     public void copyToPath(String sourceURI, String destinationURI) {
         File f = new File(sourceURI);
-        System.out.println("Copying ...");
+        TextUtils.showMessage("Copying ...");
         if(f.isDirectory()) {
             fu.copyDirectory(f.toPath(), destinationURI);
         } else {

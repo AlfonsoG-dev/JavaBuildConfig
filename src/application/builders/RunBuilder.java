@@ -30,7 +30,7 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
         }
         command.append("' ");
 
-        if(mainClassName != "") command.append(mainClassName);
+        if(!mainClassName.isBlank()) command.append(mainClassName);
         command.append(" ");
         command.append(flags);
 

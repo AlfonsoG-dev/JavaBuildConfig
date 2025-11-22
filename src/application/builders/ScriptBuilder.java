@@ -6,15 +6,15 @@ import application.models.CommandModel;
 
 public record ScriptBuilder(CommandModel cm) {
 
-    private final static String OS_NAME = System.getProperty("os.name").toLowerCase();
+    private static final boolean OS_NAME_WINDOWS = System.getProperty("os.name").contains("windows");
 
     public void appendSource(StringBuilder lines) {
-        if(OS_NAME.contains("windows")) {
+        if(OS_NAME_WINDOWS) {
             lines.append("$Source=");
             lines.append("\"");
             lines.append(cm.prepareSrcFiles());
             lines.append("\"\n");
-        } else if(OS_NAME.contains("linux")) {
+        } else {
             lines.append("source=");
             lines.append("\"");
             lines.append(cm.prepareSrcFiles());
@@ -22,12 +22,12 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
     public void appendLib(StringBuilder lines) {
-        if(OS_NAME.contains("windows")) {
+        if(OS_NAME_WINDOWS){
             lines.append("$Libs=");
             lines.append("\"");
             lines.append(cm.prepareLibFiles());
             lines.append("\"\n");
-        } else if(OS_NAME.contains("linux")) {
+        } else {
             lines.append("libs=");
             lines.append("\"");
             lines.append(cm.prepareLibFiles());
@@ -35,7 +35,7 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
     public void appendCompileCommand(StringBuilder lines, String targetURI, boolean includeLib) {
-        if(OS_NAME.contains("windows")) {
+        if(OS_NAME_WINDOWS) {
             lines.append("$Compile=");
             lines.append("\"");
             lines.append("javac -d ");
@@ -46,7 +46,7 @@ public record ScriptBuilder(CommandModel cm) {
             }
             lines.append(" $Source");
             lines.append("\"\n");
-        } else if(OS_NAME.contains("linux")) {
+        } else {
             lines.append("javac -d ");
             lines.append(targetURI);
             if(includeLib) {
@@ -58,8 +58,8 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
     public void appendCreateJarCommand(StringBuilder lines, String targetURI, boolean includeLib) {
-        // TODO: test this create jar command
-        if(OS_NAME.contains("windows")) {
+        // TEST: create jar command
+        if(OS_NAME_WINDOWS) {
             lines.append("$Jar=\"jar -cfm ");
             lines.append(cm.getFileOperation().getProjectName());
             lines.append(".jar ");
@@ -78,7 +78,7 @@ public record ScriptBuilder(CommandModel cm) {
             }
             lines.append(" \"\n");
         } else {
-            // TODO: add linux support
+            // TEST: linux support
             lines.append("jar -cfm ");
             lines.append(cm.getFileOperation().getProjectName());
             lines.append(".jar ");
@@ -99,7 +99,7 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
     public void appendRunCommand(StringBuilder lines, String targetURI, boolean includeLib) {
-        if(OS_NAME.contains("windows")) {
+        if(OS_NAME_WINDOWS) {
             lines.append("$Run=");
             lines.append("\"");
             lines.append("java -cp '");
@@ -111,7 +111,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("' ");
             lines.append(cm.getFileOperation().getMainClass());
             lines.append("\"\n");
-        } else if(OS_NAME.contains("linux")) {
+        } else {
             lines.append("java -cp '");
             lines.append(targetURI);
             if(includeLib) {
@@ -125,7 +125,7 @@ public record ScriptBuilder(CommandModel cm) {
     }
     // only on windows
     public void appendExecuteCommands(StringBuilder lines) {
-        if(OS_NAME.contains("windows")) {
+        if(OS_NAME_WINDOWS) {
             lines.append("Invoke-Expression ($Compile + \" && \" + $Jar + \" && \" + $Run)\n");
         }
     }

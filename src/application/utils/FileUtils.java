@@ -58,10 +58,9 @@ public class FileUtils {
             if(sourcePath.toFile().isFile()) {
                 Path destination = Paths.get(destinationURI).resolve(sourcePath.getFileName());
                 String o = Files.copy(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING).toString();
-                System.out.printf(
-                    "\tCopy { %s%s%s } \n\t\tinto => [ %s%s%s ]%n",
+                TextUtils.showMessage(String.format("\tCopy { %s%s%s } %n\t\tinto => [ %s%s%s ]%n",
                     TextUtils.Colors.YELLOW_UNDERLINED, sourcePath, TextUtils.Colors.ANSI_RESET,
-                    TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET
+                    TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET)
                 );
                 return o;
             }
@@ -89,10 +88,9 @@ public class FileUtils {
                     Files.createDirectories(destination);
                 } else {
                     Files.copy(mp, destination, StandardCopyOption.REPLACE_EXISTING);
-                    System.out.printf(
-                        "\tCopy { %s%s%s } \n\t\tinto => [ %s%s%s ]%n",
+                    TextUtils.showMessage(String.format("\tCopy { %s%s%s } %n\t\tinto => [ %s%s%s ]%n",
                         TextUtils.Colors.YELLOW_UNDERLINED, mp, TextUtils.Colors.ANSI_RESET,
-                        TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET
+                        TextUtils.Colors.GREEN_UNDERLINED, destination, TextUtils.Colors.ANSI_RESET)
                     );
                 }
             }
@@ -135,13 +133,10 @@ public class FileUtils {
      * @return a callable tasks to complete its future.
      */
     public Callable<List<Path>> callableList(String pathURI, int level) {
-        return new Callable<List<Path>>() {
-            @Override
-            public List<Path> call() {
-                List<Path> files = new ArrayList<>();
-                populateList(files, pathURI, level);
-                return files;
-            }
+        return () -> {
+            List<Path> files = new ArrayList<>();
+            populateList(files, pathURI, level);
+            return files;
         };
     }
 }

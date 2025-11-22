@@ -21,7 +21,7 @@ public class ExecutorUtilsTest {
         try {
             String pathURI = "bin" + File.separator + "application" + File.separator + "operation";
             List<Path> files = executorUtils.getResult(fileUtils.callableList(pathURI, 2));
-            if(files.size() <= 0) {
+            if(files.isEmpty()) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
             System.out.println("\r\t[Info] No errors present on getResultTest execution");

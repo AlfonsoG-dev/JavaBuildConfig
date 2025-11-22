@@ -15,7 +15,7 @@ public class FileOperationTest {
     public void sourceFilesTest() {
         try {
             List<Path> files = fileOperation.sourceFiles();
-            if(files.size() <= 0) {
+            if(files.isEmpty()) {
                 throw new Exception("The path has at least 1 file in it.");
             }
             System.out.println("\r\t[Info] No errors present on sourceFilesTest execution");
@@ -49,7 +49,7 @@ public class FileOperationTest {
     public void sourceDirsTest() {
         try {
             List<Path> files = fileOperation.sourceDirs();
-            if(files.size() <= 0) {
+            if(files.isEmpty()) {
                 throw new Exception("The path has at least 1 file in it.");
             }
             System.out.println("\r\t[Info] No errors present on sourceDirsTest execution");

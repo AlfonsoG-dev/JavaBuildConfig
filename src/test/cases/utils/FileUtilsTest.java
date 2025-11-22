@@ -50,7 +50,7 @@ public class FileUtilsTest {
         try {
             String pathURI = "bin" + File.separator + "application" + File.separator + "operation";
             list = fileUtils.listPaths(pathURI, 2);
-            if(list.size() <= 0) {
+            if(list.isEmpty()) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
             System.out.println("\r\t[Info] No errors present on listPathsTest execution");
@@ -64,12 +64,13 @@ public class FileUtilsTest {
         try (ExecutorService ex = Executors.newFixedThreadPool(1)) {
             results = ex.submit(fileUtils.callableList(pathURI, 2));
             list = results.get();
-            if(list.size() <= 0) {
+            if(list.isEmpty()) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
             System.out.println("\r\t[Info] No errors present on callableListTest execution");
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
-            System.err.println("\t[Error] on execution of task");
+            System.err.println("\t[Error] on execution of task " + e.getLocalizedMessage());
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             System.err.println("\t[Error] " + e.getLocalizedMessage());
         }

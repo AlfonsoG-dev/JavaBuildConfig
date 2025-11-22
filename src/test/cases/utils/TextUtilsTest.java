@@ -4,11 +4,10 @@ import application.utils.TextUtils;
 
 public class TextUtilsTest {
 
-    private String doc;
+    private static final String DOC = "Manifesto.txt";
 
     public void getFileLinesTest() {
-        doc = "Manifesto.txt";
-        String[] resultLines = TextUtils.getFileLines(doc).split("\n");
+        String[] resultLines = TextUtils.getFileLines(DOC).split("\n");
         try {
             if(resultLines.length < 2) {
                 throw new Exception("Manifesto must have at least 2 lines of configuration: [Main-Class, Class-Path] which are the most important ones");

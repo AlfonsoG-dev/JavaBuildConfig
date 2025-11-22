@@ -5,10 +5,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public record TextUtils() {
+    private static final Console CONSOL = System.console();
+    private static final String CONSOL_FORMAT = "%s[%s]%s%s%n";
 
     public static record Colors() {
         /**
@@ -40,28 +43,32 @@ public record TextUtils() {
          */
         public static final String RED_UNDERLINED = "\033[4;31m";
     }
-    public final static void warning(String message) {
-        System.out.println(Colors.YELLOW_UNDERLINED + "[Warning] " + Colors.ANSI_RESET + message);
+    public static final void showMessage(String message) {
+        CONSOL.printf("%s%n", message);
     }
-    public final static void message(String message) {
-        System.out.println(Colors.GREEN_UNDERLINED + "[Info] " + Colors.ANSI_RESET + message);
+    public static final void warning(String message) {
+        CONSOL.printf(CONSOL_FORMAT, Colors.YELLOW_UNDERLINED, "Warning", Colors.ANSI_RESET, message);
     }
-    public final static void error(String error) {
-        System.err.println(Colors.RED_UNDERLINED + "[Error] " + Colors.ANSI_RESET + error);
+    public static final void message(String message) {
+        CONSOL.printf(CONSOL_FORMAT, Colors.GREEN_UNDERLINED, "Info", Colors.ANSI_RESET, message);
+    }
+    public static final void error(String error) {
+        CONSOL.printf(CONSOL_FORMAT, Colors.RED_UNDERLINED, "Error", Colors.ANSI_RESET, error);
     }
     public static String getFileLines(String pathURI) {
-        String lines = "";
+        StringBuilder lines = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new FileReader(new File(pathURI)))) {
             while(br.ready()) {
-                lines += br.readLine() + "\n";
+                lines.append(br.readLine());
+                lines.append("\n");
             }
         } catch(IOException e) {
             e.printStackTrace();
         }
-        return lines;
+        return lines.toString();
     }
     public static void writeLines(String fileURI, String lines) {
-        System.out.println("Writing lines...");
+        CONSOL.printf("%s", "Writing lines...");
         try(FileWriter w = new FileWriter(fileURI, false)) {
             if(!lines.isEmpty()) {
                 w.write(lines);
@@ -70,7 +77,7 @@ public record TextUtils() {
             e.printStackTrace();
         }
     }
-    public static void CommandOutputError(InputStream miCmdStream) {
+    public static void commandOutputError(InputStream miCmdStream) {
         try (BufferedReader miReader = new BufferedReader(new InputStreamReader(miCmdStream))) {
             String line = "";
             while(true) {
@@ -85,7 +92,7 @@ public record TextUtils() {
             e.printStackTrace();
         }
     }
-    public static void CommandOutput(InputStream miCmdStream) {
+    public static void commandOutput(InputStream miCmdStream) {
         try (BufferedReader miReader = new BufferedReader(new InputStreamReader(miCmdStream))) {
             String line = "";
             while(true) {
@@ -94,7 +101,7 @@ public record TextUtils() {
                     break;
                 }
                 // show success message
-                System.out.println(line);
+                CONSOL.printf("%s", line);
             }
         } catch(Exception e) {
             e.printStackTrace();

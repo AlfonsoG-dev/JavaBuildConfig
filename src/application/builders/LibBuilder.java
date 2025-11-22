@@ -65,7 +65,7 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
         }
         if(targetFile.listFiles() != null) {
             StringBuilder command = new StringBuilder();
-            // TODO: test if is able to append more than 1 lib dependency.
+            // TEST: if is able to append more than 1 lib dependency.
             for(File s: targetFile.listFiles()) {
                 // enter the directory
                 command.append("cd ");

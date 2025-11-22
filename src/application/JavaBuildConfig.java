@@ -25,9 +25,9 @@ class JavaBuildConfig {
                     op.executeCommand();
                     break;
                 case "--build":
-                    op.appendExtractDependenciesProcess(target, flags);
+                    op.appendExtractDependenciesProcess(target);
                     op.appendScratchCompileProcess(flags);
-                    op.appendJarProcess(null, null, getSubCommand("-e", args));
+                    op.appendJarProcess(null, flags);
                     op.executeCommand();
                     break;
                 case "--run":
@@ -40,9 +40,9 @@ class JavaBuildConfig {
                     break;
                 case "--jar":
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.appendJarProcess(args[i+1], flags, getSubCommand("-e", args));
+                        op.appendJarProcess(args[i+1], flags);
                     } else {
-                        op.appendJarProcess(null, flags, getSubCommand("-e", args));
+                        op.appendJarProcess(null, flags);
                     }
                     op.executeCommand();
                     break;
@@ -54,7 +54,7 @@ class JavaBuildConfig {
                     }
                     break;
                 case "--extract":
-                    op.appendExtractDependenciesProcess(target, flags);
+                    op.appendExtractDependenciesProcess(target);
                     op.executeCommand();
                     break;
                 case "--config":

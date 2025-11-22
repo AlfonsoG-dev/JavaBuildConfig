@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 class TestLauncher {
-    private final static int THREAD_COUNT = 1; 
-    private final static ExecutorService EXECUTOR_THREAD = Executors.newFixedThreadPool(1);
+    private static final int THREAD_COUNT = 1; 
+    private static final ExecutorService EXECUTOR_THREAD = Executors.newFixedThreadPool(THREAD_COUNT);
     public static void main(String[] args) {
         // dependencies
         String root = "src";
@@ -27,17 +27,16 @@ class TestLauncher {
         fop.appendSource("src" + File.separator + "application");
         fop.appendLists();
 
-        // fop.populateList(ex.getListsResult(null));
         // Don't include lib files for now
         fop.populateList(ex.getListsResult(EXECUTOR_THREAD), false);
 
         // test text utils
-        System.out.println("\nTesting TextUtils\b");
+        TextUtils.showMessage("\nTesting TextUtils\b");
         TextUtilsTest t = new TextUtilsTest();
         t.getFileLinesTest();
 
         // test files utils
-        System.out.println("\nTesting FileUtils\b");
+        TextUtils.showMessage("\nTesting FileUtils\b");
         FileUtilsTest ft = new FileUtilsTest(fu);
         ft.createDirectoryTest();
         ft.countFilesTest();
@@ -45,12 +44,12 @@ class TestLauncher {
         ft.callableListTest();
 
         // test executor utils
-        System.out.println("\nTesting ExecutorUtils\b");
+        TextUtils.showMessage("\nTesting ExecutorUtils\b");
         ExecutorUtilsTest ext = new ExecutorUtilsTest(fu, ex);
         ext.getResultTest();
 
         // test fileOperationTest
-        System.out.println("\nTesting FileOperation\b");
+        TextUtils.showMessage("\nTesting FileOperation\b");
         FileOperationTest fopt = new FileOperationTest(fop);
         fopt.sourceFilesTest();
         fopt.getMainClassTest();
@@ -58,13 +57,13 @@ class TestLauncher {
         fopt.sourceDirsTest();
 
         // test CompileBuilder
-        System.out.println("\nTesting CompileBuilder\b");
+        TextUtils.showMessage("\nTesting CompileBuilder\b");
         CompileBuilderTest cbt = new CompileBuilderTest(root, fop);
         cbt.getCommandTest();
         cbt.reCompileCommandTest();
 
         // test runBuilder
-        System.out.println("\nTesting RunBuilder\b");
+        TextUtils.showMessage("\nTesting RunBuilder\b");
         RunBuilderTest rbt = new RunBuilderTest(root, fop);
         rbt.getCommandTest();
         try {
@@ -74,6 +73,7 @@ class TestLauncher {
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
 }
