@@ -95,10 +95,10 @@ public class FileOperation {
      */
     public String getMainClass() {
         String sourceRoot = root + File.separator;
-        List<Path> files = fu.listPaths(sourceRoot, 3);
+        List<Path> files = fu.listPaths(sourceRoot, 0);
         for(Path p: files) {
             File mf = p.toFile();
-            if(mf.isFile() && !mf.getName().equals("TestLauncher.java")) {
+            if(mf.isFile() && !mf.getName().contains("test")) {
                 String breakerLine = "public static void main";
                 String[] lines = TextUtils.getFileLines(mf.getPath()).split("\n");
                 for(String l: lines) {
