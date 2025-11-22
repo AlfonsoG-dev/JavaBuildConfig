@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ExecutorUtils {
     private static final String LOCAL_PATH = "." + File.separator;
-    private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+    private static final boolean OS_NAME_WINDOWS = System.getProperty("os.name").contains("Windows");
     private List<Callable<ProcessBuilder>> pendingProcess = new ArrayList<>();
     private List<Map<String, Callable<List<Path>>>> pendingLists = new ArrayList<>();
 
@@ -116,9 +116,9 @@ public class ExecutorUtils {
                             lc = "echo Happy-Day";
                         } 
                         TextUtils.showMessage("[Command] " + command);
-                        if(OS_NAME.contains("windows")) {
+                        if(OS_NAME_WINDOWS) {
                             builder.command("pwsh", "-NoProfile", "-Command", lc);
-                        } else if(OS_NAME.contains("linux")) {
+                        } else {
                             builder.command("/bin/bash", "-c", lc);
                         }
                         builder.directory(local);
@@ -150,9 +150,9 @@ public class ExecutorUtils {
                 command = "echo Happy-Day";
             } 
             TextUtils.showMessage("[Command] " + command);
-            if(OS_NAME.contains("windows")) {
+            if(OS_NAME_WINDOWS) {
                 builder.command("pwsh", "-NoProfile", "-Command", command);
-            } else if(OS_NAME.contains("linux")) {
+            } else {
                 builder.command("/bin/bash", "-c", command);
             }
             builder.directory(local);
