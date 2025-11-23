@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 public record TextUtils() {
     private static final Console CONSOL = System.console();
-    private static final String CONSOL_FORMAT = "%s[%s]%s%s%n";
+    private static final String CONSOL_FORMAT = "%s[%s] %s%s%n";
 
     public static record Colors() {
         /**
@@ -101,7 +101,7 @@ public record TextUtils() {
                     break;
                 }
                 // show success message
-                CONSOL.printf("%s", line);
+                CONSOL.printf("%s%n", line);
             }
         } catch(Exception e) {
             e.printStackTrace();

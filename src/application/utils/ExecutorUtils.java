@@ -111,7 +111,7 @@ public class ExecutorUtils {
                         String localFULL = new File(LOCAL_PATH).getCanonicalPath();
                         File local = new File(localFULL);
                         String lc = command;
-                        if(lc == null || lc.isEmpty()) {
+                        if(lc == null) {
                             TextUtils.warning("Empty command");
                             lc = "echo Happy-Day";
                         } 
@@ -146,7 +146,7 @@ public class ExecutorUtils {
             String localFULL = new File(LOCAL_PATH).getCanonicalPath();
             File local = new File(localFULL);
             if(command == null || command.isEmpty()) {
-                TextUtils.warning("[Warning] Empty command");
+                TextUtils.warning("Empty command");
                 command = "echo Happy-Day";
             } 
             TextUtils.showMessage("[Command] " + command);

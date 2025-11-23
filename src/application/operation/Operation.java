@@ -13,9 +13,6 @@ import java.io.File;
 public class Operation {
     private CompileBuilder compileBuilder;
     private RunBuilder runBuilder;
-    private JarBuilder jarBuilder;
-    private ScriptBuilder scriptBuilder;
-    private LibBuilder libBuilder;
     private FileBuilder fileBuilder;
     private FileOperation fileOperation;
     private ExecutorUtils executorUtils;
@@ -37,9 +34,6 @@ public class Operation {
         fileOperation = new FileOperation(this.root, executorUtils);
         compileBuilder = new CompileBuilder(this.root, fileOperation);
         runBuilder = new RunBuilder(this.root, fileOperation);
-        jarBuilder = new JarBuilder(this.root, fileOperation);
-        scriptBuilder = new ScriptBuilder(compileBuilder);
-        libBuilder = new LibBuilder(this.root, fileOperation);
         fileBuilder = new FileBuilder(fileOperation);
         executorThread = Executors.newCachedThreadPool();
     }
@@ -115,6 +109,7 @@ public class Operation {
     public void appendJarProcess(String fileName, String flags) {
         flags = Optional.ofNullable(flags).orElse("");
         fileName = Optional.ofNullable(fileName).orElse(fileOperation.getProjectName());
+        JarBuilder jarBuilder = new JarBuilder(root, fileOperation);
         String command = "";
         if(!new File(fileName + ".jar").exists()) {
             command = jarBuilder.getCommand(fileName, oTargetURI, oMainClass, flags, oIncludeLib);
@@ -126,7 +121,7 @@ public class Operation {
     public void appendExtractDependenciesProcess(String targetURI) {
         targetURI = Optional.ofNullable(targetURI).orElse("extractionFiles");
         // the process is capable of executing all the concatenated processes with '&&'
-        libBuilder.appendCommandToProcess(executorUtils, targetURI, oIncludeLib);
+        new LibBuilder(root, fileOperation).appendCommandToProcess(executorUtils, targetURI, oIncludeLib);
     }
     public void createBuildScript(String fileURI) {
         String osName = System.getProperty("os.name").toLowerCase();
@@ -136,7 +131,7 @@ public class Operation {
         } else if(osName.contains("linux")) {
             fileURI = fileURI + ".sh";
         }
-        String lines = scriptBuilder.getScript(oTargetURI, oIncludeLib);
+        String lines = new ScriptBuilder(compileBuilder).getScript(oTargetURI, oIncludeLib);
         fileOperation.createFile(fileURI, lines);
     }
     public void copyToPath(String sourceURI, String destinationURI) {
