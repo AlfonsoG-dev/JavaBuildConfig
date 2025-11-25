@@ -77,7 +77,7 @@ public class ExecutorUtils {
      */
     public void executeCallableProcess(ExecutorService executor) {
         if(pendingProcess.isEmpty()) {
-            TextUtils.message("[Info] All process has been finished");
+            TextUtils.message("All process has been finished");
             return;
         }
         try {
