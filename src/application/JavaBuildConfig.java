@@ -26,8 +26,13 @@ class JavaBuildConfig {
                     break;
                 case "--build":
                     op.appendExtractDependenciesProcess(target);
-                    op.appendScratchCompileProcess(flags);
-                    op.appendJarProcess(null, flags);
+                    if((i+1) < args.length && !args[i+1].startsWith("-")) {
+                        op.appendScratchCompileProcess(flags, args[i+1]);
+                        op.appendJarProcess(args[i+1], flags);
+                    } else {
+                        op.appendScratchCompileProcess(flags, null);
+                        op.appendJarProcess(null, flags);
+                    }
                     op.executeCommand();
                     break;
                 case "--run":
