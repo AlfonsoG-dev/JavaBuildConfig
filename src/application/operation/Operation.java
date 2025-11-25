@@ -80,13 +80,10 @@ public class Operation {
         }
         executorUtils.appendCommandToCallableProcess(command);
     }
-    public void appendScratchCompileProcess(String flags, String jarName) {
+    public void appendScratchCompileProcess(String flags) {
         flags = Optional.ofNullable(flags).orElse(oCompileFlags);
-        jarName = Optional.ofNullable(jarName).orElse(fileOperation.getProjectName());
         // delete class path
         executorUtils.appendCommandToCallableProcess("rm -r " + oTargetURI);
-        // delete .jar file
-        executorUtils.appendCommandToCallableProcess("rm -r" + jarName + ".jar");
         // compile project
         executorUtils.appendCommandToCallableProcess(
                 compileBuilder.getCommand(oTargetURI, flags, oIncludeLib)

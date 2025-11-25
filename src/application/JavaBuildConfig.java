@@ -27,10 +27,10 @@ class JavaBuildConfig {
                 case "--build":
                     op.appendExtractDependenciesProcess(target);
                     if((i+1) < args.length && !args[i+1].startsWith("-")) {
-                        op.appendScratchCompileProcess(flags, args[i+1]);
+                        op.appendScratchCompileProcess(flags);
                         op.appendJarProcess(args[i+1], flags);
                     } else {
-                        op.appendScratchCompileProcess(flags, null);
+                        op.appendScratchCompileProcess(flags);
                         op.appendJarProcess(null, flags);
                     }
                     op.executeCommand();
