@@ -30,13 +30,11 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(" .");
         if(includeLib) {
             File m = new File("extractionFiles");
-            String[] libFiles = prepareLibFiles().toString().split(";");
             //append assets having lib dependencies.
-            for(String l: libFiles) {
+            for(File l: m.listFiles()) {
                 lines.append(" -C .");
                 lines.append(File.separator);
-                File f = new File(l);
-                lines.append( m.toPath().resolve(f.getName().replace(FILE_EXTENSION.trim(), "")));
+                lines.append(l.getName());
                 lines.append(File.separator);
                 lines.append(" .");
             }
@@ -101,7 +99,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
      * When updating only add the .class files from bin
      * @param fileName - the name of the jar file to update.
      */
-    public String getUpdateJarCommand(String fileName, String targetURI, String flags) {
+    public String getUpdateJarCommand(String fileName, String targetURI, String flags, boolean includeLib) {
         StringBuilder command = new StringBuilder("jar -u");
         if(targetURI.isBlank()) return null;
         if(!flags.isBlank()) command.append("v");
@@ -112,11 +110,10 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         command.append(fileName);
         command.append(FILE_EXTENSION);
         /**
-         * FIXME: for now when updating lib files it generates a corrupt jar file.
-         * a temporal fix is to disable the includeLib, making always false.
+         * TEST: for now when updating lib files it generates a corrupt jar file.
         */
         // bin or class file source
-        appendAssets(command, targetURI, false);
+        appendAssets(command, targetURI, includeLib);
         return command.toString();
     }
 }
