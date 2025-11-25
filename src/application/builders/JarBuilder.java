@@ -28,8 +28,8 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(targetURI);
         lines.append(File.separator);
         lines.append(" .");
-        if(includeLib) {
-            File m = new File("extractionFiles");
+        File m = new File("extractionFiles");
+        if(includeLib && m.listFiles() != null) {
             //append assets having lib dependencies.
             for(File l: m.listFiles()) {
                 lines.append(" -C .");
