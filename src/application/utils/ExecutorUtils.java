@@ -145,7 +145,7 @@ public class ExecutorUtils {
             ProcessBuilder builder = new ProcessBuilder();
             String localFULL = new File(LOCAL_PATH).getCanonicalPath();
             File local = new File(localFULL);
-            if(command == null || command.isEmpty()) {
+            if(command == null || command.isBlank()) {
                 TextUtils.warning("Empty command");
                 command = "echo Happy-Day";
             } 

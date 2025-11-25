@@ -20,7 +20,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         // default bin
         command.append(targetURI);
         command.append(" ");
-        if(flags.isEmpty()) {
+        if(flags.isBlank()) {
             flags = "-Werror";
         }
         command.append(flags);
@@ -37,7 +37,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         StringBuilder command = new StringBuilder("javac -d ");
         command.append(targetURI);
         command.append(" ");
-        if(flags.isEmpty()) {
+        if(flags.isBlank()) {
             flags = "-Werror";
         }
         command.append(flags);

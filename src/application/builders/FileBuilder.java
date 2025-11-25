@@ -16,10 +16,10 @@ public class FileBuilder {
     }
     public void createManifesto(String author, boolean includeLib) {
         StringBuilder lines = new StringBuilder("Created-By: ");
-        if(!author.isEmpty()) lines.append(author);
+        if(!author.isBlank()) lines.append(author);
         lines.append("\n");
         String mainClass = fileOperation.getMainClass();
-        if(!mainClass.isEmpty()) {
+        if(!mainClass.isBlank()) {
             lines.append("Main-Class: ");
             lines.append(mainClass);
             lines.append("\n");

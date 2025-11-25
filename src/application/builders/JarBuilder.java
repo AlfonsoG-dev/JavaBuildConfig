@@ -16,7 +16,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         String executable = "";
         if(fileOperation.haveManifesto()) {
             executable = "m ";
-        } else if(!mainClass.isEmpty()) {
+        } else if(!mainClass.isBlank()) {
             executable = "e ";
         }
         lines.append(executable);
@@ -53,7 +53,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     @Override
     public String getCommand(String targetURI, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
-        if(!flags.isEmpty()) lines.append(flags);
+        if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
         String mainClass = fileOperation.getMainClass();
         // append jar format
@@ -70,7 +70,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     }
     public String getCommand(String targetURI, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
-        if(!flags.isEmpty()) lines.append(flags);
+        if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
         // jar format
         String format = appendJarType(lines, mainClass);
@@ -85,7 +85,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
 
     public String getCommand(String fileName, String targetURI, String mainClass, String flags, boolean includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
-        if(!flags.isEmpty()) lines.append(flags);
+        if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
         // jar format
         String format = appendJarType(lines, mainClass);

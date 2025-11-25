@@ -183,7 +183,7 @@ public class FileOperation {
         for(String l: lines) {
             String[] values = l.split(":", 2);
             String k = values[0].trim();
-            String v = 1 < values.length && !values[1].trim().isEmpty() ? values[1].trim():null;
+            String v = 1 < values.length && !values[1].trim().isBlank() ? values[1].trim():null;
             configs.put(k, v);
         }
         return configs;
