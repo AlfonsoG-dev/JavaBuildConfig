@@ -19,21 +19,34 @@ public class FileOperation {
     private static final String CONFIG_PAH = "config.txt";
     private String root;
     private FileUtils fu;
+    //Class to execute concurrently or in parallel.
     private ExecutorUtils ex;
+    // local list of files of source origin.
     private List<Path> listFiles;
+    // loca list of lib dependencies.
     private List<Path> libFiles;
+    /**
+     * content to append to the pending list of execution.
+     * <p> Feed this map to the ExecutorUtils.appendListToCallableProcess to append on the pending list.
+     */
     private HashMap<String, Callable<List<Path>>> content = new HashMap<>();
-    
+
     public FileOperation(String root) {
         this.root = root;
         fu = new FileUtils(this.root);
         ex = new ExecutorUtils();
     }
+
     public FileOperation(String root, ExecutorUtils executorUtils) {
         this.root = root;
         fu = new FileUtils(this.root);
         this.ex = executorUtils;
     }
+    /**
+     * populate the local list with the results of the pending list.
+     * @param computed - the result of the pending list.
+     * @param includeLib - to include or not the lib dependencies.
+     */
     public void populateList(Map<String, List<Path>> computed, boolean includeLib) {
         /**
          * append the list to a pending list evaluation on an executor class.
@@ -41,12 +54,21 @@ public class FileOperation {
         listFiles = computed.get("source");
         if(includeLib) libFiles = computed.get("lib");
     }
+    /**
+     * append the source content to the map content list.
+     */
     public void appendSource(String sourceURI) {
         content.put("source", fu.callableList(sourceURI, 0));
     }
+    /**
+     * append the lib content to the map content list.
+     */
     public void appendLib(String sourceLb) {
         content.put("lib", fu.callableList(sourceLb, 2));
     }
+    /**
+     * append the content lists to the callable pending list to execute later.
+     */
     public void appendLists() {
         ex.appendListToCallableProcess(content);
     }
