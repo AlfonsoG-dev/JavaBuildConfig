@@ -23,14 +23,11 @@ public class FileUtils {
     public File getRoot() {
         return new File(root);
     }
-    private void populateList(List<Path> list, String pathURI, int level) {
-        level = level > 0 ? level:Integer.MAX_VALUE;
-        try(Stream<Path> p = Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS)) {
-            list.addAll(p.toList());
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
+    /**
+     * Creates a directory even in nested structure.
+     * @param pathURI - the path to the directory to create.
+     * @return true if its created, false otherwise.
+     */
     public boolean createDirectory(String pathURI) {
         File f = new File(pathURI);
         if(!f.exists()){
@@ -44,6 +41,11 @@ public class FileUtils {
         }
         return true;
     }
+    /**
+     * Create a file with a given content.
+     * @param fileURI - the file to create.
+     * @param lines - the content to write in the newly created file.
+     */
     public void createFile(String fileURI, String lines) {
         TextUtils.writeLines(fileURI, lines);
     }
@@ -138,5 +140,19 @@ public class FileUtils {
             populateList(files, pathURI, level);
             return files;
         };
+    }
+    /**
+     * Method to initialize the local list of paths.
+     * @param list - the list to populate.
+     * @param level - the nested level to reach, if 0 use Integer.MAX_VALUE.
+     * @param pathURI - the path to list its content.
+     */
+    private void populateList(List<Path> list, String pathURI, int level) {
+        level = level > 0 ? level:Integer.MAX_VALUE;
+        try(Stream<Path> p = Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS)) {
+            list.addAll(p.toList());
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }
