@@ -47,6 +47,11 @@ public class ExecutorUtils {
         }
         return null;
     }
+    /**
+     * Executes a batch of callable lists and appends them in a map to easily access.
+     * @param executor - the type of thread to execute the callable list of tasks.
+     * @return a populated map with the result of the callable tasks.
+     */
     public Map<String, List<Path>> getListsResult(ExecutorService executor) {
         HashMap<String, List<Path>> completeResult = new HashMap<>();
         try {
@@ -72,7 +77,7 @@ public class ExecutorUtils {
         return completeResult;
     }
     /**
-     * Execute pending process with appended commands.
+     * Execute pending process with commands to execute.
      * @param executor the type of executor.
      */
     public void executeCallableProcess(ExecutorService executor) {
@@ -87,12 +92,7 @@ public class ExecutorUtils {
                 ProcessBuilder b = f.get();
                 if(b != null) {
                     Process p = b.start();
-                    if(p.getErrorStream() != null) {
-                        TextUtils.commandOutputError(p.getErrorStream());
-                    }
-                    if(p.getInputStream() != null) {
-                        TextUtils.commandOutput(p.getInputStream());
-                    }
+                    handleProcessStreams(p, executor);
                     if(!p.waitFor(5, TimeUnit.SECONDS)) {
                         p.destroy();
                     }
@@ -103,6 +103,10 @@ public class ExecutorUtils {
             Thread.currentThread().interrupt();
         }
     }
+    /**
+     * A method to append the command to the pending list of process to compute.
+     * @param command - the command to append to the pending process lists.
+     */
     public void appendCommandToCallableProcess(String command) {
         pendingProcess.add(() -> {
                     TextUtils.showMessage("Adding command to process...");
@@ -129,17 +133,26 @@ public class ExecutorUtils {
                     }
                 });
     }
+    /**
+     * A method to append the list to the pending list.
+     * @param lists - the list to append.
+     */
     public void appendListToCallableProcess(Map<String, Callable<List<Path>>> lists) {
         pendingLists.add(lists);
     }
+    /**
+     * clean up the pending lists.
+     * <p> the process lists and the map list.
+     */
     public void cleanPendingProcess() {
         pendingProcess = null;
+        pendingLists = null;
     }
     /**
      * Executes the given commands and show the success or error. 
      * @param command the command to execute.
      */
-    public void executeCommand(String command) {
+    public void executeCommand(String command, ExecutorService executor) {
         Process p = null;
         try {
             ProcessBuilder builder = new ProcessBuilder();
@@ -157,12 +170,7 @@ public class ExecutorUtils {
             }
             builder.directory(local);
             p = builder.start();
-            if(p.getErrorStream() != null) {
-                TextUtils.commandOutputError(p.getErrorStream());
-            }
-            if(p.getInputStream() != null) {
-                TextUtils.commandOutput(p.getInputStream());
-            }
+            handleProcessStreams(p, executor);
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -177,5 +185,14 @@ public class ExecutorUtils {
                 p = null;
             }
         }
+    }
+    /**
+     * Reading process stream in another thread to avoid blocking.
+     * @param process - the process to read its output stream.
+     * @param executor - the type of executor that create for thread execution.
+     */
+    private void handleProcessStreams(Process process, ExecutorService executor) {
+        executor.submit(() -> TextUtils.commandOutput(process.getInputStream()));
+        executor.submit(() -> TextUtils.commandOutputError(process.getErrorStream()));
     }
 }
