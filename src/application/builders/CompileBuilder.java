@@ -16,10 +16,10 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
     }
     @Override
     public String getCommand(String targetURI, String flags, boolean includeLib) {
-        StringBuilder command = new StringBuilder("javac -d ");
+        StringBuilder command = new StringBuilder("javac -d \"");
         // default bin
         command.append(targetURI);
-        command.append(" ");
+        command.append("\" ");
         if(flags.isBlank()) {
             flags = "-Werror";
         }
@@ -34,9 +34,9 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         return command.toString();
     }
     public String reCompileCommand(String targetURI, String sourceURI, String flags, boolean includeLib) {
-        StringBuilder command = new StringBuilder("javac -d ");
+        StringBuilder command = new StringBuilder("javac -d \"");
         command.append(targetURI);
-        command.append(" ");
+        command.append("\" ");
         if(flags.isBlank()) {
             flags = "-Werror";
         }
@@ -63,8 +63,9 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
             files.addAll(op.getDependencies(packageName, p.getFileName().toString()));
         }
         for(Path p: files) {
+            command.append("\"");
             command.append(p);
-            command.append(" ");
+            command.append("\" ");
         }
         return command.toString();
     }

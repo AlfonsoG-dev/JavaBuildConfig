@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public record LibBuilder(String root, FileOperation op) implements CommandModel {
+    private static final String LIB_EXTENSION = ".jar\"";
 
     @Override
     public FileOperation getFileOperation() {
@@ -20,12 +21,12 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     }
     private void appendExtractJarContent(StringBuilder command, File extract) {
         command.append("jar -x");
-        command.append("f ");
+        command.append("f \"");
         command.append(extract.getName());
-        command.append(".jar");
-        command.append(" && rm -r ");
+        command.append(LIB_EXTENSION);
+        command.append(" && rm -r \"");
         command.append(extract.getName());
-        command.append(".jar");
+        command.append(LIB_EXTENSION);
     }
 
     @Override
@@ -47,9 +48,9 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
         }
         if(targetFile.listFiles() != null) {
             for(File s: targetFile.listFiles()) {
-                command.append("cd ");
+                command.append("cd \"");
                 command.append(s.getPath());
-                command.append(" && ");
+                command.append("\" && ");
                 appendExtractJarContent(command, s);
             }
         }
@@ -58,7 +59,7 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     public void appendCommandToProcess(ExecutorUtils ex, String targetURI, boolean includeLib) {
         if(!includeLib) return;
         String[] libFiles = prepareLibFiles().toString().split(";");
-        List<Path> extracFiles = new ArrayList<>();
+        List<Path> extracFolders = new ArrayList<>();
         for(String l: libFiles) {
             File f = new File(l);
             Path targetPath = Paths.get(targetURI).resolve(f.getName().replace(".jar", ""));
@@ -66,28 +67,26 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
             if(!targetPath.toFile().exists() && op.createDirectories(targetPath.toString())) {
                 // create a directory with the same name as the jar file in extractionFiles 
                 op.copyToPath(f.getPath(), targetPath.toString());
-                extracFiles.add(targetPath);
+                extracFolders.add(targetPath);
             }
         }
-        if(!extracFiles.isEmpty()) {
-            // TODO: if is able to append more than 1 lib dependency.
-            for(Path s: extracFiles) {
-                StringBuilder command = new StringBuilder();
-                // enter the directory
-                command.append("cd ");
-                command.append(s.getParent() != null ? s.getParent():"");
-                command.append(" && ");
-                // the .jar dependency has the same name as the parent folder.
-                command.append("jar -x");
-                command.append("f ");
-                // should have .jar included in file name
-                command.append(s.getFileName());
-                // remove the .jar file.
-                command.append(" && rm -r ");
-                command.append(s.getFileName());
-                // TODO: test if the string append is completed or you have to extract the command outside the for-loop to get the complete command sequence.
-                ex.appendCommandToCallableProcess(command.toString());
-            }
+        if(extracFolders.isEmpty()) return;
+        for(Path s: extracFolders) {
+            StringBuilder command = new StringBuilder();
+            // enter the directory
+            command.append("cd \"");
+            command.append(s.toString());
+            command.append("\" && ");
+            // the .jar dependency has the same name as the parent folder.
+            command.append("jar -x");
+            command.append("f \"");
+            command.append(s.getFileName());
+            command.append(LIB_EXTENSION);
+            // remove the .jar file.
+            command.append(" && rm -r \"");
+            command.append(s.getFileName());
+            command.append(LIB_EXTENSION);
+            ex.appendCommandToCallableProcess(command.toString());
         }
     }
 }
