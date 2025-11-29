@@ -85,20 +85,39 @@ public class ExecutorUtils {
             TextUtils.message("All process has been finished");
             return;
         }
-        try {
-            List<Future<ProcessBuilder>> futureResults = executor.invokeAll(pendingProcess);
-            for(Future<ProcessBuilder> f: futureResults) {
-                TextUtils.showMessage("Waiting for process to complete...");
-                ProcessBuilder b = f.get();
-                if(b != null) {
-                    Process p = b.start();
-                    handleProcessStreams(p, executor);
-                    if(!p.waitFor(15, TimeUnit.SECONDS)) {
-                        p.destroy();
-                    }
-                }
+
+        try(ExecutorService streamExecutor = Executors.newCachedThreadPool()) {
+            // Submit all callables in parallel
+            List<Future<ProcessBuilder>> futures = new ArrayList<>();
+            for (Callable<ProcessBuilder> c : pendingProcess) {
+                futures.add(executor.submit(c));
             }
-        } catch(IOException | InterruptedException | ExecutionException e) {
+
+            // Wait results and execute processes
+            for (Future<ProcessBuilder> future : futures) {
+                TextUtils.showMessage("Waiting for results...");
+
+                ProcessBuilder builder = future.get(); // wait for callable
+
+                if (builder == null) {
+                    TextUtils.warning("Null ProcessBuilder returned, skipping...");
+                    continue;
+                }
+
+                Process p = builder.start();
+                handleProcessStreams(p, streamExecutor);
+
+                boolean finished = p.waitFor(15, TimeUnit.SECONDS);
+                if (!finished) {
+                    TextUtils.warning("Process timeout →  killing process.");
+                    p.destroyForcibly();
+                }
+
+                int exitCode = p.exitValue();
+                TextUtils.message("Exit code: " + exitCode);
+            }
+
+        } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
@@ -110,8 +129,8 @@ public class ExecutorUtils {
     public void appendCommandToCallableProcess(String command) {
         pendingProcess.add(() -> {
                     TextUtils.showMessage("Adding command to process...");
+                    ProcessBuilder builder = new ProcessBuilder();
                     try {
-                        ProcessBuilder builder = new ProcessBuilder();
                         String localFULL = new File(LOCAL_PATH).getCanonicalPath();
                         File local = new File(localFULL);
                         String lc = command;
@@ -126,11 +145,10 @@ public class ExecutorUtils {
                             builder.command("/bin/bash", "-c", lc);
                         }
                         builder.directory(local);
-                        return builder;
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
-                        return null;
                     }
+                    return builder;
                 });
     }
     /**
@@ -145,8 +163,8 @@ public class ExecutorUtils {
      * <p> the process lists and the map list.
      */
     public void cleanPendingProcess() {
-        pendingProcess = null;
-        pendingLists = null;
+        pendingProcess.clear();
+        pendingLists.clear();
     }
     /**
      * Executes the given commands and show the success or error. 
@@ -191,8 +209,8 @@ public class ExecutorUtils {
      * @param process - the process to read its output stream.
      * @param executor - the type of executor that create for thread execution.
      */
-    private void handleProcessStreams(Process process, ExecutorService executor) {
-        executor.submit(() -> TextUtils.commandOutput(process.getInputStream()));
-        executor.submit(() -> TextUtils.commandOutputError(process.getErrorStream()));
+    private void handleProcessStreams(Process process, ExecutorService streamExecutor) {
+        streamExecutor.submit(() -> TextUtils.commandOutput(process.getInputStream()));
+        streamExecutor.submit(() -> TextUtils.commandOutputError(process.getErrorStream()));
     }
 }
