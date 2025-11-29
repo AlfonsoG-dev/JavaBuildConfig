@@ -129,26 +129,13 @@ public class ExecutorUtils {
     public void appendCommandToCallableProcess(String command) {
         pendingProcess.add(() -> {
                     TextUtils.showMessage("Adding command to process...");
-                    ProcessBuilder builder = new ProcessBuilder();
-                    try {
-                        String localFULL = new File(LOCAL_PATH).getCanonicalPath();
-                        File local = new File(localFULL);
-                        String lc = command;
-                        if(lc == null) {
-                            TextUtils.warning("Empty command");
-                            lc = "echo Happy-Day";
-                        } 
-                        TextUtils.showMessage("[Command] " + command);
-                        if(OS_NAME_WINDOWS) {
-                            builder.command("pwsh", "-NoProfile", "-Command", lc);
-                        } else {
-                            builder.command("/bin/bash", "-c", lc);
-                        }
-                        builder.directory(local);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return builder;
+                    String lc = command;
+                    if(lc == null) {
+                        TextUtils.warning("Empty command");
+                        lc = "echo Happy-Day";
+                    } 
+                    TextUtils.showMessage("[Command] " + lc);
+                    return buildProcess(lc);
                 });
     }
     /**
@@ -202,6 +189,16 @@ public class ExecutorUtils {
                 }
                 p = null;
             }
+        }
+    }
+    private ProcessBuilder buildProcess(String command) throws IOException {
+        String localPath = new File(LOCAL_PATH).getCanonicalPath();
+        if(OS_NAME_WINDOWS) {
+            return new ProcessBuilder("pwsh", "-NoProfile", "-Command", command)
+                .directory(new File(localPath));
+        } else {
+            return new ProcessBuilder("/bin/bash", "-c", command)
+                .directory(new File(localPath));
         }
     }
     /**
