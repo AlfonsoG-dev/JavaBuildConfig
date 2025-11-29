@@ -124,7 +124,7 @@ class JavaBuildConfig {
                 default:
                     System.out.println("Use --h to see the commands");
                     op.terminateProgram();
-                    break outter;
+                    break;
             }
         }
     }
