@@ -151,7 +151,7 @@ public class Operation {
     public void terminateProgram() {
         executorThread.shutdown();
         try {
-            if(!executorThread.awaitTermination(5, TimeUnit.SECONDS)) {
+            if(!executorThread.awaitTermination(15, TimeUnit.SECONDS)) {
                 executorThread.shutdownNow();
             }
         } catch(InterruptedException e) {

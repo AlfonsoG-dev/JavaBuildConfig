@@ -93,7 +93,7 @@ public class ExecutorUtils {
                 if(b != null) {
                     Process p = b.start();
                     handleProcessStreams(p, executor);
-                    if(!p.waitFor(5, TimeUnit.SECONDS)) {
+                    if(!p.waitFor(15, TimeUnit.SECONDS)) {
                         p.destroy();
                     }
                 }
