@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 class TestLauncher {
+    private static final String DEFAULT_LIB_CONFIG = "ignore";
     private static final int THREAD_COUNT = 1; 
     private static final ExecutorService EXECUTOR_THREAD = Executors.newFixedThreadPool(THREAD_COUNT);
     public static void main(String[] args) {
@@ -28,7 +29,7 @@ class TestLauncher {
         fop.appendLists();
 
         // Don't include lib files for now
-        fop.populateList(ex.getListsResult(EXECUTOR_THREAD), false);
+        fop.populateList(ex.getListsResult(EXECUTOR_THREAD), DEFAULT_LIB_CONFIG);
 
         // test text utils
         TextUtils.showMessage("\nTesting TextUtils\b");

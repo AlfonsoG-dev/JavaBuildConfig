@@ -15,7 +15,7 @@ public class CompileBuilderTest {
     public void getCommandTest() {
         try {
 
-            String command = compileBuilder.getCommand("bin", "-Werror", false);
+            String command = compileBuilder.getCommand("bin", "-Werror", "ignore");
             // check if empty or is white space
             if(command.isBlank()) {
                 throw new Exception("Compile command can't be empty");
@@ -29,7 +29,7 @@ public class CompileBuilderTest {
     public void reCompileCommandTest() {
         try {
 
-            String command = compileBuilder.reCompileCommand("bin", "bin", "-Werror", false);
+            String command = compileBuilder.reCompileCommand("bin", "bin", "-Werror", "exclude");
             // check if empty or is white space
             if(command != null && command.isBlank()) {
                 throw new Exception("Compile command can't be empty");

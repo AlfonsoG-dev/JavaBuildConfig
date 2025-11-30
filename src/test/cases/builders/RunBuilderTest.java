@@ -11,7 +11,7 @@ public class RunBuilderTest {
 
     public void getCommandTest() {
         try {
-            String command = runBuilder.getCommand("bin", null, false);
+            String command = runBuilder.getCommand("bin", null, "ignore");
             if(command != null && command.isBlank()) {
                 throw new Exception("Run command can't be empty");
             }

@@ -6,6 +6,7 @@ import application.models.CommandModel;
 
 public record ScriptBuilder(CommandModel cm) {
 
+    private static final String DEFAULT_LIB_CONFIG = "ignore";
     private static final boolean OS_NAME_WINDOWS = System.getProperty("os.name").contains("windows");
 
     public void appendSource(StringBuilder lines) {
@@ -49,7 +50,7 @@ public record ScriptBuilder(CommandModel cm) {
         } else {
             lines.append("javac -d ");
             lines.append(targetURI);
-            if(!includeLib.equals("ignore")) {
+            if(!includeLib.equals(DEFAULT_LIB_CONFIG)) {
                 lines.append(" -cp '");
                 lines.append("$libs'");
             }
@@ -104,7 +105,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\"");
             lines.append("java -cp '");
             lines.append(targetURI);
-            if(!includeLib.equals("ignore")) {
+            if(!includeLib.equals(DEFAULT_LIB_CONFIG)) {
                 lines.append(";");
                 lines.append("$Libs");
             }
@@ -114,7 +115,7 @@ public record ScriptBuilder(CommandModel cm) {
         } else {
             lines.append("java -cp '");
             lines.append(targetURI);
-            if(!includeLib.equals("ignore")) {
+            if(!includeLib.equals(DEFAULT_LIB_CONFIG)) {
                 lines.append(";");
                 lines.append("$libs");
             }
@@ -133,7 +134,7 @@ public record ScriptBuilder(CommandModel cm) {
     public String getScript(String targetURI, String includeLib) {
         StringBuilder lines = new StringBuilder();
         appendSource(lines);
-        if(!includeLib.equals("ignore")) appendLib(lines);
+        if(!includeLib.equals(DEFAULT_LIB_CONFIG)) appendLib(lines);
         appendCompileCommand(lines, targetURI, includeLib);
         appendCreateJarCommand(lines, targetURI, includeLib);
         appendRunCommand(lines, targetURI, includeLib);
