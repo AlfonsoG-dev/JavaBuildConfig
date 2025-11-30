@@ -14,10 +14,10 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
     }
     private String appendJarType(StringBuilder lines, String mainClass) {
         String executable = "";
-        if(fileOperation.haveManifesto()) {
-            executable = "m ";
-        } else if(!mainClass.isBlank()) {
+        if(!mainClass.isBlank()) {
             executable = "e ";
+        } else if(fileOperation.haveManifesto()) {
+            executable = "m ";
         }
         lines.append(executable);
         return executable;
