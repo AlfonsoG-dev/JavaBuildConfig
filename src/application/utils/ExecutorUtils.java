@@ -97,9 +97,10 @@ public class ExecutorUtils {
                 futures.add(executor.submit(c));
             }
 
+            TextUtils.showMessage("Waiting for batch results...");
             // Wait results and execute processes
             for (Future<ProcessBuilder> future : futures) {
-                TextUtils.showMessage("Waiting for results...");
+                TextUtils.showMessage("Processing...");
 
                 ProcessBuilder builder = future.get(); // wait for callable
 
@@ -118,7 +119,10 @@ public class ExecutorUtils {
                 }
 
                 int exitCode = p.exitValue();
-                TextUtils.message("Exit code: " + exitCode);
+                if(exitCode != 0) {
+                    TextUtils.error("Something happen while trying to execute the command process.");
+                }
+                TextUtils.message("Successful execution. Exit code " + exitCode);
             }
 
         } catch(InterruptedException e) { 
