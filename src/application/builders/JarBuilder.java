@@ -22,26 +22,26 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         lines.append(executable);
         return executable;
     }
-    private void appendAssets(StringBuilder lines, String targetURI, boolean includeLib) {
+    private void appendAssets(StringBuilder lines, String targetURI, String includeLib) {
         lines.append(" -C .");
         lines.append(File.separator);
         lines.append(targetURI);
         lines.append(File.separator);
         lines.append(" .");
         File m = new File("extractionFiles");
-        if(includeLib && m.listFiles() != null) {
+        if(includeLib.equals("include") && m.listFiles() != null) {
             //append assets having lib dependencies.
             for(File l: m.listFiles()) {
                 lines.append(" -C .");
                 lines.append(File.separator);
-                lines.append(l.getName());
+                lines.append(l.toPath().normalize().toString());
                 lines.append(File.separator);
                 lines.append(" .");
             }
 
         }
     }
-    private void appendJarFormat(StringBuilder lines, String format, String mainClass) {
+    private void appendJarFormatAsset(StringBuilder lines, String format, String mainClass) {
         switch(format) {
             case "m " -> lines.append("Manifesto.txt");
             case "e " -> lines.append(mainClass);
@@ -49,7 +49,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         }
     }
     @Override
-    public String getCommand(String targetURI, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String flags, String includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
         if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
@@ -60,13 +60,13 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
         // append files
         lines.append(fileOperation.getProjectName());
         lines.append(FILE_EXTENSION);
-        appendJarFormat(lines, format, mainClass);
+        appendJarFormatAsset(lines, format, mainClass);
 
         // append assets
         appendAssets(lines, targetURI, includeLib);
         return lines.toString();
     }
-    public String getCommand(String targetURI, String mainClass, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String mainClass, String flags, String includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
         if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
@@ -75,13 +75,13 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
 
         lines.append(fileOperation.getProjectName());
         lines.append(FILE_EXTENSION);
-        appendJarFormat(lines, format, mainClass);
+        appendJarFormatAsset(lines, format, mainClass);
 
         appendAssets(lines, targetURI, includeLib);
         return lines.toString();
     }
 
-    public String getCommand(String fileName, String targetURI, String mainClass, String flags, boolean includeLib) {
+    public String getCommand(String fileName, String targetURI, String mainClass, String flags, String includeLib) {
         StringBuilder lines = new StringBuilder(JAR_COMMAND);
         if(!flags.isBlank()) lines.append(flags);
         lines.append("f");
@@ -90,7 +90,7 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
 
         lines.append(fileName);
         lines.append(FILE_EXTENSION);
-        appendJarFormat(lines, format, mainClass);
+        appendJarFormatAsset(lines, format, mainClass);
 
         appendAssets(lines, targetURI, includeLib);
         return lines.toString();
@@ -99,19 +99,19 @@ public record JarBuilder(String root, FileOperation fileOperation) implements Co
      * When updating only add the .class files from bin
      * @param fileName - the name of the jar file to update.
      */
-    public String getUpdateJarCommand(String fileName, String targetURI, String flags, boolean includeLib) {
+    public String getUpdateJarCommand(String fileName, String targetURI, String mainClass, String flags, String includeLib) {
         StringBuilder command = new StringBuilder("jar -u");
         if(targetURI.isBlank()) return null;
         if(!flags.isBlank()) command.append("v");
         if(fileName.isBlank()) return null;
 
         // add jar file
-        command.append("f ");
+        command.append("f");
+        String format = appendJarType(command, mainClass);
         command.append(fileName);
         command.append(FILE_EXTENSION);
-        /**
-         * TEST: for now when updating lib files it generates a corrupt jar file.
-        */
+        // append manifesto to the .jar update process
+        appendJarFormatAsset(command, format, mainClass);
         // bin or class file source
         appendAssets(command, targetURI, includeLib);
         return command.toString();

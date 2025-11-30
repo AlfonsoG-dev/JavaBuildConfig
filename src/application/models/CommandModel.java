@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public interface CommandModel {
 
     public FileOperation getFileOperation();
-    public String getCommand(String targetURI, String flags, boolean includeLib);
+    public String getCommand(String targetURI, String flags, String includeLib);
 
     public default String getLibURI() {
         return Paths.get("." + File.separator).resolve("lib").toString();

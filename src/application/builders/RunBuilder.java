@@ -18,13 +18,13 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
      * @param includeLib true if you want to include the jar dependencies in the build process, false otherwise.
      */
     @Override
-    public String getCommand(String targetURI, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String flags, String includeLib) {
         if(!new File(targetURI).exists()) return null;
         StringBuilder command = new StringBuilder("java -cp '");
         String mainClassName = op.getMainClass();
 
         command.append(targetURI);
-        if(includeLib && !prepareLibFiles().isEmpty()) {
+        if(!includeLib.equals("ignore") && !prepareLibFiles().isEmpty()) {
             command.append(";");
             command.append(prepareLibFiles());
         }
@@ -52,12 +52,12 @@ public record RunBuilder(String root, FileOperation op) implements CommandModel 
      * @param includeLib if you want to include jar dependencies in the build process
      * @return the command.
      */
-    public String getCommand(String mainClass, String targetURI, String flags, boolean includeLib) {
+    public String getCommand(String mainClass, String targetURI, String flags, String includeLib) {
         if(!new File(targetURI).exists()) return null;
         StringBuilder command = new StringBuilder("java -cp '");
 
         command.append(targetURI);
-        if(includeLib && !prepareLibFiles().isEmpty()) {
+        if(!includeLib.equals("ignore") && !prepareLibFiles().isEmpty()) {
             command.append(";");
             command.append(prepareLibFiles());
         }

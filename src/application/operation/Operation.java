@@ -11,6 +11,9 @@ import java.util.Map;
 import java.io.File;
 
 public class Operation {
+    private static final String DEFAULT_CONFIG_LIB = "ignore";
+
+
     private CompileBuilder compileBuilder;
     private RunBuilder runBuilder;
     private FileBuilder fileBuilder;
@@ -25,7 +28,7 @@ public class Operation {
     private String oAuthor;
     private String oCompileFlags;
     private String oTestClass;
-    private boolean oIncludeLib;
+    private String oIncludeLib;
     private ExecutorService executorThread;
 
     public Operation(String root) {
@@ -45,18 +48,17 @@ public class Operation {
         oAuthor = Optional.ofNullable(fileOperation.getAuthor()).orElse("System-Owner");
         oCompileFlags = Optional.ofNullable(configData.get("Compile-Flags")).orElse("-Xlint:all -Xdiags:verbose");
         oTestClass = Optional.ofNullable(configData.get("Test-Class")).orElse("test.TestLauncher");
-        String dataLib = Optional.ofNullable(configData.get("Libraries")).orElse("exclude");
-        oIncludeLib = dataLib.equals("include");
+        oIncludeLib = Optional.ofNullable(configData.get("Libraries")).orElse(DEFAULT_CONFIG_LIB);
     }
     public void initializeENV(String sourceURI, String targetURI, String includeLib) {
         if(targetURI != null) {
-            this. oTargetURI = targetURI;
+            oTargetURI = targetURI;
         }
         if(includeLib != null) {
-            this.oIncludeLib = includeLib.equals("include");
+            oIncludeLib = Optional.ofNullable(includeLib).orElse(DEFAULT_CONFIG_LIB);
         }
         fileOperation.appendSource(Optional.ofNullable(sourceURI).orElse(oSourceURI));
-        if(oIncludeLib) {
+        if(!oIncludeLib.equals(DEFAULT_CONFIG_LIB)) {
             fileOperation.appendLib("lib");
         }
         fileOperation.appendLists();
@@ -66,6 +68,7 @@ public class Operation {
         mainClass = Optional.ofNullable(mainClass).orElse(oMainClass);
         author = Optional.ofNullable(author).orElse(oAuthor);
         fileBuilder.createConfig(oSourceURI, oTargetURI, mainClass, oCompileFlags, oIncludeLib);
+        // include means include in the build process, otherwise append in the manifesto.
         fileBuilder.createManifesto(author, oIncludeLib);
     }
     public void appendCompileProcess(String compileFlags, String target) {
@@ -117,7 +120,7 @@ public class Operation {
         if(!new File(fileName + ".jar").exists()) {
             command = jarBuilder.getCommand(fileName, oTargetURI, oMainClass, flags, oIncludeLib);
         } else {
-            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, flags, oIncludeLib);
+            command = jarBuilder.getUpdateJarCommand(fileName, oTargetURI, fileOperation.getMainClass(), flags, oIncludeLib);
         }
         executorUtils.appendCommandToCallableProcess(command);
     }

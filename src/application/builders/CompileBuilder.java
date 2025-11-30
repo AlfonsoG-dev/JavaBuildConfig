@@ -15,7 +15,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         return op;
     }
     @Override
-    public String getCommand(String targetURI, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String flags, String includeLib) {
         StringBuilder command = new StringBuilder("javac -d \"");
         // default bin
         command.append(targetURI);
@@ -25,7 +25,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         }
         command.append(flags);
         command.append(" ");
-        if(includeLib && !prepareLibFiles().isEmpty()) {
+        if(!includeLib.equals("ignore") && !prepareLibFiles().isEmpty()) {
             command.append("-cp '");
             command.append(prepareLibFiles());
             command.append("' ");
@@ -33,7 +33,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         command.append(prepareSrcFiles());
         return command.toString();
     }
-    public String reCompileCommand(String targetURI, String sourceURI, String flags, boolean includeLib) {
+    public String reCompileCommand(String targetURI, String sourceURI, String flags, String includeLib) {
         StringBuilder command = new StringBuilder("javac -d \"");
         command.append(targetURI);
         command.append("\" ");
@@ -43,7 +43,7 @@ public record CompileBuilder(String root, FileOperation op) implements CommandMo
         command.append(flags);
         command.append(" -cp '");
         command.append(sourceURI);
-        if(includeLib) {
+        if(!includeLib.equals("ignore")) {
             command.append(";");
             command.append(prepareLibFiles());
         }

@@ -47,12 +47,14 @@ public class FileOperation {
      * @param computed - the result of the pending list.
      * @param includeLib - to include or not the lib dependencies.
      */
-    public void populateList(Map<String, List<Path>> computed, boolean includeLib) {
+    public void populateList(Map<String, List<Path>> computed, String includeLib) {
         /**
          * append the list to a pending list evaluation on an executor class.
          */
         listFiles = computed.get("source");
-        if(includeLib) libFiles = computed.get("lib");
+        if(!includeLib.equals("ignore")){
+            libFiles = computed.get("lib");
+        }
     }
     /**
      * append the source content to the map content list.

@@ -14,7 +14,16 @@ public class FileBuilder {
     public FileBuilder(FileOperation fileOperation) {
         this.fileOperation = fileOperation;
     }
-    public void createManifesto(String author, boolean includeLib) {
+    /**
+     * Create the manifest file for the .jar operation.
+     * <p> The .jar operation uses the manifest fields to store meta-data in the .jar file.
+     * @param author - the creator of the project.
+     * @param includeLib - a series of options between (include, exclude, ignore) where:
+     * <p> include means to include the lib dependencies in the build process.
+     * <p> exclude means to exclude the lib dependencies of the build process by placing in the manifest the field. Class-Path: lib.jar
+     * <p> ignore is the default value, and it means to ignore the lib dependencies of the build process.
+     */
+    public void createManifesto(String author, String includeLib) {
         StringBuilder lines = new StringBuilder("Created-By: ");
         if(!author.isBlank()) lines.append(author);
         lines.append("\n");
@@ -24,7 +33,7 @@ public class FileBuilder {
             lines.append(mainClass);
             lines.append("\n");
         }
-        if(!includeLib) {
+        if(includeLib.equals("exclude")) {
             List<Path> libs = fileOperation.libFiles("." + File.separator + "lib");
             if(libs != null) {
                 lines.append("Class-Path: ");
@@ -35,9 +44,10 @@ public class FileBuilder {
                 );
             }
         }
+        lines.append("\n");
         fileOperation.createFile("Manifesto.txt", lines.toString());
     }
-    public void createConfig(String source, String target, String mainClass, String flags, boolean includeLib) {
+    public void createConfig(String source, String target, String mainClass, String flags, String includeLib) {
         StringBuilder lines = new StringBuilder();
         String[][] headers = {
             {"Root-Path: ", source.split("\\" + File.separator)[0].trim()},
@@ -46,7 +56,7 @@ public class FileBuilder {
             {"Main-Class: ", mainClass},
             {"Test-Path: ", source.split("\\" + File.separator)[0].trim() + File.separator + "test"},
             {"Test-Class: ", "test.TestLauncher"},
-            {"Libraries: ", includeLib ? "include":"exclude"},
+            {"Libraries: ", includeLib},
             {"Compile-Flags: ", flags}
         };
         for(int i=0; i<headers.length; ++i) {

@@ -30,9 +30,9 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
     }
 
     @Override
-    public String getCommand(String targetURI, String flags, boolean includeLib) {
+    public String getCommand(String targetURI, String flags, String includeLib) {
         // don't include in build process
-        if(!includeLib) return null;
+        if(!includeLib.equals("include")) return null;
 
         StringBuilder command = new StringBuilder();
         File targetFile = new File(targetURI);
@@ -56,8 +56,8 @@ public record LibBuilder(String root, FileOperation op) implements CommandModel 
         }
         return command.toString();
     }
-    public void appendCommandToProcess(ExecutorUtils ex, String targetURI, boolean includeLib) {
-        if(!includeLib) return;
+    public void appendCommandToProcess(ExecutorUtils ex, String targetURI, String includeLib) {
+        if(!includeLib.equals("include")) return;
         String[] libFiles = prepareLibFiles().toString().split(";");
         List<Path> extracFolders = new ArrayList<>();
         for(String l: libFiles) {

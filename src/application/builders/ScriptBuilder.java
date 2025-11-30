@@ -34,13 +34,13 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\"\n");
         }
     }
-    public void appendCompileCommand(StringBuilder lines, String targetURI, boolean includeLib) {
+    public void appendCompileCommand(StringBuilder lines, String targetURI, String includeLib) {
         if(OS_NAME_WINDOWS) {
             lines.append("$Compile=");
             lines.append("\"");
             lines.append("javac -d ");
             lines.append(targetURI);
-            if(includeLib) {
+            if(!includeLib.equals("ingore")) {
                 lines.append(" -cp '");
                 lines.append("$Libs'");
             }
@@ -49,7 +49,7 @@ public record ScriptBuilder(CommandModel cm) {
         } else {
             lines.append("javac -d ");
             lines.append(targetURI);
-            if(includeLib) {
+            if(!includeLib.equals("ignore")) {
                 lines.append(" -cp '");
                 lines.append("$libs'");
             }
@@ -57,7 +57,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\n");
         }
     }
-    public void appendCreateJarCommand(StringBuilder lines, String targetURI, boolean includeLib) {
+    public void appendCreateJarCommand(StringBuilder lines, String targetURI, String includeLib) {
         // TEST: create jar command
         if(OS_NAME_WINDOWS) {
             lines.append("$Jar=\"jar -cfm ");
@@ -67,7 +67,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append(targetURI);
             lines.append(File.separator);
             lines.append(" .");
-            if(includeLib) {
+            if(includeLib.equals("include")) {
                 File f = new File("extractionFiles");
                 for(File l: f.listFiles()) {
                     lines.append(" -C ");
@@ -86,7 +86,7 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append(targetURI);
             lines.append(File.separator);
             lines.append(" .");
-            if(includeLib) {
+            if(includeLib.equals("include")) {
                 File f = new File("extractionFiles");
                 for(File l: f.listFiles()) {
                     lines.append(" -C ");
@@ -98,13 +98,13 @@ public record ScriptBuilder(CommandModel cm) {
             lines.append("\n");
         }
     }
-    public void appendRunCommand(StringBuilder lines, String targetURI, boolean includeLib) {
+    public void appendRunCommand(StringBuilder lines, String targetURI, String includeLib) {
         if(OS_NAME_WINDOWS) {
             lines.append("$Run=");
             lines.append("\"");
             lines.append("java -cp '");
             lines.append(targetURI);
-            if(includeLib) {
+            if(!includeLib.equals("ignore")) {
                 lines.append(";");
                 lines.append("$Libs");
             }
@@ -114,7 +114,7 @@ public record ScriptBuilder(CommandModel cm) {
         } else {
             lines.append("java -cp '");
             lines.append(targetURI);
-            if(includeLib) {
+            if(!includeLib.equals("ignore")) {
                 lines.append(";");
                 lines.append("$libs");
             }
@@ -130,10 +130,10 @@ public record ScriptBuilder(CommandModel cm) {
         }
     }
 
-    public String getScript(String targetURI, boolean includeLib) {
+    public String getScript(String targetURI, String includeLib) {
         StringBuilder lines = new StringBuilder();
         appendSource(lines);
-        if(includeLib) appendLib(lines);
+        if(!includeLib.equals("ignore")) appendLib(lines);
         appendCompileCommand(lines, targetURI, includeLib);
         appendCreateJarCommand(lines, targetURI, includeLib);
         appendRunCommand(lines, targetURI, includeLib);
