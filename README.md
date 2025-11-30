@@ -33,7 +33,7 @@ Class-Path: bin
 Main-Class: application.JavaBuildConfig
 Test-Path: src\test
 Test-Class: test.TestLauncher
-Libraries: exclude
+Libraries: include/exclude/ignore
 Compile--flags: -Werror
 ```
 You can create the `config.txt` file with:
