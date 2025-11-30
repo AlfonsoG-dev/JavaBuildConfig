@@ -41,9 +41,11 @@ public class ExecutorUtils {
                 TextUtils.message("Data is ready...");
             }
             return value;
-        } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        } catch(InterruptedException e) {
             Thread.currentThread().interrupt();
+            e.printStackTrace();
+        } catch(RejectedExecutionException | ExecutionException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -70,9 +72,11 @@ public class ExecutorUtils {
                     }
                 }
             }
-        } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        } catch(InterruptedException e) {
             Thread.currentThread().interrupt();
+            e.printStackTrace();
+        } catch(RejectedExecutionException | ExecutionException e) {
+            e.printStackTrace();
         }
         return completeResult;
     }
@@ -117,9 +121,11 @@ public class ExecutorUtils {
                 TextUtils.message("Exit code: " + exitCode);
             }
 
-        } catch (IOException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        } catch(InterruptedException e) { 
             Thread.currentThread().interrupt();
+            e.printStackTrace();
+        } catch (IOException | ExecutionException e) {
+            e.printStackTrace();
         }
     }
     /**
