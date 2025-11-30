@@ -121,8 +121,9 @@ public class ExecutorUtils {
                 int exitCode = p.exitValue();
                 if(exitCode != 0) {
                     TextUtils.error("Something happen while trying to execute the command process.");
+                } else {
+                    TextUtils.message("Successful execution. Exit code " + exitCode);
                 }
-                TextUtils.message("Successful execution. Exit code " + exitCode);
             }
 
         } catch(InterruptedException e) { 
@@ -144,7 +145,14 @@ public class ExecutorUtils {
                         TextUtils.warning("Empty command");
                         lc = "echo Happy-Day";
                     } 
-                    TextUtils.showMessage("[Command] " + lc);
+                    TextUtils.showMessage(
+                            String.format(
+                                "%s[Command]%s%s",
+                                TextUtils.Colors.ANSI_YELLOW,
+                                lc,
+                                TextUtils.Colors.ANSI_RESET
+                            )
+                    );
                     return buildProcess(lc);
                 });
     }
