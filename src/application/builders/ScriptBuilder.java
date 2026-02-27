@@ -7,7 +7,7 @@ import application.models.CommandModel;
 public record ScriptBuilder(CommandModel cm) {
 
     private static final String DEFAULT_LIB_CONFIG = "ignore";
-    private static final boolean OS_NAME_WINDOWS = System.getProperty("os.name").contains("windows");
+    private static final boolean OS_NAME_WINDOWS = System.getProperty("os.name").equals("Windows 11");
 
     public void appendSource(StringBuilder lines) {
         if(OS_NAME_WINDOWS) {
