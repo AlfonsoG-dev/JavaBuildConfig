@@ -1,17 +1,8 @@
 package test.cases.utils;
 
+import module java.base;
+
 import application.utils.FileUtils;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
-import java.io.File;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class FileUtilsTest {
 
@@ -29,9 +20,9 @@ public class FileUtilsTest {
             if(!fileUtils.createDirectory(directory)) {
                 throw new Exception("Create directory fails to create on " + directory + " path.");
             }
-            System.out.println("\r\t[Info] No errors present on createDirectoryTest execution");
+            IO.println("\r\t[Info] No errors present on createDirectoryTest execution");
         } catch(Exception e) {
-            System.err.println("\t[Error] " + e.getLocalizedMessage());
+            IO.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
     public void countFilesTest() {
@@ -40,9 +31,9 @@ public class FileUtilsTest {
             if(fileUtils.countFiles(Paths.get(directory)) <= 0) {
                 throw new Exception("The directory " + directory + " has at least 1 file in it.");
             }
-            System.out.println("\r\t[Info] No errors present on countFilesTest execution");
+            IO.println("\r\t[Info] No errors present on countFilesTest execution");
         } catch (Exception e) {
-            System.err.println("\t[Error] " + e.getLocalizedMessage());
+            IO.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
 
@@ -53,9 +44,9 @@ public class FileUtilsTest {
             if(list.isEmpty()) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
-            System.out.println("\r\t[Info] No errors present on listPathsTest execution");
+            IO.println("\r\t[Info] No errors present on listPathsTest execution");
         } catch (Exception e) {
-            System.err.println("\t[Error] " + e.getLocalizedMessage());
+            IO.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
     public void callableListTest() {
@@ -67,12 +58,12 @@ public class FileUtilsTest {
             if(list.isEmpty()) {
                 throw new Exception("The path " + pathURI + " has at least 1 file in it.");
             }
-            System.out.println("\r\t[Info] No errors present on callableListTest execution");
+            IO.println("\r\t[Info] No errors present on callableListTest execution");
         } catch(RejectedExecutionException | InterruptedException | ExecutionException e) {
-            System.err.println("\t[Error] on execution of task " + e.getLocalizedMessage());
+            IO.println("\t[Error] on execution of task " + e.getLocalizedMessage());
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            System.err.println("\t[Error] " + e.getLocalizedMessage());
+            IO.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
 }

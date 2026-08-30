@@ -2,6 +2,7 @@ package test.cases.builders;
 
 import application.builders.RunBuilder;
 import application.operation.FileOperation;
+import java.io.IOException;
 
 public class RunBuilderTest {
     private RunBuilder runBuilder;
@@ -13,11 +14,11 @@ public class RunBuilderTest {
         try {
             String command = runBuilder.getCommand("bin", null, "ignore");
             if(command != null && command.isBlank()) {
-                throw new Exception("Run command can't be empty");
+                throw new IOException("Run command can't be empty");
             }
-            System.out.println("\r\t[Info] No errors present on getCommandTest execution");
-        } catch(Exception e) {
-            System.err.println("\t[Error] " + e.getLocalizedMessage());
+            IO.println("\r\t[Info] No errors present on getCommandTest execution");
+        } catch(IOException e) {
+            IO.println("\t[Error] " + e.getLocalizedMessage());
         }
     }
 }

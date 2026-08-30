@@ -1,5 +1,7 @@
 package test;
 
+import module java.base;
+
 import application.utils.*;
 import application.operation.FileOperation;
 
@@ -7,11 +9,6 @@ import test.cases.utils.*;
 import test.cases.operation.*;
 import test.cases.builders.*;
 
-import java.io.File;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 class TestLauncher {
     private static final String DEFAULT_LIB_CONFIG = "ignore";
@@ -57,9 +54,9 @@ class TestLauncher {
         fopt.getProjectNameTest();
         fopt.sourceDirsTest();
 
-        // test CompileBuilder
+        // test CompileBuilder using the ignore option of library files.
         TextUtils.showMessage("\nTesting CompileBuilder\b");
-        CompileBuilderTest cbt = new CompileBuilderTest(root, fop);
+        CompileBuilderTest cbt = new CompileBuilderTest(root, fop, "ignore");
         cbt.getCommandTest();
         cbt.reCompileCommandTest();
 

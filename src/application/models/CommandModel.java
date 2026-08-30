@@ -1,13 +1,8 @@
 package application.models;
 
+import module java.base;
+
 import application.operation.FileOperation;
-
-import java.util.stream.Collectors;
-
-import java.io.File;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public interface CommandModel {
 

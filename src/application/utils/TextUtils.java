@@ -1,16 +1,8 @@
 package application.utils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import module java.base;
 
 public record TextUtils() {
-    private static final Console CONSOL = System.console();
     private static final String CONSOL_FORMAT = "%s[%s] %s%s%n";
 
     /**
@@ -52,7 +44,7 @@ public record TextUtils() {
      * @param messages - the message to show.
      */
     public static final void showMessage(String message) {
-        CONSOL.printf("%s%n", message);
+        IO.println(message);
     }
     /**
      * A formatted message with warning label.
@@ -60,7 +52,7 @@ public record TextUtils() {
      * @param message - the warning message.
      */
     public static final void warning(String message) {
-        CONSOL.printf(CONSOL_FORMAT, Colors.YELLOW_UNDERLINED, "Warning", Colors.ANSI_RESET, message);
+        IO.print(String.format(CONSOL_FORMAT, Colors.YELLOW_UNDERLINED, "Warning", Colors.ANSI_RESET, message));
     }
     /**
      * A formatted message with info label.
@@ -68,7 +60,7 @@ public record TextUtils() {
      * @param message - the message to format as info.
      */
     public static final void message(String message) {
-        CONSOL.printf(CONSOL_FORMAT, Colors.GREEN_UNDERLINED, "Info", Colors.ANSI_RESET, message);
+        IO.print(String.format(CONSOL_FORMAT, Colors.GREEN_UNDERLINED, "Info", Colors.ANSI_RESET, message));
     }
     /**
      * A formatted message with error label.
@@ -76,7 +68,7 @@ public record TextUtils() {
      * @param error - the message to format as error.
      */
     public static final void error(String error) {
-        CONSOL.printf(CONSOL_FORMAT, Colors.RED_UNDERLINED, "Error", Colors.ANSI_RESET, error);
+        IO.print(String.format(CONSOL_FORMAT, Colors.RED_UNDERLINED, "Error", Colors.ANSI_RESET, error));
     }
     /**
      * Get the content of a file as a string.
@@ -103,7 +95,7 @@ public record TextUtils() {
      * @param lines - the content to write into the file.
      */
     public static void writeLines(String fileURI, String lines) {
-        CONSOL.printf("%s", "Writing lines...");
+        IO.print("Writing lines...");
         try(FileWriter w = new FileWriter(fileURI, false)) {
             if(!lines.isEmpty()) {
                 w.write(lines);
@@ -146,7 +138,7 @@ public record TextUtils() {
                     break;
                 }
                 // show success message
-                CONSOL.printf("%s%n", line);
+                IO.println(line);
             }
         } catch(Exception e) {
             e.printStackTrace();
